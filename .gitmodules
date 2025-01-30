@@ -1,0 +1,6 @@
+[submodule "submodules/xbase"]
+	path = submodules/xbase
+	url = https://github.com/Medialooks-LLC/xbase.git
+[submodule "submodules/xnode"]
+	path = submodules/xnode
+	url = https://github.com/Medialooks-LLC/xnode.git

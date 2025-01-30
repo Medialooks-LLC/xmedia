@@ -1,0 +1,58 @@
+{
+    "container": [{
+            "av_demultiplexer": {
+                "init_props": {
+                    "av_program_indexes": [1, 2, 3, 0]
+                },
+                "open_url": "E:/Media/TS/RTRS_1_mux_MSK.ts",
+                "subtype": "av_demultiplexer"
+            }
+        }, {
+            "av_decoder": {
+                "subtype": "av_decoder",
+                "wrappers": [{
+                        "multistream": {}
+                    }]
+            }
+        }, {
+            "av_encoder": {
+                "init_props": {
+                    "audio": {
+                        "av_codec_name": "libmp3lame",
+                        "b": "192K"
+                    },
+                    "video": {
+                        "av_codec_name": "mpeg4",
+                        "b": "10M"
+                    }
+                },
+                "subtype": "av_encoder",
+                "wrappers": [{
+                        "multistream": {}
+                    }]
+            }
+        }, {
+            "selector_container": {
+                "container": [{
+                        "av_multiplexer": {
+                            "links": [{
+                                    "container_source": {
+                                        "filter": {
+                                            "program_numbers": 2010
+                                        }
+                                    }
+                                }],
+                            "open_url": "E:/Media/!Temp/xmedia_containers_test.av_serial_transcode_selector_load_1.ts",
+                            "subtype": "av_multiplexer"
+                        }
+                    }, {
+                        "av_multiplexer_01": {
+                            "open_url": "E:/Media/!Temp/xmedia_containers_test.av_serial_transcode_selector_load_2.ts",
+                            "subtype": "av_multiplexer"
+                        }
+                    }],
+                "subtype": "selector_container"
+            }
+        }],
+    "subtype": "serial_container"
+}

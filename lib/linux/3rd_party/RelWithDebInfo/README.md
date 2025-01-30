@@ -1,0 +1,1 @@
+# Release libraries with debug information
