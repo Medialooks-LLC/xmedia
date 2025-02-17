@@ -36,13 +36,13 @@ The **XMedia** library, developed by **Medialooks LLC**, is a professional multi
 ### Get sources
 To get the source code along with submodules, run one of the following commands:
 ```shell
-git clone git@github.com:Medialooks-LLC/xmedia.git
+git clone https://github.com/Medialooks-LLC/xmedia
 cd xmedia
 git submodule update --init --recursive
 ```
 or
 ```shell
-git clone --recurse-submodules git@github.com:Medialooks-LLC/xmedia.git
+git clone --recurse-submodules https://github.com/Medialooks-LLC/xmedia
 ```
 
 ### Prepare prebuilt libraries
