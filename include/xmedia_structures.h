@@ -68,22 +68,38 @@ struct XTimecode {
 };
 
 /**
+ * @brief Struct XSegment represents media segment information.
+ */
+struct XSegment {
+    /// @brief Optional media segment start time (in Time64 !!!)
+    std::optional<xbase::Time64> segment_start;
+    /// @brief Optional media segment end time (in Time64 !!!)
+    std::optional<xbase::Time64> segment_end;
+};
+
+/**
  * @brief Struct XTime represents media time information.
  * This struct holds media time information including timestamp, duration, segment start, timebase, and optional
  * timecode.
  */
 struct XTime {
     /// @brief 64-bit media timestamp
+    // - for frames is's presentation timestamp
+    // - for packets this is decode timestamp, pts could be obtained via Packet::pts_offset in 'extra' member
     int64_t timestamp = 0;
+    /// @brief Optional media timebase
+    /// @note If not set, 1/10'000'000 timescale used (xbase::Time64 units)
+    std::optional<XRational> timebase;
+    /// @brief Optional media duration (same timebase as timestamp)
+    std::optional<int64_t> duration;
+    /// @brief Playing media segment information (in xbase::Time64 units)
+    XSegment segment;
+    /// @brief Optional media segment start time (in Time64 !!!)
+    // std::optional<xbase::Time64> segment_start;
+    /// @brief Optional media segment end time (in Time64 !!!)
+    // std::optional<xbase::Time64> segment_end;
     /// @brief Optional media rate control type
     std::optional<RateControl> rc_type;
-    /// @brief Optional media duration
-    std::optional<int64_t> duration;
-    /// @brief Optional media segment start
-    std::optional<int64_t> segment_start;
-    /// @brief Optional media timebase
-    /// @note If not set 1/10'000'000 timescale used (xbase::Time64 units)
-    std::optional<XRational> timebase;
 
     /// @brief Media packet information, if struct XTime is representing a packet
     struct Packet {
@@ -103,7 +119,7 @@ struct XTime {
     std::variant<std::monostate, Packet, Frame> extra;
 
     /// @brief Media timecode information, optional
-    std::optional<XTimecode> timecode;
+    std::vector<XTimecode> timecodes;
 };
 
 /// @brief Struct holding information about multimedia stream
@@ -191,6 +207,12 @@ struct XCodec {
     std::optional<Audio> audio_data;
 };
 
+struct HWAccel {
+    HWDeviceType hw_device_type = HWDeviceType::kNONE; // + size_t index; // ?
+    std::string  hw_format;
+    std::any     hw_frames_ctx;
+};
+
 /**
  * @brief Representation of media format for video streams.
  * This struct contains information about pixel format, size, fields order, frame rate,
@@ -227,8 +249,11 @@ struct XFormatV {
     std::optional<ChromaLocation> chroma_location;
     ///@}
 
-    /// @brief Codec for the video stream for encoded streams.
+    /// @brief Codec for the stream for encoded streams.
     std::optional<XCodec> codec;
+
+    /// @brief Hardware video acceleration.
+    std::optional<HWAccel> hw_accel;
 };
 
 /**
@@ -303,17 +328,20 @@ public:
     /**
      * @brief Set audio format, use nullptr for reset type
      */
-    void Set(const XFormatA* _format_p) { audio = _format_p ? std::optional<XFormatA> {*_format_p} : std::nullopt; }
+    void Set(const XFormatA* _format_p) { audio = (_format_p ? std::optional<XFormatA> {*_format_p} : std::nullopt); }
     void Set(const XFormatA& _format) { Set(&_format); }
     /**
      * @brief Set video format, use nullptr for reset type
      */
-    void Set(const XFormatV* _format_p) { video = _format_p ? std::optional<XFormatV> {*_format_p} : std::nullopt; }
+    void Set(const XFormatV* _format_p) { video = (_format_p ? std::optional<XFormatV> {*_format_p} : std::nullopt); }
     void Set(const XFormatV& _format) { Set(&_format); }
     /**
      * @brief Set subtitle format, use nullptr for reset type
      */
-    void Set(const XFormatS* _format_p) { subtitle = _format_p ? std::optional<XFormatS> {*_format_p} : std::nullopt; }
+    void Set(const XFormatS* _format_p)
+    {
+        subtitle = (_format_p ? std::optional<XFormatS> {*_format_p} : std::nullopt);
+    }
     void Set(const XFormatS& _format) { Set(&_format); }
     /**
      * @brief Reset format type.

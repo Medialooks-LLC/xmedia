@@ -25,4 +25,5 @@ static const std::string kUrlAddress  = "ndi_url_address";
 
 static const std::string kMetadata = "ndi_metadata";
 static const std::string kProduct  = "ndi_product";
+
 } // namespace xsdk::ndi

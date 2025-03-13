@@ -817,4 +817,19 @@ XENUM_CLASS(eXFieldsOrder,
             BottomCoded_TopDisplay  ///< Bottom coded first, top displayed first
 )
 
+XENUM_CLASS(HWDeviceType,
+            kNONE,
+            kVDPAU,
+            kCUDA,
+            kVAAPI,
+            kDXVA2,
+            kQSV,
+            kVIDEOTOOLBOX,
+            kD3D11VA,
+            kDRM,
+            kOPENCL,
+            kMEDIACODEC,
+            kVULKAN,
+            kD3D12VA)
+
 } // namespace xsdk

@@ -39,9 +39,9 @@ namespace mframe {
 
     CComPtr<IMFFrame> MakeCPU(IMFFrame* _mf_frame_p);
 
-    xbase::XResult<IMediaFrame::SPtr> ExtractVideo(IMFFrame* _mf_frame_p, const IMediaProps::SPtr& _base_props);
+    xbase::XResult<IMediaFrame::SPtr> ExtractVideo(IMFFrame* _mf_frame_p, const IMediaProps::SPtrC& _base_props);
 
-    xbase::XResult<IMediaFrame::SPtr> ExtractAudio(IMFFrame* _mf_frame_p, const IMediaProps::SPtr& _base_props);
+    xbase::XResult<IMediaFrame::SPtr> ExtractAudio(IMFFrame* _mf_frame_p, const IMediaProps::SPtrC& _base_props);
 
     xbase::XResult<CComPtr<IMFFrame>> MakeFrame(const IMediaFrame::SPtrC& _media_frame,
                                                 bool                      _use_reference = false,

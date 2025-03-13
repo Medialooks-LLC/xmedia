@@ -1,5 +1,7 @@
 #pragma once
 
+#include "scheme_functions.h"
+
 #include "../xmedia_interfaces.h"
 #include "../xmedia_structures.h"
 
@@ -32,8 +34,10 @@ INode::SPtr FactoryConfig(XPath&& _path = {}, bool _create_path = false);
 
 /**
  * @brief Helpers for create wrapping props (used in ItemDesc::wrapping_props member)
+ * The order of wrappers from inner to outer, i.e. latest wrapper is outer, first is inner
  */
-INode::SPtr CreateWrappingProps(const std::vector<std::pair<std::string_view, INode::SPtrC>>& _wrappers_list);
+INode::SPtr CreateWrappingProps(const std::vector<std::pair<std::string_view, INode::SPtrC>>& _wrappers_list,
+                                const INode::SPtr&                                            _add_to_props = {});
 
 /**
  * @brief Factory function for creating media handlers.
@@ -58,60 +62,74 @@ xbase::XResult<std::shared_ptr<TInterface>> HandlerCreateByName(
     if (handler_res.HasError())
         return handler_res.Error();
 
-    auto desired_intrerface = xobject::PtrQuery<TInterface>(handler_res.Result().get());
-    if (!desired_intrerface)
+    auto desired_interface = xobject::PtrQuery<TInterface>(handler_res.Result().get());
+    if (!desired_interface)
         return XError::InvalidCast;
 
-    return desired_intrerface;
+    return desired_interface;
 }
 
 /**
  * @brief Factory function for creating and initializing media handlers.
  * @tparam TInterface The type of interface to query for after creation and initialization.
- * @param _create_init_params - name or type, url, props
+ * @param _item_desc - name or type, url, props
  * @param _input_streams_props Optional input streams properties.
  * @param _handler_stat Node to store handler statistics.
  * @return Returns an XResult with a shared pointer to the newly created and initialized handler object if
  * successful, or an error if creation fails.
  */
 template <typename TInterface>
-xbase::XResult<std::shared_ptr<TInterface>> HandlerCreateAndInit(const IContainerScheme::ItemDesc& _create_init_params,
+xbase::XResult<std::shared_ptr<TInterface>> HandlerCreateAndInit(const IContainerScheme::ItemDesc& _item_desc,
                                                                  MediaPropsVec&& _input_streams_props = {},
                                                                  IData::SPtrC&&  _outer_interfaces    = {},
                                                                  INode::SPtr&&   _handler_stat        = {})
 {
-    auto handler_res = xmedia::HandlersFactory()->CreateAndInit(_create_init_params,
+    auto item_desc = xconfig::UpdateSchemeFromJson(_item_desc).first;
+    // 2Think:
+    // if (xbase::TypeUid<IActiveHandler>() == xbase::TypeUid<TInterface>()) {
+    //    item_desc.wrapping_props = xmedia::CreateWrappingProps({{xmedia::wrappers::kActiveHandler, {}}},
+    //                                                           xnode::Clone(item_desc.wrapping_props, false));
+    //}
+
+    auto handler_res = xmedia::HandlersFactory()->CreateAndInit(item_desc,
                                                                 std::move(_input_streams_props),
                                                                 std::move(_outer_interfaces),
                                                                 std::move(_handler_stat));
     if (handler_res.HasError())
         return handler_res.Error();
 
-    auto desired_intrerface = xobject::PtrQuery<TInterface>(handler_res.Result().get());
-    if (!desired_intrerface)
+    auto desired_interface = xobject::PtrQuery<TInterface>(handler_res.Result().get());
+    if (!desired_interface)
         return XError::InvalidCast;
 
-    return desired_intrerface;
+    return desired_interface;
 }
 
 template <typename TInterface>
-xbase::XResult<std::shared_ptr<TInterface>> HandlerCreateByProps(const IContainerScheme::ItemDesc& _create_init_params,
+xbase::XResult<std::shared_ptr<TInterface>> HandlerCreateByProps(const IContainerScheme::ItemDesc& _item_desc,
                                                                  MediaPropsVec&& _input_streams_props = {},
                                                                  IData::SPtrC&&  _outer_interfaces    = {},
                                                                  INode::SPtr&&   _handler_stat        = {})
 {
-    auto handler_res = xmedia::HandlersFactory()->CreateByProps(_create_init_params,
+    auto item_desc = xconfig::UpdateSchemeFromJson(_item_desc).first;
+    // 2Think:
+    // if (xbase::TypeUid<IActiveHandler>() == xbase::TypeUid<TInterface>()) {
+    //    item_desc.wrapping_props = xmedia::CreateWrappingProps({{xmedia::wrappers::kActiveHandler, {}}},
+    //                                                           xnode::Clone(item_desc.wrapping_props, false));
+    //}
+
+    auto handler_res = xmedia::HandlersFactory()->CreateByProps(item_desc,
                                                                 std::move(_input_streams_props),
                                                                 std::move(_outer_interfaces),
                                                                 std::move(_handler_stat));
     if (handler_res.HasError())
         return handler_res.Error();
 
-    auto desired_intrerface = xobject::PtrQuery<TInterface>(handler_res.Result().get());
-    if (!desired_intrerface)
+    auto desired_interface = xobject::PtrQuery<TInterface>(handler_res.Result().get());
+    if (!desired_interface)
         return XError::InvalidCast;
 
-    return desired_intrerface;
+    return desired_interface;
 }
 
 /**

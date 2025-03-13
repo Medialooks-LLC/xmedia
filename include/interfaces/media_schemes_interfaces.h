@@ -65,8 +65,9 @@ public:
         std::variant<HandlerType, std::string, IContainerScheme::SPtrC> type_name_or_scheme;
         IMediaHandler::InitParamsVariant                                init_url_or_func;
         INode::SPtrC                                                    init_props;
-        INode::SPtrC                                                    wrapping_props;
-        std::optional<std::string>                                      instance_name;
+        // 2Think: use special class for wrapping props ?
+        INode::SPtrC               wrapping_props;
+        std::optional<std::string> instance_name;
     };
 
     struct ItemProps {
@@ -115,7 +116,8 @@ public:
     virtual IContainerScheme::SPtr SubcontainerGet(XPath&& _item_path) = 0;
 
     // For sink links use kContainerSink
-    virtual ILinksScheme::SPtr ItemLinks(XPath&& _item_path) = 0;
+    virtual ILinksScheme::SPtrC ItemLinks(XPath&& _item_path) const = 0;
+    virtual ILinksScheme::SPtr  ItemLinks(XPath&& _item_path)       = 0;
 };
 
 } // namespace xsdk

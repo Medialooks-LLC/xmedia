@@ -62,7 +62,6 @@ class xMedia(ConanFile):
     def generate(self):
         tc = CMakeDeps(self)
         tc.generate()
-        os.environ["DEBUSSY"] = "1"
 
         # Copy dependency binaries
         deps_file = os.path.join(self.build_folder, os.path.pardir, f"{self.settings.build_type}.deps")
@@ -92,6 +91,7 @@ class xMedia(ConanFile):
 
             if os.environ.get("XSDK_PREBUILD_FOLDER"): #need copy dependensies
                 xsdk_prebuild_folder = os.path.join(os.environ.get("XSDK_PREBUILD_FOLDER"), "windows", "3rd_party", str(self.settings.build_type))
+                self.output.info(f"prebuild folder was set: {xsdk_prebuild_folder}")
                 copy(self, pattern="*.dll", dst=xsdk_prebuild_folder, src=ffmpeg_bin_folder, keep_path=False)
                 copy(self, pattern="*.lib", excludes="ff*.lib", dst=xsdk_prebuild_folder, src=ffmpeg_lib_folder, keep_path=False)
                 copy(self, pattern="*.pdb", excludes="ff*.pdb", dst=xsdk_prebuild_folder, src=ffmpeg_lib_folder, keep_path=False)
@@ -126,6 +126,7 @@ class xMedia(ConanFile):
 
             if os.environ.get("XSDK_PREBUILD_FOLDER"): #need copy dependensies
                 xsdk_prebuild_folder = os.path.join(os.environ.get("XSDK_PREBUILD_FOLDER"), str(self.settings.os).lower(), "3rd_party", str(self.settings.build_type))
+                self.output.info(f"prebuild folder was set: {xsdk_prebuild_folder}")
                 copy(self, pattern="lib*", dst=xsdk_prebuild_folder, src=ffmpeg_lib_folder, keep_path=False)
                 copy(self, pattern="lib*", dst=xsdk_prebuild_folder, src=ndi_lib_folder, keep_path=False)
                 copy(self, pattern="*.json", dst=xsdk_prebuild_folder, src=xlogger_bin_folder, keep_path=False)

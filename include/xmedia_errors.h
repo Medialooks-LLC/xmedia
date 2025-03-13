@@ -22,6 +22,7 @@ XENUM_CLASS(XError,
             InvalidIndex,
             NullPointer,
             WrongMediatype,
+            UnsupportedMediatype,
             OpenFailed,
             ParseFailed,
             NoReadyStreams,
@@ -77,7 +78,17 @@ XENUM_CLASS(XError,
             NotContainer,
             NoEventsHanders,
             EndOfFile,
-            EndOfStream)
+            EndOfStream,
+            NotSupportChanges,
+            UnwrapFailed,
+            NoInputStreams,
+            NoOutputStreams,
+            CommandsNotSupported,
+            CodecNotFound,
+            Timeout,
+            NotReady,
+            RecreationInProgress,
+            Corrupted)
 
 /**
  * @brief Creates an std::error_code object from an XError
@@ -87,7 +98,18 @@ XENUM_CLASS(XError,
  */
 std::error_code make_error_code(xsdk::XError _error);
 
-bool IsXError(const std::error_code err);
+namespace xerror {
+    // 2Think: ToString() Move to xbase ? (and add something like XResult().ErrorStr())
+    /**
+     * @brief Creates a string representation of the current ErrorDump object
+     * @return A std::string containing the error message associated with the current error code
+     */
+    std::string ToString(const std::error_code _err);
+    /**
+     * @brief Check is error_code from XError
+     */
+    bool IsXError(const std::error_code err);
+} // namespace xerror
 
 // Test class
 /**
@@ -107,6 +129,7 @@ public:
      */
     ErrorDump(const std::error_code& _err) noexcept : std::error_code(_err) {}
 
+    // For remove
     /**
      * @brief Creates a string representation of the current ErrorDump object
      * @return A std::string containing the error message associated with the current error code

@@ -9,7 +9,7 @@ FILE(GLOB FILES
 )
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/include
+    ../../include
 )
 
 if(MSVC)
@@ -25,8 +25,6 @@ target_link_libraries(${PROJECT_NAME}
         xutils
         xnode
         xbase
-        swscale
-        swresample
 )
 if(USE_PREBUILD)
 target_link_libraries(${PROJECT_NAME}
@@ -45,4 +43,4 @@ add_dependencies(${PROJECT_NAME}
     copy_libs
 )
 
-source_group(TREE ${CMAKE_SOURCE_DIR}/samples FILES ${FILES})
+source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${FILES})

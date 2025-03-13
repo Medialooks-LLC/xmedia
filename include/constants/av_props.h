@@ -2,6 +2,7 @@
 
 #include <string_view>
 
+// 2Think: About public namespace ?
 namespace xsdk::av_lib {
 /**
  * @namespace codec_parameters
@@ -86,6 +87,13 @@ namespace codec_parameters {
      * set to 0 (the denominator may have any value).
      */
     static constexpr std::string_view kSampleAspectRatio = "sample_aspect_ratio";
+    /**
+     * @brief Constant used for handling the aspect ratio (width / height) which a picture
+     * should have when displayed.
+     *
+     * @note Video only.
+     */
+    static constexpr std::string_view kPictureAspectRatio = "picture_aspect_ratio";
     /**
      * @brief Constant used for handling the order of the fields in interlaced video.
      * @note Video only.
@@ -198,6 +206,16 @@ namespace codec_parameters {
      * the sample format, the value corresponds to enum AVSampleFormat.
      */
     static constexpr std::string_view kFormat = "format";
+    /**
+     * @brief Constant representing the video frame
+     * pixel format, the value corresponds to enum AVPixelFormat.
+     */
+    static constexpr std::string_view kPixelFormat = "pixel_format";
+    /**
+     * @brief Constant representing the audio
+     * sample format, the value corresponds to enum AVSampleFormat.
+     */
+    static constexpr std::string_view kSampleFormat = "sample_format";
     /**
      * @brief Constant representing the general type of the encoded data, e.g. video, audio, subtitles.
      */
@@ -315,6 +333,7 @@ namespace program {
     static constexpr std::string_view kPmtVersion = "pmt_version";
 
 } // namespace program
+
 namespace format_context {
     /**
      * @brief Constant representing the name of the direction property.

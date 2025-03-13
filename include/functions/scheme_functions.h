@@ -36,7 +36,7 @@ using OnCreateSubcontainerPF =
 // Create link node (Map): node name is link_source, node body (Map) is link details (could be empty)
 INode::SPtr CreateLinkNode(const std::string_view _link_source, const INode::SPtrC& _details = {});
 // Input is vector of nodes with name is link_source, body is details (use method above for such nodes creation)
-ILinksScheme::SPtr CreateLinksScheme(const std::vector<INode::SPtrC>& _links_details,
+ILinksScheme::SPtr CreateLinksScheme(const std::vector<INode::SPtrC>& _links_details = {},
                                      xconfig::OnLinkChangedPF&&       _on_changes_pf = {},
                                      const std::string&               _dest_name     = {});
 
@@ -49,9 +49,9 @@ std::pair<HandlerType, std::string>  GetTypeSubtype(const IContainerScheme::Item
 std::pair<std::string, bool> BaseNameGet(const IContainerScheme::ItemDesc& _item_desc);
 
 xbase::XResult<IContainerScheme::SPtr> CreateContainerScheme(const xconfig::DataFlowMode       _flow_mode,
-                                                             const std::optional<std::string>& _scheme_name,
-                                                             OnCreateSubcontainerPF&& _on_create_subconfig = {},
-                                                             OnLinkChangedPF&&        _on_link_changes_pf  = {});
+                                                             const std::optional<std::string>& _scheme_name = {},
+                                                             OnCreateSubcontainerPF&& _on_create_subconfig  = {},
+                                                             OnLinkChangedPF&&        _on_link_changes_pf   = {});
 
 xbase::XResult<size_t> CopyContainerScheme(const IContainerScheme::SPtrC& _source, const IContainerScheme::SPtr& _dest);
 
@@ -59,6 +59,8 @@ xbase::XResult<size_t> CopyContainerScheme(const IContainerScheme::SPtrC& _sourc
 // 2Think:
 // - Make something like ISerializer / IConfigSerializer interface ?
 // - add 'serialize' namespace ?
+
+std::pair<IContainerScheme::ItemDesc, bool> UpdateSchemeFromJson(const IContainerScheme::ItemDesc& _item_desc);
 
 xbase::XResult<INode::SPtr> StoreItemDesc(const IContainerScheme::ItemDesc& _item_desc, INode::SPtr&& _dest_node = {});
 

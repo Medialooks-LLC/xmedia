@@ -74,8 +74,8 @@ public:
     struct StreamProps {
         /// @brief The name of the stream.
         std::string stream_name;
-        /// @brief The stream's properties.
-        IMediaProps::SPtrC stream_props;
+        /// @brief The stream's media properties.
+        IMediaProps::SPtrC media_props;
     };
 
     virtual ~IMediaHandler() = default;

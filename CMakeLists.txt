@@ -12,12 +12,12 @@ option(WITH_PYTHON_BINDINGS "Add python bindings support" OFF)
 option(WITH_OPENCV_LIBRARY "Add OpenCV library to the build" ON)
 option(WITH_XSDK_CI_BUILD "Guard for non CI code build" OFF)
 option(WITH_PATCHED_BAICALP7 "Use patched version of baical-p7 logging library" ON)
-option(WITH_TESTS "Build test projects" OFF)
+option(WITH_TESTS "Build test projects" ON)
 option(USE_PREBUILD "Use pre build version of xmedia library" OFF)
 option(PREPARE_PREBUILD "Preapare pre build version of xmedia dependency library" OFF)
 option(WITH_CODE_COVERAGE "Set ON when do linux build on CI" OFF)
-option(DYNAMIC_RUNTIME "Set ON when want to use dynamic runtime" OFF)
-option(DYNAMIC_BUILD "Set ON when want to use dynamic build" OFF)
+option(DYNAMIC_RUNTIME "Set ON when want to use dynamic runtime" $ENV{DYNAMIC_RUNTIME})
+option(DYNAMIC_BUILD "Set ON when want to use dynamic build" $ENV{DYNAMIC_BUILD})
 
 if(WIN32 OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     if(DYNAMIC_RUNTIME)
@@ -43,8 +43,8 @@ if(WIN32)
     set(MSVC_TOOLSET_VERSION "143" CACHE STRING MSVC_TOOLSET_VERSION)
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
     set(CMAKE_SYSTEM_VERSION "10.0" CACHE STRING INTERNAL FORCE)
-    set(CMAKE_CXX_FLAGS "/GR /EHsc /DWIN32 /nologo /Zi /Gm- /GS /Gy- /Zc:wchar_t /Zc:inline /fp:precise /W3 /WX /Zc:forScope /utf-8 /D_CRT_RAND_S /Zc:__cplusplus /MP" CACHE STRING CMAKE_CXX_FLAGS)
-    set(CMAKE_C_FLAGS "/DWIN32 /GR /EHsc /nologo /Zi /Gm- /GS /Gy- /Zc:wchar_t /Zc:inline /fp:precise /W3 /WX /Zc:forScope /utf-8 /MP" CACHE STRING CMAKE_C_FLAGS)
+    set(CMAKE_CXX_FLAGS "/GR /EHsc /DWIN32 /nologo /Zi /Gm- /GS /Gy- /Zc:wchar_t /Zc:inline /fp:precise /W3 /WX /Zc:forScope /utf-8 /D_CRT_RAND_S /Zc:__cplusplus /MP /Zc:preprocessor" CACHE STRING CMAKE_CXX_FLAGS)
+    set(CMAKE_C_FLAGS "/DWIN32 /GR /EHsc /nologo /Zi /Gm- /GS /Gy- /Zc:wchar_t /Zc:inline /fp:precise /W3 /WX /Zc:forScope /utf-8 /MP /Zc:preprocessor" CACHE STRING CMAKE_C_FLAGS)
 
     set(CMAKE_CXX_FLAGS_DEBUG "/Zi /Ob0 /Od /RTC1" CACHE STRING CMAKE_CXX_FLAGS_DEBUG)
     set(CMAKE_C_FLAGS_DEBUG "/Zi /Ob0 /Od /RTC1" CACHE STRING CMAKE_C_FLAGS_DEBUG)
@@ -105,56 +105,24 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+set(DEPS_FILE "$<IF:$<CONFIG:Debug>,${CMAKE_BINARY_DIR}/Debug.deps,${CMAKE_BINARY_DIR}/RelWithDebInfo.deps>")
+
 if(WIN32)
-    add_custom_command(
-        OUTPUT
-        "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/avcodec-61.dll"
-        "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/avdevice-61.dll"
-        "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/avfilter-10.dll"
-        "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/avformat-61.dll"
-        "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/avutil-59.dll"
-        "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/swresample-5.dll"
-        "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/Processing.NDI.Lib.DirectShow.x64.dll"
-        "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/Processing.NDI.Lib.x64.dll"
-        #TODO change it to some universal file
-        COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/copy_deps.py" -i ${CMAKE_BINARY_DIR}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>.deps -o ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>
-        DEPENDS
-        copy_deps.py
-        ${CMAKE_BINARY_DIR}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>.deps
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-    )
-    add_custom_target(copy_deps
-        DEPENDS "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/avcodec-61.dll"
-    )
-elseif(APPLE)
-    add_custom_command(
-        OUTPUT
-        "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/libavcodec.dylib"
-        #TODO change it to some universal file
-        COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/copy_deps.py" -i ${CMAKE_BINARY_DIR}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>.deps -o ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-        DEPENDS
-        copy_deps.py
-        ${CMAKE_BINARY_DIR}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>.deps
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-    )
-    add_custom_target(copy_deps
-        DEPENDS "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/libavcodec.dylib"
-    )
+    set(DEPS_OUTPUT ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>)
 else()
-    add_custom_command(
-        OUTPUT
-        "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/libavcodec.so"
-        #TODO change it to some universal file
-        COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/copy_deps.py" -i ${CMAKE_BINARY_DIR}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>.deps -o ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-        DEPENDS
-        copy_deps.py
-        ${CMAKE_BINARY_DIR}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>.deps
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-    )
-    add_custom_target(copy_deps
-        DEPENDS "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/libavcodec.so"
-    )
+    set(DEPS_OUTPUT ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/)
 endif()
+
+add_custom_command(
+    OUTPUT ${DEPS_OUTPUT}/.copy_deps_done
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_LIST_DIR}/copy_deps.cmake ${DEPS_FILE} ${DEPS_OUTPUT}/
+    COMMENT "Copying libraries files from ${DEPS_FILE} to ${CMAKE_BINARY_DIR}"
+)
+
+add_custom_target(copy_deps ALL
+    DEPENDS ${DEPS_OUTPUT}/.copy_deps_done
+)
+
 if(PREPARE_PREBUILD)
     set(ENV{XSDK_PREBUILD_FOLDER} ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 endif()

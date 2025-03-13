@@ -5,24 +5,9 @@
 #include <string>
 
 namespace xsdk {
-// static constexpr std::string_view kXM_Class_AV = "av_module";
-//
-// static constexpr std::string_view kXModule_AVPassThrough = "av_pass_through";
-// static constexpr std::string_view kXModule_AVDemux       = "av_demux";
-// static constexpr std::string_view kXModule_AVDecoder     = "av_decoder";
-// static constexpr std::string_view kXModule_AVEncoder     = "av_encoder";
-// static constexpr std::string_view kXModule_AVMux         = "av_mux";
-// static constexpr std::string_view kXModule_AVSource      = "av_source";
-// static constexpr std::string_view kXModule_AVRenderer    = "av_renderer";
-// static constexpr std::string_view kXModule_AVProcessor   = "av_processor";
-//
-//// Compound modules
-// static constexpr std::string_view kXModule_AVMultiDecoder = "av_multi_decoder";
-// static constexpr std::string_view kXModule_AVMultiEncoder = "av_multi_encoder";
 
-static constexpr std::string_view kAvSourceUid = "av_source_uid";
-static constexpr std::string_view kAvMediaType =
-    "av_media_type"; // XObjectType::Audio/XObjectType::Video/kOTSubtitles/kOTAux
+static constexpr std::string_view kAvSourceUid      = "av_source_uid";
+static constexpr std::string_view kAvMediaType      = "av_media_type";
 static constexpr std::string_view kAvStreamUid      = "av_stream_uid";
 static constexpr std::string_view kAvVideoStreamIdx = "av_video_stream_idx";
 static constexpr std::string_view kAvAudioStreamIdx = "av_audio_stream_idx";
@@ -61,11 +46,24 @@ static constexpr std::string_view kAvProcessor_Background    = "avp_background";
 static constexpr std::string_view kAvAudioStreamsCount       = "av_audio_streams_count";
 static constexpr std::string_view kAvVideoStreamsCount       = "av_video_streams_count";
 static constexpr std::string_view kAvFilterGraphDesc         = "av_filter_graph_desc";
-static constexpr std::string_view kAvFilterGraph_VideoOut    = "video_out";
-static constexpr std::string_view kAvFilterGraph_AudioOut    = "audio_out";
+static constexpr std::string_view kAvFilterGraphDescIn       = "av_filter_graph_desc_in";
+static constexpr std::string_view kAvFilterGraphDescOut      = "av_filter_graph_desc_out";
+
+// 2Think: move to namespace
+static constexpr std::string_view kAvScalerName       = "av_scaler_name";
+static constexpr std::string_view kAvScalerDefault    = "scale";
+static constexpr std::string_view kAvScalerOptions    = "av_scaler_options";
+static constexpr std::string_view kAvFrameRateName    = "av_frame_rate_name";
+static constexpr std::string_view kAvFrameRateDefault = "fps";
+static constexpr std::string_view kAvFrameRateOptions = "av_frame_rate_options";
+
+static constexpr std::string_view kAvFilterGraph_VideoOut = "video_out";
+static constexpr std::string_view kAvFilterGraph_AudioOut = "audio_out";
 
 static constexpr std::string_view kAvMediaTypes     = "av_media_types";
 static constexpr std::string_view kAvPixelFormats   = "av_pixel_formats";
+static constexpr std::string_view kAvColorSpaces    = "av_color_spaces";
+static constexpr std::string_view kAvColorRanges    = "av_color_ranges";
 static constexpr std::string_view kAvSampleFormats  = "av_sample_formats";
 static constexpr std::string_view kAvFrameRates     = "av_frame_rates";
 static constexpr std::string_view kAvSampleRates    = "av_sample_rates";
@@ -142,6 +140,7 @@ static constexpr std::string_view kAvEOF           = "EOF";
 static constexpr std::string_view kAvEOS           = "EOS";
 
 // Format properties
+// TODO: move format_context namespace ?
 static constexpr std::string_view kAvFormatDesc = "format_desc";
 static constexpr std::string_view kAvCodecDesc  = "codec_desc";
 
@@ -162,5 +161,8 @@ static constexpr std::string_view kBitPerSample = "bits_per_sample";
 
 static constexpr std::string_view kDevices        = "devices";
 static constexpr std::string_view kSelectedDevice = "selected_device";
+
+// HW Accell
+static constexpr std::string_view kHwDevice = "hw_device";
 
 } // namespace xsdk

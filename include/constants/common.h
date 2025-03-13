@@ -13,6 +13,7 @@ static constexpr std::string_view kError         = "error";
 static constexpr std::string_view kErrorCode     = "error_code";
 static constexpr std::string_view kErrorName     = "error_name";
 static constexpr std::string_view kErrorCategory = "error_category";
+static constexpr std::string_view kEvent         = "event";
 static constexpr std::string_view kResult        = "result";
 static constexpr std::string_view kErrorSource   = "error_source";
 static constexpr std::string_view kSuccess       = "success";
@@ -62,16 +63,16 @@ static constexpr std::string_view kProtocol     = "protocol";
 static constexpr std::string_view kConnectType  = "connect_type";
 static constexpr std::string_view kLog          = "log";
 static constexpr std::string_view kAccess       = "access";
-static constexpr std::string_view kActive       = "active";
-static constexpr std::string_view kGateway      = "gateway";
-static constexpr std::string_view kUnavailable  = "unavailable";
-static constexpr std::string_view kPing         = "ping";
-static constexpr std::string_view kKeepAlive    = "keep_alive";
-static constexpr std::string_view kAddress      = "address";
-static constexpr std::string_view kPublicIP     = "public_ip";
-static constexpr std::string_view kUserData     = "user_data";
-static constexpr std::string_view kFlush        = "flush";
-static constexpr std::string_view kLinkUid      = "link_uid";
+// static constexpr std::string_view kActive       = "active";
+static constexpr std::string_view kGateway     = "gateway";
+static constexpr std::string_view kUnavailable = "unavailable";
+static constexpr std::string_view kPing        = "ping";
+static constexpr std::string_view kKeepAlive   = "keep_alive";
+static constexpr std::string_view kAddress     = "address";
+static constexpr std::string_view kPublicIP    = "public_ip";
+static constexpr std::string_view kUserData    = "user_data";
+static constexpr std::string_view kFlush       = "flush";
+static constexpr std::string_view kLinkUid     = "link_uid";
 
 static constexpr std::string_view kMedia = "media";
 
@@ -87,6 +88,9 @@ static constexpr std::string_view kReconnectMsec = "reconnect_msec";
 static constexpr std::string_view kState        = "state";
 static constexpr std::string_view kFromState    = "from_state";
 static constexpr std::string_view kStateChanges = "state_changes";
+
+static constexpr std::string_view kFrom = "from";
+static constexpr std::string_view kTo   = "to";
 
 static constexpr std::string_view kMediaState = "media_state";
 

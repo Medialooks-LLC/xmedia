@@ -59,6 +59,10 @@ namespace xrect {
 
 namespace xtime {
     /**
+     * @brief Converts a XSegment data structure into a string.
+     */
+    std::ostringstream ToString(const XSegment& _segment, std::ostringstream&& _out_ss = {});
+    /**
      * @brief Converts a XTime data structure into a string.
      * @param _time The XTime data structure to convert.
      * @return A string representation of the XTime data structure.
@@ -127,12 +131,12 @@ namespace xformat {
     std::string ToString(const XFormatA* _format);
     /**
      * @brief Converts an XFormatV object to a string.
-     * @param _format The XFormatV object to convert.
+     * @param _format_v_p The XFormatV object to convert.
      * @return A string representation of the XFormatV object.
      * @note The resulting string will look like this: "fmt_v:widthxheight@frame_rate ar:picture_ar pf:pixel_format
      * codec:codec_id"
      */
-    std::string ToString(const XFormatV* _format);
+    std::string ToString(const XFormatV* _format_v_p);
     /**
      * @brief Converts an XFormatS object to a string.
      * @param _format The XFormatS object to convert.
@@ -171,7 +175,7 @@ namespace xplane_a {
      * @param _plane_a The XPlaneA data structure to convert.
      * @return A string representation of the XPlaneA data structure.
      */
-    std::string ToString(const XPlaneA& _plane_a);
+    std::string ToString(const XPlaneA& _plane_a, const XFormatA* _format_p = nullptr);
 } // namespace xplane_a
 
 namespace xprogram {

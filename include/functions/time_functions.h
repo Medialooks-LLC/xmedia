@@ -28,9 +28,10 @@ std::optional<xbase::Time64> ToRT(int64_t _time, const std::optional<XRational>&
 /**
  * @brief Converts an XTime object to real-time representation.
  * @param _time_p Pointer to an XTime object.
+ * @param _pts_time Flag for return packet pts time (by default is dts)
  * @return The real-time representation or null opt if the input time object is null.
  */
-std::optional<xbase::Time64> ToRT(const XTime* _time_p);
+std::optional<xbase::Time64> ToRT(const XTime* _time_p, const bool _pts_time = false);
 /**
  * @brief Converts real-time representation to another one with using input time base.
  * @param _rtTime Real-time representation.
@@ -41,13 +42,12 @@ std::optional<xbase::Time64> ToRT(const XTime* _time_p);
 int64_t FromRT(xbase::Time64                   _rtTime,
                const std::optional<XRational>& _time_base,
                int64_t                         _llReplaceNoVal = time64::kNoVal);
+
 /**
- * @brief Helper function to retrieve the start time as real-time representation from an XTime object.
- * @param _time_p Pointer to an XTime object.
- * @return The segment start time in real-time representation or null opt if the input time
- * object is null or its segment_start is not set.
+ * @brief Check is playing segment start changed.
  */
-std::optional<xbase::Time64> SegmentStartRT(const XTime* _time_p);
+bool IsNewSegment(const XTime* _time_p, const XTime& _recent_time);
+
 /**
  * @brief Helper function to extract Packet extra data from an XTime object.
  * @param _time_p Pointer to an XTime object.
@@ -62,5 +62,17 @@ XTime::Packet PacketExtra(const XTime* _time_p);
  * not set.
  */
 XTime::Frame FrameExtra(const XTime* _time_p);
+
+/**
+ * @brief Function for calculate next frame time from given one.
+ * @return The next frame time if possible to calulate it's
+ */
+std::optional<XTime> NextFrameTime(const XTime* _time_p, const std::optional<XRational>& _frame_rate = {});
+
+/**
+ * @brief Function for store XSegment into INode
+ * @return The node with XSegment 'in', 'out'
+ */
+INode::SPtr ToNode(const XSegment& _segment, const INode::SPtr& _dest_node = nullptr);
 
 } // namespace xsdk::xtime

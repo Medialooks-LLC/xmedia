@@ -25,19 +25,30 @@ public:
 
     virtual ~IActiveItem() = default;
 
+    // Return:
+    // 'true'  - media consumed
+    // 'false' - media not consumed (if possible, repeat later)
+    // std::nullopt - remove callback
+    using OnMediaPF = std::function<std::optional<std::error_code>(const IMediaObject::SPtrC& _obj)>;
+
     /**
-     * @brief Set link for push mode
+     * @brief Set callback for push mode
      * @return true if compoent do support push mode - MediaGet() should return XError::PushModeUsed in this case
      * false if compont output data via MediaGet() only
      */
-    virtual bool SetLinkForPush(const ILink::SPtr& _link) = 0;
+    virtual bool SetPushCallback(OnMediaPF&& _on_media_pf) = 0;
 
     /**
-     * @brief Update state of media cpmponent from active container
-     * @return previous state or error if state changes prohibited (e.g. handler in wrong state, like Closed or Error)
+     * @brief Update state of media component from active wrapper/container
+     * @return previous state or error if state changes prohibited (e.g. handler in not Ready)
      */
-    virtual xbase::XResult<IMediaHandler::State> ActiveStateSet(const IMediaHandler::State _state,
-                                                                const std::string_view     _details) = 0;
+    virtual xbase::XResult<IMediaHandler::State> OnActiveStart(const std::string_view _details) = 0;
+
+    /**
+     * @brief Update state of media component from active wrapper/container
+     * @return previous state or error if state changes prohibited (e.g. handler is not running)
+     */
+    virtual xbase::XResult<IMediaHandler::State> OnActiveStop(const std::string_view _details) = 0;
 };
 
 // todo: public IMediaBase
@@ -47,8 +58,9 @@ public:
 
     virtual ~IActiveOutput() = default;
 
-    static constexpr int32_t kGetMediaRepeatMsec = 10;
-    static constexpr int32_t kPutMediaRepeatMsec = 10;
+    static constexpr int32_t kGetMediaRepeatMsec      = 10;
+    static constexpr int32_t kGetMediaErrorRepeatMsec = 100;
+    static constexpr int32_t kPutMediaRepeatMsec      = 10;
 
     /**
      * @brief Function signature for auto link creation.
@@ -134,10 +146,13 @@ class IActiveContainer: public IActiveHandler, public IContainerScheme {
 public:
     USING_PTRS(IActiveContainer)
 
-    virtual std::error_code          ActiveConfigSet(const IContainerScheme::SPtrC& _container_scheme) = 0;
-    virtual std::vector<std::string> ActiveHandlers() const                                            = 0;
-    virtual IActiveHandler::SPtrC    ActiveGetByPath(XPath&& _path) const                              = 0;
-    virtual IActiveHandler::SPtr     ActiveGetByPath(XPath&& _path)                                    = 0;
+    // TODO: Rename to ActiveSchemeLoad(...) ?
+    virtual std::error_code ActiveSchemeSet(const IContainerScheme::SPtrC& _container_scheme) = 0;
+
+    //
+    virtual std::vector<std::string> ActiveHandlers() const               = 0;
+    virtual IActiveHandler::SPtrC    ActiveGetByPath(XPath&& _path) const = 0;
+    virtual IActiveHandler::SPtr     ActiveGetByPath(XPath&& _path)       = 0;
 
     // virtual std::vector<IActiveHandler::SPtr> ActiveReinit(const std::string_view _name) = 0;
 };

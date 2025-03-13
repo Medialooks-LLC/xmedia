@@ -34,8 +34,17 @@ namespace links_scheme {
 } // namespace links_scheme
 
 namespace media_handler {
-    static const std::string kInit  = "init";
-    static const std::string kClose = "close";
+    static const std::string kInit     = "init";
+    static const std::string kClose    = "close";
+    static const std::string kMediaGet = "media_get";
+
+    static const std::string kPeekMedia   = "peek_media";
+    static const std::string kTimeoutMsec = "timeout_msec";
+    static const std::string kStreamUid   = "stream_uid";
+    static const std::string kHints       = "hints";
+    static const std::string kStreamName  = "stream_name";
+    static const std::string kSegment     = "segment";
+    static const std::string kTime        = "time";
 } // namespace media_handler
 
 namespace active_output {

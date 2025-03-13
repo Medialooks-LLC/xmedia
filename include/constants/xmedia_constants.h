@@ -20,6 +20,7 @@ namespace xmedia::handlers {
     static const std::string kAvDecoder       = "av_decoder";
     static const std::string kAvEncoder       = "av_encoder";
     static const std::string kAvProcessor     = "av_processor";
+    static const std::string kAvConverter     = "av_converter";
     // specicial handlers
     static const std::string kNdiSource    = "ndi_source";
     static const std::string kNdiRenderer  = "ndi_renderer";
@@ -35,6 +36,9 @@ namespace xmedia::handlers {
 namespace xmedia::wrappers {
     static const std::string kActiveHandler = "active_handler";
     static const std::string kMultistream   = "multistream"; // 2Think
+    static const std::string kAvConverter   = "av_converter";
+    static const std::string kRateControl   = "rate_control";
+    static const std::string kRecreation    = "recreation";
 } // namespace xmedia::wrappers
 
 namespace xmedia::links {
@@ -70,6 +74,8 @@ namespace xmedia::links {
 namespace statistics {
     static constexpr std::string_view kInputLinks  = "input_links";
     static constexpr std::string_view kOutputLinks = "output_links";
+    static constexpr std::string_view kEvents      = "events";
+
 } // namespace statistics
 
 namespace xmedia::config {
@@ -85,8 +91,25 @@ namespace xmedia::config {
     static const std::string kWrapperType    = "wrapper_type";
     static const std::string kLinks          = "links";
     static const std::string kLinkSource     = "link_source"; // "source_name" ?
+    static const std::string kSinkLinks      = "sink_links";  // "source_name" ?
     static const std::string kLinkDetails    = "link_details";
     static const std::string kContainerItems = "container_items";
 } // namespace xmedia::config
+
+namespace xmedia::conversion {
+    static const std::string kNoFormatChanges         = "no_format_changes";
+    static const std::string kDiscardForFormatChanges = "discard_for_format_changes";
+    static const std::string kBypassOtherTypes        = "bypass_other_types";
+    static const std::string kAudioSamplesPerFrame    = "audio_samples_per_frame"; // Better name ?
+
+    static const std::string kAudioFormat = "audio_format";
+    static const std::string kVideoFormat = "video_format";
+} // namespace xmedia::conversion
+
+namespace xmedia::recreation {
+    static const std::string kInternalMinSec = "interval_min_sec";
+    static const std::string kInternalMaxSec = "interval_max_sec";
+    static const std::string kInternalsSteps = "intervals_steps";
+} // namespace xmedia::recreation
 
 } // namespace xsdk

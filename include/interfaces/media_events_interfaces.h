@@ -12,7 +12,15 @@
 namespace xsdk {
 
 // Expect to be exteneded to other events types
-XENUM_CLASS(MediaEvent, kStateChanged = 1, kEOFReached)
+XENUM_CLASS(MediaEvent,
+            kStateChanged = 1,
+            kEOFReached,
+            kMediaGetError,
+            kConnectionBroken,
+            kRecreationStart,
+            kRecreationFailed,
+            kRecreationSucceeded,
+            kMediaPropsChanged)
 
 class IMediaNotification {
 public:
@@ -27,11 +35,12 @@ public:
 };
 
 namespace xevents {
-    // If return true, forward event to next handler interface
+    // If return false, forward event to next handler interface
     using OnEventPF = std::function<
         bool(const IMediaHandler::SPtrC& event_source, const MediaEvent event_type, const INode::SPtrC& event_details)>;
 
-    IMediaNotification::SPtr CreateHandler(OnEventPF&& _on_event, const IMediaNotification::SPtr& _next_interface = {});
+    IMediaNotification::SPtr CreateEventsHandler(OnEventPF&&                     _on_event,
+                                                 const IMediaNotification::SPtr& _next_interface = {});
 } // namespace xevents
 
 } // namespace xsdk

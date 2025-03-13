@@ -121,7 +121,7 @@ private:
         AddSaveLoadCommands_(command_executor_.get());
 
         if (_on_media_event) {
-            auto events_hander = xevents::CreateHandler(std::move(_on_media_event));
+            auto events_hander = xevents::CreateEventsHandler(std::move(_on_media_event));
             outer_interfaces_  = xdata::CreateInterfacesCollection(std::move(events_hander));
         }
         else {
@@ -393,6 +393,18 @@ void ControlMessagesLoop(ContainerServer*      _server_p,
 
 int main(int argc, char** argv)
 {
+
+    auto cmd_line = command_line::ParseCommandLine(argc, argv);
+    assert(cmd_line);
+    auto need_help = cmd_line->At("help").Bool(false);
+    if (need_help) {
+        PrintHelp(argv[0]);
+    }
+    auto factory_config_path = cmd_line->At("factory_config").String();
+    auto load_scheme_path    = cmd_line->At("load_scheme").String("xm_server.scheme.json");
+    auto save_scheme_path    = cmd_line->At("save_scheme").String("xm_server.scheme.json");
+    xmedia::LogLevelSet(xmedia::LogLevel(cmd_line->At("log_level").Int32()));
+
     auto container_server_xr = ContainerServer::Create(
         [](const IMediaHandler::SPtrC& event_source, const MediaEvent event_type, const INode::SPtrC& event_details) {
             // Events hanlder example
@@ -404,13 +416,6 @@ int main(int argc, char** argv)
         });
 
     assert(container_server_xr.Result());
-
-    auto cmd_line = command_line::ParseCommandLine(argc, argv);
-    assert(cmd_line);
-    auto factory_config_path = cmd_line->At("factory_config").String();
-    auto load_scheme_path    = cmd_line->At("load_scheme").String("xm_server.scheme.json");
-    auto save_scheme_path    = cmd_line->At("save_scheme").String("xm_server.scheme.json");
-    xmedia::LogLevelSet(xmedia::LogLevel(cmd_line->At("log_level").Int32()));
 
     INode::SPtr factory_config = helpers::JsonFromFile(factory_config_path);
     if (factory_config && !factory_config->Empty()) {

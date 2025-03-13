@@ -4,6 +4,7 @@
 #include "functions/container_functions.h"
 #include "functions/factory_functions.h"
 #include "functions/format_functions.h"
+#include "functions/frame_functions.h"
 #include "functions/links_functions.h"
 #include "functions/scheme_functions.h"
 #include "functions/time_functions.h"
@@ -135,27 +136,30 @@ namespace xmedia {
     template <typename TInterface>
     xbase::XResult<std::vector<std::shared_ptr<const TInterface>>> MediaGetVec(
         IMediaHandler*               _handler_p,
-        const std::optional<size_t>& _output_idx = std::nullopt,
-        const INode::SPtrC&          _hints      = nullptr,
-        size_t                       _max_size   = 128)
+        const std::optional<size_t>& _output_idx  = std::nullopt,
+        const INode::SPtrC&          _first_hints = nullptr,
+        size_t                       _max_size    = 128)
     {
         if (!_handler_p)
             return XError::NullPointer;
 
-        std::vector<std::shared_ptr<const TInterface>> media_vec;
-        while (true) {
-            auto res = _handler_p->MediaGet(_output_idx, _hints);
-            if (res.HasError() && media_vec.empty())
-                return res.Error();
+        auto first_hints = _first_hints;
 
-            auto interface_sp = xobject::PtrQuery<const TInterface>(res.Result().get());
-            if (interface_sp) {
+        std::vector<std::shared_ptr<const TInterface>> media_vec;
+        while (media_vec.size() < _max_size) {
+            auto get_xr = _handler_p->MediaGet(_output_idx, first_hints);
+            if (get_xr.Result()) {
+                auto interface_sp = xobject::PtrQuery<const TInterface>(get_xr.GetPtr());
+                if (!interface_sp)
+                    return XError::InvalidCast;
+
                 media_vec.push_back(std::move(interface_sp));
+                first_hints.reset();
                 continue;
             }
 
-            if (res.Result())
-                return XError::InvalidCast;
+            if (media_vec.empty())
+                return get_xr.Error();
 
             break;
         }
@@ -227,6 +231,24 @@ namespace xmedia {
         const std::string_view                    _prefix    = {},
         std::vector<IMediaHandler::StreamProps>&& _append_to = {});
 
+    /**
+     * @brief Return codec props from media props or media packet object
+     */
+    const XCodec* CodecProps(const IMediaObject* _obj);
+
+    /**
+     * @brief Start output from handler to callback
+     */
+    std::error_code OutputStart(IMediaHandler* const _handler_p, ILink::OnDataPF&& _on_data_pf);
+
+    /**
+     * @brief Start output from handler for audio, video, sub(and aux) callback
+     */
+    std::error_code OutputStartAV(IMediaHandler* const _handler_p,
+                                  ILink::OnDataPF&&    _on_video_pf,
+                                  ILink::OnDataPF&&    _on_audio_pf = {},
+                                  ILink::OnDataPF&&    _on_other_pf = {});
+
 } // namespace xmedia
 
 /**
@@ -241,7 +263,7 @@ namespace xrational {
      * @return true if the given optional rational number has a value, and its denominator is not zero
      *            or zero_is_valid is true. Otherwise, false is returned.
      */
-    bool IsValid(const std::optional<XRational>& _rat, bool _zero_is_valid = true);
+    bool IsValid(const std::optional<XRational>& _rat, bool _zero_is_valid);
     /**
      * @brief Converts an rational number to a double value.
      * @param _rat The rational number to convert.
@@ -266,20 +288,6 @@ namespace xrational {
                     double                          _precision = 0.001);
     // double  Value(const std::optional<XRational>& _val, double _default_val = 0.0);
 } // namespace xrational
-
-/**
- * @brief The xcodec namespace provides the functionalities for working with XCodec objects.
- */
-namespace xcodec {
-    /**
-     * @brief Compare two codecs by their properties.
-     * @param _left_p The first codec.
-     * @param _right_p The second codec.
-     *
-     * @return 0 if codecs are equal.
-     */
-    int32_t Compare(const XCodec& _left, const XCodec& _right);
-} // namespace xcodec
 
 namespace xoptions {
 
