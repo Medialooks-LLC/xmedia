@@ -1,0 +1,8 @@
+{
+    "container_items": [{
+        "open_url": "ndi://Test Pattern",
+        "subtype": "ndi_source"
+        "name": "my_ndi"
+    }],
+    "subtype": "serial_container"
+}

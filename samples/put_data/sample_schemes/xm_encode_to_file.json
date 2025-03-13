@@ -1,0 +1,22 @@
+{
+    "container_items": [{
+            "init_props": {
+                "audio": {
+                    "av_codec_name": "aac",
+                    "b": "128K"
+                },
+                "video": {
+                    "av_codec_name": "mpeg4",
+                    "b": "10M"
+                }
+            },
+            "subtype": "av_encoder",
+            "wrappers": [{
+                    "wrapper_type": "multistream"
+                }]
+        }, {
+            "open_url": "xmedia_gen_sample.mp4",
+            "subtype": "av_multiplexer"
+        }],
+    "subtype": "serial_container"
+}

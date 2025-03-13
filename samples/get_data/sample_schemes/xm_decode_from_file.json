@@ -1,0 +1,44 @@
+{
+  "container_items": [
+    {
+      "open_url": "xmedia_gen_sample.mp4",
+      "name": "my_demux_name",
+      "subtype": "av_demultiplexer"
+    },
+    {
+      "type": "kDecoder",
+      "name": "my_decoder",
+      "wrappers": [ { "wrapper_type": "multistream" } ],
+      "links": [ { "link_source": "my_demux_name" } ]
+    },
+    {
+      "init_props": {
+        "audio": {
+          "audio_format": {
+            "channels": 2,
+            "sample_rate": 32000,
+            "type": "Audio"
+          }
+        },
+        "video": {
+          "video_format": {
+            "field_order": "Progressive",
+            "frame_rate": 50,
+            "height": 720,
+            "pixel_format": "yuv420p",
+            "type": "Video",
+            "width": 1280
+          }
+        }
+      },
+      "subtype": "av_converter",
+      "name":  "my_converter",
+      "wrappers": [
+        {
+          "wrapper_type": "multistream"
+        }
+      ]
+    }
+  ],
+  "subtype": "serial_container"
+}

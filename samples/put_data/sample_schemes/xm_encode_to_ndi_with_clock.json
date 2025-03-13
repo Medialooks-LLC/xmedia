@@ -1,0 +1,12 @@
+{
+    "container_items": [{
+            "init_props": {
+                "ndi_send_async": false,
+                "ndi_clock_video": true,
+                "ndi_clock_audio": false
+            },
+            "open_url": "ndi://Test_Signal",
+            "subtype": "ndi_renderer"
+        }],
+    "subtype": "serial_container"
+}
