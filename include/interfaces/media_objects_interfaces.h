@@ -169,10 +169,11 @@ public:
      * @param _update_programs_p An optional list of programs to update in the cloned object.
      * @return A shared pointer to the cloned packet.
      */
-    virtual IMediaPacket::SPtr Clone(const IMediaObject::Uids&    _update_uids       = {},
-                                     const XTime*                 _update_time_p     = nullptr,
-                                     const XStreamInfo*           _update_stream_p   = nullptr,
-                                     const std::vector<XProgram>* _update_programs_p = nullptr) const = 0;
+    virtual IMediaPacket::SPtr Clone(const IMediaObject::Uids&     _update_uids        = {},
+                                     const XTime*                  _update_time_p      = nullptr,
+                                     const XStreamInfo*            _update_stream_p    = nullptr,
+                                     const std::vector<XProgram>*  _update_programs_p  = nullptr,
+                                     const std::vector<XSideData>* _update_side_data_p = nullptr) const = 0;
 };
 
 /**
@@ -224,10 +225,11 @@ public:
      * @param _update_programs_p An optional list of programs to update in the cloned object.
      * @return A shared pointer to the cloned frame.
      */
-    virtual IMediaFrame::SPtr Clone(const IMediaObject::Uids&    _update_uids       = {},
-                                    const XTime*                 _update_time_p     = nullptr,
-                                    const XStreamInfo*           _update_stream_p   = nullptr,
-                                    const std::vector<XProgram>* _update_programs_p = nullptr) const = 0;
+    virtual IMediaFrame::SPtr Clone(const IMediaObject::Uids&          _update_uids        = {},
+                                    const XTime*                       _update_time_p      = nullptr,
+                                    const XStreamInfo*                 _update_stream_p    = nullptr,
+                                    const std::vector<XProgram>*       _update_programs_p  = nullptr,
+                                    const std::vector<XFrameSideData>* _update_side_data_p = nullptr) const = 0;
 };
 
 } // namespace xsdk

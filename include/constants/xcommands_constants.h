@@ -47,6 +47,30 @@ namespace media_handler {
     static const std::string kTime        = "time";
 } // namespace media_handler
 
+namespace playlist {
+    static const std::string kPlaylist      = "playlist";
+    static const std::string kPlaylistProps = "playlist_props";
+    static const std::string kPlaylistItems = "playlist_items";
+
+    static const std::string kUid      = "uid";
+    static const std::string kSplitUid = "split_uid";
+
+    static const std::string kMedia     = "media";
+    static const std::string kOpenUrl   = "open_url";
+    static const std::string kOpenHints = "open_hints";
+
+    static const std::string kItemProps = "item_props";
+
+    static const std::string kStartSec = "start_sec";
+    static const std::string kPin      = "pin";
+    static const std::string kBreak    = "break";
+    static const std::string kSync     = "sync";
+
+    static const std::string kInSec       = "in_sec";
+    static const std::string kOutSec      = "out_sec";
+    static const std::string kDurationSec = "duration_sec";
+} // namespace playlist
+
 namespace active_output {
     static const std::string kOutputStart    = "output_start";
     static const std::string kOutputStop     = "output_stop";

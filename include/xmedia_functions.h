@@ -6,6 +6,7 @@
 #include "functions/format_functions.h"
 #include "functions/frame_functions.h"
 #include "functions/links_functions.h"
+#include "functions/playlist_functions.h"
 #include "functions/scheme_functions.h"
 #include "functions/time_functions.h"
 #include "functions/tostring_functions.h"

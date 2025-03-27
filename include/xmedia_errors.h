@@ -45,6 +45,7 @@ XENUM_CLASS(XError,
             AlreadyStarted,
             Expired,
             DuplicatedName,
+            DuplicatedUid,
             AlreadyExists,
             StreamNotInitialized,
             MediaNotSuitable,
@@ -88,7 +89,13 @@ XENUM_CLASS(XError,
             Timeout,
             NotReady,
             RecreationInProgress,
-            Corrupted)
+            Corrupted,
+            NotSupported,
+            WrongTarget,
+            PositionRequired,
+            PositionTaken,
+            InvalidItemFlags,
+            OpenUrlMissed)
 
 /**
  * @brief Creates an std::error_code object from an XError

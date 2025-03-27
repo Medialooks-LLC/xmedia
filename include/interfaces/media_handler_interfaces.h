@@ -27,7 +27,9 @@ XENUM_CLASS(HandlerType,
             kMultiplexer,
             kOutputDevice,
             kProcessor,
-            kContainer)
+            kContainer,
+            kComplexSource,
+            kComplexDest)
 
 /**
  * @brief Interface for media handlers.

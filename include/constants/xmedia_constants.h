@@ -26,11 +26,14 @@ namespace xmedia::handlers {
     static const std::string kNdiRenderer  = "ndi_renderer";
     static const std::string kVsdkSource   = "vsdk_source";
     static const std::string kVsdkRenderer = "vsdk_renderer";
-
+    // Containers
     static const std::string kFreeContainer     = "free_container";
     static const std::string kSerialContainer   = "serial_container";
     static const std::string kParallelContainer = "parallel_container";
     static const std::string kSelectorContainer = "selector_container";
+    // Complex handlers
+    static const std::string kMediaPlayer   = "media_player";
+    static const std::string kMediaPlaylist = "media_playlist";
 } // namespace xmedia::handlers
 
 namespace xmedia::wrappers {

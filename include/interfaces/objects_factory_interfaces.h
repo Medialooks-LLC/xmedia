@@ -119,7 +119,7 @@ public:
      * @param _time Time for the frame
      * @param _audio_planes Vector of audio planes for the frame, can be empty
      * @param _video_planes Vector of video planes for the frame, can be empty
-     * @param _holder Holder for the audio/video planes data, sould be provided if audio/video planes present
+     * @param _holder Holder for the audio/video planes data, should be provided if audio/video planes present
      * @param _side_data Vector of side data for the frame, can be empty
      * @param _subtitle Subtitle for the frame, can be empty
      * @param _private_metadata Private metadata for the frame
@@ -140,7 +140,7 @@ public:
      * @param _base_props Base properties for the frame
      * @param _time Time for the frame
      * @param _planes_or_subtitle Vector of audio or video planes or subtitle structure
-     * @param _holder Holder for the audio/video planes data, sould be provided if audio/video planes present
+     * @param _holder Holder for the audio/video planes data, should be provided if audio/video planes present
      * @param _side_data Vector of side data for the frame, can be empty
      * @param _private_metadata Private metadata for the frame
      * @return Returns an XResult with a shared pointer to the newly created media frame object if successful,
