@@ -79,7 +79,7 @@ XENUM_CLASS(XError,
             NotContainer,
             NoEventsHanders,
             EndOfFile,
-            EndOfStream,
+            StreamFinished,
             NotSupportChanges,
             UnwrapFailed,
             NoInputStreams,
@@ -95,7 +95,10 @@ XENUM_CLASS(XError,
             PositionRequired,
             PositionTaken,
             InvalidItemFlags,
-            OpenUrlMissed)
+            DurationOrOutRequired,
+            OpenUrlMissed,
+            Busy,
+            Canceled)
 
 /**
  * @brief Creates an std::error_code object from an XError

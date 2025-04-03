@@ -175,24 +175,67 @@ namespace xmedia {
      */
     std::string_view StateName(const IMediaHandler::State _state);
     /**
-     * @brief Return the index of a stream associated with a media object.
+     * @brief Get the stream information of the media object.
      * @param _object_p The media object to check.
      * @return The index of the stream if it exists.
      */
-    std::optional<uint32_t> StreamIdx(const IMediaObject* _object_p);
-    /**
-     * @brief Return the name of a stream associated with a media object.
-     * @param _object_p The media object to check.
-     * @return The name of the stream if it exists.
-     */
-    std::string StreamName(const IMediaObject* _object_p);
+    const XStreamInfo* StreamInfo(const IMediaObject* _object_p);
     /**
      * @brief Check if the end of a stream has been reached for a given packet or frame.
      * @param _packet_or_frame Pointer to the packet or frame.
      * @return true if this packet or frame is the end of the stream. If the media object is neither a packet nor a
      * frame, std::nullopt is returned.
      */
-    std::optional<bool> IsEndOfStream(const IMediaObject* _packet_or_frame);
+    const XFormat* Format(const IMediaObject* _packet_or_frame);
+    /**
+     * @brief Return the index of a stream associated with a media object.
+     * @param _object_p The media object to check.
+     * @return The index of the stream if it exists.
+     */
+    std::optional<uint32_t> StreamIdx(const IMediaObject* _object_p);
+    /**
+     * @brief Return the name of a stream associated with a media object or generate a new unique stream name
+     * @param _object_p The media object to check.
+     * @return The name of the stream if it exists.
+     */
+    std::pair<std::string, bool> StreamName(const IMediaObject* _object_p, const bool _use_generated_name);
+    /**
+     * @brief Generate a new unique stream name.
+     * @param _object_p The media object.
+     * @return The name of the stream if it exists.
+     */
+    std::string StreamNameGen(const IMediaObject* _object_p);
+    /**
+     * @brief Check if the end of a stream has been reached for a given packet or frame.
+     * @param _packet_or_frame Pointer to the packet or frame.
+     * @return true if this packet or frame is the end of the stream. If the media object is neither a packet nor a
+     * frame, std::nullopt is returned.
+     */
+    bool IsEndOfStream(const IMediaObject* _packet_or_frame, const bool _value_for_null);
+
+    /**
+     * @brief Creating a new media object from a given packet or frame with the end-of-stream flag added.
+     * @param _packet_or_frame Pointer to the packet or frame.
+     * @return true if this packet or frame is the end of the stream. If the media object is neither a packet nor a
+     * frame, std::nullopt is returned.
+     */
+    IMediaUnit::SPtrC MakeEndOfStream(const IMediaObject* _packet_or_frame);
+
+    /**
+     * @brief Creating a new media object from a given packet or frame with the end-of-stream flag added.
+     * @param _packet_or_frame Pointer to the packet or frame.
+     * @return true if this packet or frame is the end of the stream. If the media object is neither a packet nor a
+     * frame, std::nullopt is returned.
+     */
+    template <typename TInterface>
+    std::shared_ptr<const TInterface> MakeEndOfStreamT(const IMediaObject* _packet_or_frame)
+    {
+        auto eos_media = MakeEndOfStream(_packet_or_frame);
+        if (!eos_media)
+            return nullptr;
+
+        return xobject::PtrQuery<TInterface>(eos_media.get());
+    }
 
     /**
      * @brief Compare two media formats of media objects by their properties.
@@ -201,36 +244,22 @@ namespace xmedia {
      *
      * @return 0 if media formats are equal.
      */
-    int32_t CompareFormats(const IMediaProps* _left_p, const IMediaProps* _right_p);
+    int32_t CompareFormats(const IMediaUnit* _left_p, const IMediaUnit* _right_p);
     /**
      * @brief Return the program UID of a media object.
      * @param _media_p The media object.
      * @param _prog_index Index of the program within the media object.
      * @return The program UID if possible else std::nullopt.
      */
-    std::optional<uint64_t> ProgramUid(const IMediaProps* _media_p, size_t _prog_index = 0);
+    std::optional<uint64_t> ProgramUid(const IMediaUnit* _media_p, size_t _prog_index = 0);
 
     /**
-     * @brief Return the vector of IMediaProps::SPtrC from IMediaHandler::StreamProps vector.
-     * @param _streams_props IMediaHandler::StreamProps vector.
-     * @param _append_to optional IMediaHandler::StreamProps vector for append taken props
-     * @return The vector of IMediaProps::SPtrC.
+     * @brief Return the vector of IMediaUnit::SPtrC from IMediaUnit::SPtrC vector.
+     * @param _streams_props IMediaUnit::SPtrC vector.
+     * @param _append_to optional IMediaUnit::SPtrC vector for append taken props
+     * @return The vector of IMediaUnit::SPtrC.
      */
-    MediaPropsVec MediaPropsVecMake(const std::vector<IMediaHandler::StreamProps>& _streams_props,
-                                    MediaPropsVec&&                                _append_to = {});
-
-    /**
-     * @brief Return the vector of IMediaHandler::StreamProps from IMediaProps::SPtrC vector, name generated
-     * as _prefix + xmedia::StreamName(props)
-     * @param _media_props IMediaProps::SPtrC vector.
-     * @param _prefix optional string for add as prefix for stream name.
-     * @param _append_to optional IMediaHandler::StreamProps vector for append taken props
-     * @return The vector of IMediaHandler::StreamProps.
-     */
-    std::vector<IMediaHandler::StreamProps> StreamPropsVecMake(
-        const MediaPropsVec&                      _media_props,
-        const std::string_view                    _prefix    = {},
-        std::vector<IMediaHandler::StreamProps>&& _append_to = {});
+    MediaUnitsVec MediaUnitsVecMake(const MediaUnitsVec& _streams_props, MediaUnitsVec&& _append_to = {});
 
     /**
      * @brief Return codec props from media props or media packet object

@@ -80,7 +80,7 @@ xbase::XResult<std::shared_ptr<TInterface>> HandlerCreateByName(
  */
 template <typename TInterface>
 xbase::XResult<std::shared_ptr<TInterface>> HandlerCreateAndInit(const IContainerScheme::ItemDesc& _item_desc,
-                                                                 MediaPropsVec&& _input_streams_props = {},
+                                                                 MediaUnitsVec&& _input_streams_props = {},
                                                                  IData::SPtrC&&  _outer_interfaces    = {},
                                                                  INode::SPtr&&   _handler_stat        = {})
 {
@@ -107,7 +107,7 @@ xbase::XResult<std::shared_ptr<TInterface>> HandlerCreateAndInit(const IContaine
 
 template <typename TInterface>
 xbase::XResult<std::shared_ptr<TInterface>> HandlerCreateByProps(const IContainerScheme::ItemDesc& _item_desc,
-                                                                 MediaPropsVec&& _input_streams_props = {},
+                                                                 MediaUnitsVec&& _input_streams_props = {},
                                                                  IData::SPtrC&&  _outer_interfaces    = {},
                                                                  INode::SPtr&&   _handler_stat        = {})
 {
@@ -149,7 +149,7 @@ xbase::XResult<std::shared_ptr<TInterface>> HandlerCreateAndInit(
     const std::variant<HandlerType, std::string, IContainerScheme::SPtrC>& _type_name_or_scheme,
     IMediaHandler::InitParamsVariant&&                                     _init_url_or_func,
     const INode::SPtrC&                                                    _init_props          = {},
-    MediaPropsVec&&                                                        _input_streams_props = {},
+    MediaUnitsVec&&                                                        _input_streams_props = {},
     const INode::SPtrC&                                                    _wrapping_props      = nullptr,
     IData::SPtrC&&                                                         _outer_interfaces    = {},
     INode::SPtr&&                                                          _handler_stat        = {})
@@ -160,5 +160,11 @@ xbase::XResult<std::shared_ptr<TInterface>> HandlerCreateAndInit(
         std::move(_outer_interfaces),
         std::move(_handler_stat));
 }
+
+xbase::XResult<IMediaHandler::SPtr> HandlerCreateFromScheme(const INode::SPtr& _scheme_desc_node,
+                                                            IData::SPtrC&&     _outer_interfaces = {});
+
+xbase::XResult<IMediaHandler::SPtr> HandlerCreateFromJson(const std::string_view _json_sceme_or_desc,
+                                                          IData::SPtrC&&         _outer_interfaces = {});
 
 } // namespace xsdk::xmedia

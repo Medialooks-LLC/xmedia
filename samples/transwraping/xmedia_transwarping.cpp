@@ -43,7 +43,7 @@ int transwrap_file(std::string_view _input_file,
         exit(1);
     }
 
-    std::map<uint64_t, IMediaProps::SPtrC> packets_have;
+    std::map<uint64_t, IMediaUnit::SPtrC> packets_have;
 
     bool   skip_before_kf = true;
     size_t a_frames       = 0;
@@ -61,7 +61,7 @@ int transwrap_file(std::string_view _input_file,
         auto stm_idx          = packet->StreamInfo()->stream_idx.value();
         packets_have[stm_idx] = packet;
         if (muxer->HandlerState() <= IMediaHandler::State::Closed && packets_have.size() >= 5) {
-            MediaPropsVec init_streams;
+            MediaUnitsVec init_streams;
             for (const auto& [uid, packet] : packets_have)
                 init_streams.push_back(packet);
 

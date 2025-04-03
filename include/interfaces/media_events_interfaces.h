@@ -20,7 +20,7 @@ XENUM_CLASS(MediaEvent,
             kRecreationStart,
             kRecreationFailed,
             kRecreationSucceeded,
-            kMediaPropsChanged)
+            kMediaUnitChanged)
 
 class IMediaNotification {
 public:

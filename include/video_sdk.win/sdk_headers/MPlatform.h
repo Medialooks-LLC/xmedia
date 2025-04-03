@@ -11877,7 +11877,7 @@ public:
         /* [in] */ IUnknown * _pReceiverOrSender,
         /* [in] */ BOOL _bNoEOS) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE GetMediaProps(
+    virtual HRESULT STDMETHODCALLTYPE GetMediaUnit(
         /* [out] */ M_VID_PROPS * _pVidProps,
         /* [out] */ M_AUD_PROPS * _pAudProps) = 0;
 
@@ -11922,8 +11922,8 @@ typedef struct IMObject_IVtbl {
      /* [in] */ IUnknown *_pReceiverOrSender,
      /* [in] */ BOOL      _bNoEOS);
 
-    DECLSPEC_XFGVIRT(IMObject_I, GetMediaProps)
-    HRESULT(STDMETHODCALLTYPE *GetMediaProps)
+    DECLSPEC_XFGVIRT(IMObject_I, GetMediaUnit)
+    HRESULT(STDMETHODCALLTYPE *GetMediaUnit)
     (IMObject_I              *This,
      /* [out] */ M_VID_PROPS *_pVidProps,
      /* [out] */ M_AUD_PROPS *_pAudProps);
@@ -11961,8 +11961,8 @@ interface IMObject_I { CONST_VTBL struct IMObject_IVtbl *lpVtbl; };
             #define IMObject_I_SetInterface(This, _pReceiverOrSender, _bNoEOS) \
                 ((This)->lpVtbl->SetInterface(This, _pReceiverOrSender, _bNoEOS))
 
-            #define IMObject_I_GetMediaProps(This, _pVidProps, _pAudProps) \
-                ((This)->lpVtbl->GetMediaProps(This, _pVidProps, _pAudProps))
+            #define IMObject_I_GetMediaUnit(This, _pVidProps, _pAudProps) \
+                ((This)->lpVtbl->GetMediaUnit(This, _pVidProps, _pAudProps))
 
             #define IMObject_I_GetState(This, _peState, _ppReceiverOrSender) \
                 ((This)->lpVtbl->GetState(This, _peState, _ppReceiverOrSender))
@@ -12010,7 +12010,7 @@ public:
     virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE SenderGetName(
         /* [out] */ BSTR * _pbsName) = 0;
 
-    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE SenderGetMediaProps(
+    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE SenderGetMediaUnit(
         /* [out] */ M_VID_PROPS * _pVidProps,
         /* [out] */ M_AUD_PROPS * _pAudProps) = 0;
 
@@ -12065,10 +12065,10 @@ typedef struct IMSender_IVtbl {
     /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SenderGetName)(IMSender_I       *This,
                                                                  /* [out] */ BSTR *_pbsName);
 
-    DECLSPEC_XFGVIRT(IMSender_I, SenderGetMediaProps)
-    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SenderGetMediaProps)(IMSender_I              *This,
-                                                                       /* [out] */ M_VID_PROPS *_pVidProps,
-                                                                       /* [out] */ M_AUD_PROPS *_pAudProps);
+    DECLSPEC_XFGVIRT(IMSender_I, SenderGetMediaUnit)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SenderGetMediaUnit)(IMSender_I              *This,
+                                                                      /* [out] */ M_VID_PROPS *_pVidProps,
+                                                                      /* [out] */ M_AUD_PROPS *_pAudProps);
 
     DECLSPEC_XFGVIRT(IMSender_I, SenderCallbackAdd)
     /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SenderCallbackAdd)(IMSender_I          *This,
@@ -12107,8 +12107,8 @@ interface IMSender_I { CONST_VTBL struct IMSender_IVtbl *lpVtbl; };
 
             #define IMSender_I_SenderGetName(This, _pbsName) ((This)->lpVtbl->SenderGetName(This, _pbsName))
 
-            #define IMSender_I_SenderGetMediaProps(This, _pVidProps, _pAudProps) \
-                ((This)->lpVtbl->SenderGetMediaProps(This, _pVidProps, _pAudProps))
+            #define IMSender_I_SenderGetMediaUnit(This, _pVidProps, _pAudProps) \
+                ((This)->lpVtbl->SenderGetMediaUnit(This, _pVidProps, _pAudProps))
 
             #define IMSender_I_SenderCallbackAdd(This, _pCallback, _llCallbackUserData) \
                 ((This)->lpVtbl->SenderCallbackAdd(This, _pCallback, _llCallbackUserData))

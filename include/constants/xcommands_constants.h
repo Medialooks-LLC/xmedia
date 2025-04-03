@@ -59,12 +59,13 @@ namespace playlist {
     static const std::string kOpenUrl   = "open_url";
     static const std::string kOpenHints = "open_hints";
 
-    static const std::string kItemProps = "item_props";
+    static const std::string kItemProps   = "play_props";
+    static const std::string kSwitchProps = "switch_props";
 
-    static const std::string kStartSec = "start_sec";
-    static const std::string kPin      = "pin";
-    static const std::string kBreak    = "break";
-    static const std::string kSync     = "sync";
+    static const std::string kStartSec  = "start_sec";
+    static const std::string kPin       = "pin";
+    static const std::string kBreak     = "break";
+    static const std::string kFixedTime = "fixed_time";
 
     static const std::string kInSec       = "in_sec";
     static const std::string kOutSec      = "out_sec";

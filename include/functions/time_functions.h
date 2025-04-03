@@ -33,6 +33,13 @@ std::optional<xbase::Time64> ToRT(int64_t _time, const std::optional<XRational>&
  */
 std::optional<xbase::Time64> ToRT(const XTime* _time_p, const bool _pts_time = false);
 /**
+ * @brief Converts an XTime object to real-time representation.
+ * @param _time_p Pointer to an XTime object.
+ * @param _pts_time Flag for return packet pts time (by default is dts)
+ * @return The real-time representation or null opt if the input time object is null.
+ */
+std::optional<xbase::Time64> ToRT(const std::optional<XTime>& _time, const bool _pts_time = false);
+/**
  * @brief Converts real-time representation to another one with using input time base.
  * @param _rtTime Real-time representation.
  * @param _time_base Time base.
@@ -64,11 +71,28 @@ XTime::Packet PacketExtra(const XTime* _time_p);
 XTime::Frame FrameExtra(const XTime* _time_p);
 
 /**
+ * @brief Function for calculate end frame time based on duration.
+ * @return The end frame time if possible to calulate it's
+ */
+std::optional<xbase::Time64> EndTime(const XTime* _time_p, const xbase::Time64 _default_duration_rt);
+/**
  * @brief Function for calculate next frame time from given one.
  * @return The next frame time if possible to calulate it's
  */
 std::optional<XTime> NextFrameTime(const XTime* _time_p, const std::optional<XRational>& _frame_rate = {});
 
+enum class SegmentPos {
+    kTimeInvalid = 0,
+    kBeforeStart = 0x01,
+    kInside      = 0x10,
+    kInsideFirst = 0x02 | kInside,
+    kInsideLast  = 0x04 | kInside,
+    kOpenSegment = 0x08 | kInside,
+    kAfterEnd    = 0x20
+};
+XENUM_OPS32(SegmentPos)
+
+SegmentPos CheckSegment(const XTime* _time_p);
 /**
  * @brief Function for store XSegment into INode
  * @return The node with XSegment 'in', 'out'

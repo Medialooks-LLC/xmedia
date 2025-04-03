@@ -113,6 +113,8 @@ struct XTime {
     struct Frame {
         /// @brief Picture type
         PictureType picture_type = PictureType::None; // AV_PICTURE_TYPE_xxx map
+        /// @brief Original frame PTS (used for duplicated frames)
+        int64_t original_pts = time64::kNoVal;
     };
 
     /// @brief Extra information, can be either Packet or Frame
@@ -124,10 +126,12 @@ struct XTime {
 
 /// @brief Struct holding information about multimedia stream
 struct XStreamInfo {
-    /// @brief Unique identifier of the original stream.
-    uint64_t original_stream_uid = 0; ///< const ?
+    /// @brief stream name
+    std::string stream_name;
     /// @brief Optional metadata of the stream.
-    INode::SPtrC metadata;
+    INode::SPtrC stream_metadata;
+    /// @brief Unique identifier of the original stream.
+    std::optional<uint64_t> original_stream_uid; ///< const ?
     /// @brief Optional source stream index.
     std::optional<uint32_t> stream_idx;
     /// @brief Optional source stream PID. Usually MPEG-TS PID.

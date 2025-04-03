@@ -273,7 +273,7 @@ inline IMediaFrame::SPtrC GenerateBGRAVideoFrame(size_t  _frame_num,
     format.frame_rate   = {25, 1};
     auto frame_props_   = xmedia::ObjectsFactory()->PropsCreate({1, 2, 3}, format).MoveResult();
     if (_eos) {
-        return xmedia::ObjectsFactory()->FrameCreateEOS(frame_props_.get()).MoveResult();
+        return xmedia::MakeEndOfStreamT<IMediaFrame>(frame_props_.get());
     }
     XPlaneV plane_v_rgb;
     plane_v_rgb.width     = format.width;
@@ -323,7 +323,7 @@ inline IMediaFrame::SPtrC GenerateAudioFrame(size_t  _audio_pos_in_samples,
     format.sample_rate   = 44100;
     auto frame_props_    = xmedia::ObjectsFactory()->PropsCreate({4, 5, 6}, format).MoveResult();
     if (_eos) {
-        return xmedia::ObjectsFactory()->FrameCreateEOS(frame_props_.get()).MoveResult();
+        return xmedia::MakeEndOfStreamT<IMediaFrame>(frame_props_.get());
     }
     XTime time_;
     time_.timestamp     = time64::FromSec(_audio_pos_in_samples / (double)format.sample_rate);

@@ -49,15 +49,22 @@ public:
      */
     virtual XObjectType ObjectType() const = 0;
     /**
-     * @brief Get the current timestamp of the media object.
-     * @return std::optional<int64_t> The timestamp or an empty optional if not available.
+     * @brief Get the timestamp of the media object (by default is unit utc of object creation time)
+     * @return The timestamp or an empty optional if not available.
      */
-    virtual std::optional<int64_t> Timestamp() const = 0; // 2Think: use system time of not specified ?
+    virtual xbase::Time64 Timestamp() const = 0;
     /**
      * @brief Get the UIDs associated with the media object.
      * @return Uids The UIDs of the source and stream.
      */
     virtual Uids MediaUids() const = 0;
+
+    /**
+     * @brief Get the media flags associated with the media object.
+     * @return media flags.
+     */
+    virtual XMediaFlags MediaFlags() const = 0;
+
     /**
      * @brief Get the data of the media object.
      * @return A pointer to the constant data.
@@ -86,13 +93,13 @@ public:
  * This class represents a media object with associated properties. It derives from IMediaObject and adds
  * functionality related to media properties.
  */
-class IMediaProps: public IMediaObject {
+class IMediaUnit: public IMediaObject {
 public:
-    /// Type aliases for pointers to IMediaProps instances.
-    USING_PTRS(IMediaProps)
+    /// Type aliases for pointers to IMediaUnit instances.
+    USING_PTRS(IMediaUnit)
 
     /**
-     * @brief Get the current time of the media object.
+     * @brief Get the time of the media object.
      * @return A pointer to the constant XTime.
      */
     virtual const XTime* Time() const = 0;
@@ -111,6 +118,20 @@ public:
      * @return The list of programs.
      */
     virtual std::vector<XProgram> Programs() const = 0;
+    /**
+     * @brief Clone the props packet or frame.
+     * @param _update_uids An optional UIDs to update in the cloned object.
+     * @param _update_time_p An optional time to update in the cloned object.
+     * @param _update_stream_p An optional stream information to update in the cloned object.
+     * @param _update_programs_p An optional list of programs to update in the cloned object.
+     * @return A shared pointer to the cloned frame.
+     */
+    virtual IMediaUnit::SPtr Clone(const IMediaObject::Uids&           _update_uids        = {},
+                                   const XTime*                        _update_time_p      = nullptr,
+                                   const std::optional<XMediaFlags>&   _update_media_flags = {},
+                                   const XStreamInfo*                  _update_stream_p    = nullptr,
+                                   const std::vector<XProgram>*        _update_programs_p  = nullptr,
+                                   const std::optional<xbase::Time64>& _update_timestamp   = {}) const = 0;
     /**
      * @brief Get the shared metadata of the media object.
      * @param _path The XPath to the metadata.
@@ -131,24 +152,19 @@ public:
     virtual INode::SPtr PrivateMetadata(XPath&& _path = {}) = 0;
 };
 
-/// Type aliases for vector of pointers to IMediaProps instances.
-using MediaPropsVec = std::vector<IMediaProps::SPtrC>;
+/// Type aliases for vector of pointers to IMediaUnit instances.
+using MediaUnitsVec = std::vector<IMediaUnit::SPtrC>;
 
 /**
  * @brief Media packet with encoded data and associated properties.
- * This class represents a media packet with encoded data and associated properties. It derives from IMediaProps
+ * This class represents a media packet with encoded data and associated properties. It derives from IMediaUnit
  * and adds functionality related to media packet-specific properties.
  */
-class IMediaPacket: public IMediaProps {
+class IMediaPacket: public IMediaUnit {
 public:
     /// Type aliases for pointers to IMediaPacket instances.
     USING_PTRS(IMediaPacket)
 
-    /**
-     * @brief Check if the packet is the end of the stream.
-     * @return A boolean indicating whether the packet is the end of the stream.
-     */
-    virtual bool IsEndOfStream() const = 0;
     /**
      * @brief Get the encoded data of the packet.
      * @param _holder_get An optional holder getter for the encoded data.
@@ -162,36 +178,33 @@ public:
      */
     virtual std::vector<XSideData> SideData(const std::optional<SideDataType>& _type = std::nullopt) const = 0;
     /**
-     * @brief Clone the packet.
+     * @brief Clone the packet
      * @param _update_uids An optional UIDs to update in the cloned object.
      * @param _update_time_p An optional time to update in the cloned object.
      * @param _update_stream_p An optional stream information to update in the cloned object.
      * @param _update_programs_p An optional list of programs to update in the cloned object.
      * @return A shared pointer to the cloned packet.
      */
-    virtual IMediaPacket::SPtr Clone(const IMediaObject::Uids&     _update_uids        = {},
-                                     const XTime*                  _update_time_p      = nullptr,
-                                     const XStreamInfo*            _update_stream_p    = nullptr,
-                                     const std::vector<XProgram>*  _update_programs_p  = nullptr,
-                                     const std::vector<XSideData>* _update_side_data_p = nullptr) const = 0;
+    virtual IMediaPacket::SPtr ClonePacket(const std::vector<XSideData>*       _update_side_data_p = nullptr,
+                                           const IMediaObject::Uids&           _update_uids        = {},
+                                           const XTime*                        _update_time_p      = nullptr,
+                                           const std::optional<XMediaFlags>&   _update_media_flags = {},
+                                           const XStreamInfo*                  _update_stream_p    = nullptr,
+                                           const std::vector<XProgram>*        _update_programs_p  = nullptr,
+                                           const std::optional<xbase::Time64>& _update_timestamp   = {}) const = 0;
 };
 
 /**
  * @brief Media frame with video and audio planes and associated properties.
  *
  * This class represents a media frame with video and audio planes and associated properties. It derives from
- * IMediaProps and adds functionality related to media frame-specific properties.
+ * IMediaUnit and adds functionality related to media frame-specific properties.
  */
-class IMediaFrame: public IMediaProps {
+class IMediaFrame: public IMediaUnit {
 public:
     /// Type aliases for pointers to IMediaFrame instances.
     USING_PTRS(IMediaFrame)
 
-    /**
-     * @brief Check if the frame is the end of the stream.
-     * @return A boolean indicating whether the frame is the end of the stream.
-     */
-    virtual bool IsEndOfStream() const = 0;
     /**
      * @brief Get the video object planes of the frame.
      * @param _holder_get An optional holder getter for the video object planes.
@@ -225,11 +238,13 @@ public:
      * @param _update_programs_p An optional list of programs to update in the cloned object.
      * @return A shared pointer to the cloned frame.
      */
-    virtual IMediaFrame::SPtr Clone(const IMediaObject::Uids&          _update_uids        = {},
-                                    const XTime*                       _update_time_p      = nullptr,
-                                    const XStreamInfo*                 _update_stream_p    = nullptr,
-                                    const std::vector<XProgram>*       _update_programs_p  = nullptr,
-                                    const std::vector<XFrameSideData>* _update_side_data_p = nullptr) const = 0;
+    virtual IMediaFrame::SPtr CloneFrame(const std::vector<XFrameSideData>*  _update_side_data_p = nullptr,
+                                         const IMediaObject::Uids&           _update_uids        = {},
+                                         const XTime*                        _update_time_p      = nullptr,
+                                         const std::optional<XMediaFlags>&   _update_media_flags = {},
+                                         const XStreamInfo*                  _update_stream_p    = nullptr,
+                                         const std::vector<XProgram>*        _update_programs_p  = nullptr,
+                                         const std::optional<xbase::Time64>& _update_timestamp   = {}) const = 0;
 };
 
 } // namespace xsdk

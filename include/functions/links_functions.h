@@ -36,25 +36,25 @@ xbase::XResult<ILink::SPtr> CreateLinkToHandler(const IMediaHandler::SPtr&     _
                                                 const ILink::Props&            _default_props    = {},
                                                 const xbase::IWorker::SPtr&    _dedicated_worker = {});
 
-std::pair<MediaPropsVec, MediaPropsVec> SetMediaProps(IMediaPropsAgent* _props_agent_p,
-                                                      MediaPropsVec&&   _media_props,
-                                                      bool              _reset_props);
+std::pair<MediaUnitsVec, MediaUnitsVec> SetMediaUnit(IMediaUnitAgent* _props_agent_p,
+                                                     MediaUnitsVec&&  _media_props,
+                                                     bool             _reset_props);
 
-std::pair<MediaPropsVec, MediaPropsVec> SetMediaProps(IObject*        _media_link_p,
-                                                      MediaPropsVec&& _media_props,
-                                                      bool            _reset_props);
+std::pair<MediaUnitsVec, MediaUnitsVec> SetMediaUnit(IObject*        _media_link_p,
+                                                     MediaUnitsVec&& _media_props,
+                                                     bool            _reset_props);
 
-MediaPropsVec GetMediaProps(IObject*                          _media_link_p,
-                            const IMediaPropsAgent::PropsType _props_type,
-                            MediaPropsVec&&                   _append_to = {});
+MediaUnitsVec GetMediaUnit(IObject*                         _media_link_p,
+                           const IMediaUnitAgent::PropsType _props_type,
+                           MediaUnitsVec&&                  _append_to = {});
 
-size_t FindMediaProps(const MediaPropsVec&           _props_info_vec,
-                      const std::optional<uint64_t>& _stream_uid,
-                      const size_t                   _from_idx = 0);
+size_t FindMediaUnit(const MediaUnitsVec&           _props_info_vec,
+                     const std::optional<uint64_t>& _stream_uid,
+                     const size_t                   _from_idx = 0);
 
-IMediaProps::SPtrC ExtractMediaProps(MediaPropsVec&                 _props_info_vec,
-                                     const std::optional<uint64_t>& _stream_uid,
-                                     const size_t                   _from_idx = 0);
+IMediaUnit::SPtrC ExtractMediaUnit(MediaUnitsVec&                 _props_info_vec,
+                                   const std::optional<uint64_t>& _stream_uid,
+                                   const size_t                   _from_idx = 0);
 
 xbase::XResult<IMediaLink::SPtr> CreateMedialinkEx(const ILink::OnDataPF&           _on_data_pf,
                                                    const xbase::IScheduler::SPtr&   _link_scheduler,
@@ -70,7 +70,7 @@ xbase::XResult<ILink::SPtr> CreateMultiLink(const INode::SPtrC&                 
 xbase::XResult<IMediaLink::SPtr> CreateMultiMedialinkEx(const INode::SPtrC&              _link_details,
                                                         const bool                       _exclusive_links,
                                                         const xmedia::IsSuitableMediaPF& _is_suitable_pf = {},
-                                                        const IMediaPropsAgent::SPtr&    _upstream_agent = {},
+                                                        const IMediaUnitAgent::SPtr&     _upstream_agent = {},
                                                         const ILink::Props&              _default_props  = {});
 
 } // namespace xsdk::xlink

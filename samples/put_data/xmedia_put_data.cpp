@@ -56,8 +56,8 @@ int GenerateStream(std::string_view _container_scheme_path, INode::SPtrC _cmd_li
 
     auto container = container_xr.MoveResult();
     std::cout << "Initialize container\n";
-    auto v_frame = helpers::GenerateBGRAVideoFrame(0, 0); //<-here can be simple MediaProps not full formed frame
-    auto a_frame = helpers::GenerateAudioFrame(0);        //<-here can be simple MediaProps not full formed frame
+    auto v_frame = helpers::GenerateBGRAVideoFrame(0, 0); //<-here can be simple MediaUnit not full formed frame
+    auto a_frame = helpers::GenerateAudioFrame(0);        //<-here can be simple MediaUnit not full formed frame
     auto asamples_in_chunk = 1764;
     auto init_xr           = container->Init({}, init_props, {v_frame, a_frame});
     if (!init_xr.HasResult())
@@ -148,7 +148,7 @@ int GenerateStream(std::string_view _container_scheme_path, INode::SPtrC _cmd_li
         //  TODO: add some await while, but it should be wait on OutputStop
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
-    std::cout << "Send EndOfStream frames\n";
+    std::cout << "Send EOS frames\n";
     v_frame = helpers::GenerateBGRAVideoFrame(_num_frames, 0, true);
     err     = container->MediaPut(v_frame);
     if (err) {

@@ -38,7 +38,7 @@ public:
 
     using IsSupportedPF = std::function<bool(const IMediaHandler::InitParamsVariant& _init_url_or_func,
                                              const INode::SPtrC&                     _init_props,
-                                             const MediaPropsVec&                    _input_streams_props)>;
+                                             const MediaUnitsVec&                    _input_streams_props)>;
 
     struct RegistrationData {
         // Mandatory fields
@@ -106,7 +106,7 @@ public:
      * error if creation fails.
      */
     virtual xbase::XResult<IMediaHandler::SPtr> CreateAndInit(const IContainerScheme::ItemDesc& _create_init_params,
-                                                              MediaPropsVec&& _input_streams_props = {},
+                                                              MediaUnitsVec&& _input_streams_props = {},
                                                               IData::SPtrC&&  _outer_interfaces    = {},
                                                               INode::SPtr&&   _handler_stat        = {}) const = 0;
 
@@ -122,7 +122,7 @@ public:
      * error if creation fails.
      */
     virtual xbase::XResult<IMediaHandler::SPtr> CreateByProps(const IContainerScheme::ItemDesc& _create_init_params,
-                                                              const MediaPropsVec& _input_streams_props = {},
+                                                              const MediaUnitsVec& _input_streams_props = {},
                                                               IData::SPtrC&&       _outer_interfaces    = {},
                                                               INode::SPtr&&        _handler_stat        = {}) const = 0;
 };

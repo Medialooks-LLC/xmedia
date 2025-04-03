@@ -53,14 +53,15 @@ public:
      * @return Returns an XResult with a shared pointer to the newly created media properties object if successful,
      *         or an error if creation fails.
      */
-    virtual xbase::XResult<IMediaProps::SPtr> PropsCreate(const IMediaObject::Uids&  _media_uids,
-                                                          const XFormat&             _format,
-                                                          std::optional<XStreamInfo> _stream_info     = std::nullopt,
-                                                          const INode::SPtrC&        _shared_metadata = nullptr,
-                                                          std::vector<XProgram>&&    _programs        = {},
-                                                          const IData*               _extra_data      = nullptr) = 0;
+    virtual xbase::XResult<IMediaUnit::SPtr> PropsCreate(const IMediaObject::Uids&  _media_uids,
+                                                         const XFormat&             _format,
+                                                         std::optional<XStreamInfo> _stream_info     = std::nullopt,
+                                                         const INode::SPtrC&        _shared_metadata = nullptr,
+                                                         std::vector<XProgram>&&    _programs        = {},
+                                                         const IData*               _extra_data      = nullptr) = 0;
+    // TODO: Replace in favor of IMediaUnit::Clone()
     /**
-     * @brief Clones an existing media properties object.
+     * @brief Clones an existing media properties object
      *
      * @param _base_props The base media properties object.
      * @param _media_uids The new media object UIDs.
@@ -74,14 +75,14 @@ public:
      * @return Returns an XResult with a shared pointer to the cloned media properties object if successful,
      *         or an error if cloning fails.
      */
-    virtual xbase::XResult<IMediaProps::SPtr> PropsClone(const IMediaProps*           _base_props,
-                                                         const IMediaObject::Uids&    _media_uids        = {},
-                                                         std::optional<XFormat>       _format            = std::nullopt,
-                                                         std::optional<XStreamInfo>   _stream_info       = std::nullopt,
-                                                         std::optional<INode::SPtrC>  _shared_metadata   = std::nullopt,
-                                                         const std::vector<XProgram>* _programs_update   = nullptr,
-                                                         const IData*                 _data_update       = nullptr,
-                                                         const std::vector<uint64_t>& _data_types_remove = {}) = 0;
+    virtual xbase::XResult<IMediaUnit::SPtr> PropsClone(const IMediaUnit*            _base_props,
+                                                        const IMediaObject::Uids&    _media_uids        = {},
+                                                        std::optional<XFormat>       _format            = std::nullopt,
+                                                        std::optional<XStreamInfo>   _stream_info       = std::nullopt,
+                                                        std::optional<INode::SPtrC>  _shared_metadata   = std::nullopt,
+                                                        const std::vector<XProgram>* _programs_update   = nullptr,
+                                                        const IData*                 _data_update       = nullptr,
+                                                        const std::vector<uint64_t>& _data_types_remove = {}) = 0;
     /**
      * @brief Creates a new media packet object.
      *
@@ -95,24 +96,13 @@ public:
      * @return Returns an XResult with a shared pointer to the newly created media packet object if successful,
      *         or an error if creation fails.
      */
-    virtual xbase::XResult<IMediaPacket::SPtr> PacketCreate(const IMediaProps*       _base_props,
+    virtual xbase::XResult<IMediaPacket::SPtr> PacketCreate(const IMediaUnit*        _base_props,
                                                             const XTime&             _time,
                                                             size_t                   _data_bytes,
                                                             const void*              _data_p,
                                                             std::any&&               _holder,
                                                             std::vector<XSideData>&& _side_data        = {},
                                                             INode::SPtr&&            _private_metadata = {}) = 0;
-    /**
-     * @brief Create end of stream media packet
-     * @param _base_props Base properties for the packet
-     * @param _time Optional time for the packet, can be empty
-     * @param _private_metadata Optional private metadata for the packet
-     * @return Returns an XResult with a shared pointer to the newly created media packet object if successful,
-     *         or an error if creation fails.
-     */
-    virtual xbase::XResult<IMediaPacket::SPtr> PacketCreateEOS(const IMediaProps*   _base_props,
-                                                               std::optional<XTime> _time             = {},
-                                                               INode::SPtr&&        _private_metadata = {}) = 0;
     /**
      * @brief Create media frame
      * @param _base_props Base properties for the frame
@@ -126,7 +116,7 @@ public:
      * @return Returns an XResult with a shared pointer to the newly created media frame object if successful,
      *         or an error if creation fails.
      */
-    virtual xbase::XResult<IMediaFrame::SPtr> FrameCreate(const IMediaProps*              _base_props,
+    virtual xbase::XResult<IMediaFrame::SPtr> FrameCreate(const IMediaUnit*               _base_props,
                                                           const XTime&                    _time,
                                                           std::vector<XPlaneA>&&          _audio_planes,
                                                           std::vector<XPlaneV>&&          _video_planes,
@@ -147,24 +137,12 @@ public:
      *         or an error if creation fails.
      */
     using FrameCreateVariant = std::variant<std::vector<XPlaneA>, std::vector<XPlaneV>, XSubtitle>;
-    virtual xbase::XResult<IMediaFrame::SPtr> FrameCreate(const IMediaProps*            _base_props,
+    virtual xbase::XResult<IMediaFrame::SPtr> FrameCreate(const IMediaUnit*             _base_props,
                                                           const XTime&                  _time,
                                                           FrameCreateVariant&&          _planes_or_subtitle,
                                                           std::any&&                    _holder,
                                                           std::vector<XFrameSideData>&& _side_data        = {},
                                                           INode::SPtr&&                 _private_metadata = {}) = 0;
-
-    /**
-     * @brief Create end of stream media frame
-     * @param _base_props Base properties for the frame
-     * @param _time Time for the frame, can be empty
-     * @param _private_metadata Private metadata for the frame
-     * @return Returns an XResult with a shared pointer to the newly created media frame object if successful,
-     *         or an error if creation fails.
-     */
-    virtual xbase::XResult<IMediaFrame::SPtr> FrameCreateEOS(const IMediaProps*   _base_props,
-                                                             std::optional<XTime> _time             = {},
-                                                             INode::SPtr&&        _private_metadata = {}) = 0;
 };
 
 } // namespace xsdk

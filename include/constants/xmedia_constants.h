@@ -42,6 +42,7 @@ namespace xmedia::wrappers {
     static const std::string kAvConverter   = "av_converter";
     static const std::string kRateControl   = "rate_control";
     static const std::string kRecreation    = "recreation";
+    static const std::string kFixedSegment  = "fixed_segment";
 } // namespace xmedia::wrappers
 
 namespace xmedia::links {

@@ -113,7 +113,7 @@ public:
     virtual void SetExpired(bool _flush_data, bool _wait_for_finish) = 0;
 };
 
-class IMediaLink: public ILink, public IMediaPropsAgent {
+class IMediaLink: public ILink, public IMediaUnitAgent {
 public:
     USING_PTRS(IMediaLink)
 };
@@ -162,10 +162,10 @@ namespace xlink {
 
     INode::SPtr StoreProps(const ILink::Props& _link_props, const INode::SPtr&& _append_to = {});
 
-    bool IsSuitable(const INode::SPtrC&       _filter_node,
-                    const MediaPropsVec&      _current_props,
-                    const size_t              _updated_idx,
-                    const IMediaProps::SPtrC& _new_props);
+    bool IsSuitable(const INode::SPtrC&      _filter_node,
+                    const MediaUnitsVec&     _current_props,
+                    const size_t             _updated_idx,
+                    const IMediaUnit::SPtrC& _new_props);
 
 } // namespace xlink
 

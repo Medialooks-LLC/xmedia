@@ -207,11 +207,11 @@ namespace xmedia::chunk {
 
 namespace xmedia::props {
     /**
-     * @brief Converts an IMediaProps object to a string.
-     * @param _props The IMediaProps object to convert.
-     * @return A string representation of the IMediaProps object.
+     * @brief Converts an IMediaUnit object to a string.
+     * @param _props The IMediaUnit object to convert.
+     * @return A string representation of the IMediaUnit object.
      */
-    std::string ToString(const IMediaProps* _props);
+    std::string ToString(const IMediaUnit* _props);
 } // namespace xmedia::props
 
 namespace xmedia::packet {
@@ -265,11 +265,11 @@ namespace xmedia {
     std::string ToString(const IMediaHandler::InitParamsVariant& _init_url_or_func);
 
     /**
-     * @brief Converts an MediaPropsVec to a string.
-     * @param _input_streams_props The MediaPropsVec convert.
-     * @return A string representation of the MediaPropsVec object.
+     * @brief Converts an MediaUnitsVec to a string.
+     * @param _input_streams_props The MediaUnitsVec convert.
+     * @return A string representation of the MediaUnitsVec object.
      */
-    std::string ToString(const MediaPropsVec& _input_streams_props);
+    std::string ToString(const MediaUnitsVec& _input_streams_props);
 
 } // namespace xmedia
 

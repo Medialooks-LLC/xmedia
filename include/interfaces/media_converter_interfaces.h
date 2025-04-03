@@ -43,11 +43,11 @@ public:
 public:
     virtual ~IFormatConverter() = default;
 
-    virtual xbase::XResult<IMediaProps::SPtrC> ConverterInit(const IMediaProps::SPtrC& _media_props) = 0;
+    virtual xbase::XResult<IMediaUnit::SPtrC> ConverterInit(const IMediaUnit::SPtrC& _media_props) = 0;
 
-    virtual IMediaProps::SPtrC ConverterInput() const = 0;
+    virtual IMediaUnit::SPtrC ConverterInput() const = 0;
 
-    virtual IMediaProps::SPtrC ConverterOutput() const = 0;
+    virtual IMediaUnit::SPtrC ConverterOutput() const = 0;
 
     virtual INode::SPtrC ConverterStat(XPath&& _path = {}) const = 0;
 

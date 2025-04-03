@@ -49,6 +49,14 @@ XENUM_CLASS(XObjectType,
             FrameData     = Frame | Data,
             FrameAV       = Frame | AV)
 
+/// @brief Enum class representing different flags of media packet or frame
+XENUM_CLASS(XMediaFlags,
+            kRegular,
+            // kFirst         = 0x01,
+            kEndOfStream   = 0x02,
+            kDuplicated    = 0x04,
+            kDuplicatedEOS = kEndOfStream | kDuplicated)
+
 /**
  * @brief Enum class representing different rate control modes.
  * @details This enum class represents different rate control modes, namely:
