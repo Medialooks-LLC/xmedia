@@ -2,6 +2,7 @@
 
 #include <atlbase.h>
 #include "sdk_headers/MFormats.h"
+#include "sdk_headers/MPlatform.h"
 
 #include "../xmedia_interfaces.h"
 

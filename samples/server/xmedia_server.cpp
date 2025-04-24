@@ -407,7 +407,7 @@ int main(int argc, char** argv)
 
     auto container_server_xr = ContainerServer::Create(
         [](const IMediaHandler::SPtrC& event_source, const MediaEvent event_type, const INode::SPtrC& event_details) {
-            // Events hanlder example
+            // Events handler example
             std::cout << "Event:" << xenum::ToString(event_type) << std::endl;
             std::cout << "From:" << event_source->Props()->NameGet() << std::endl;
             std::cout << "Details:" << xnode::ToJson(event_details) << std::endl;

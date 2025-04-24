@@ -38,19 +38,24 @@ namespace media_handler {
     static const std::string kClose    = "close";
     static const std::string kMediaGet = "media_get";
 
-    static const std::string kPeekMedia   = "peek_media";
+    static const std::string kKeepMedia   = "keep_media";
     static const std::string kTimeoutMsec = "timeout_msec";
     static const std::string kStreamUid   = "stream_uid";
     static const std::string kHints       = "hints";
     static const std::string kStreamName  = "stream_name";
     static const std::string kSegment     = "segment";
     static const std::string kTime        = "time";
+
+    static const std::string kFrameRate = "frame_rate";
+    static const std::string kNum       = "num";
+    static const std::string kDen       = "den";
 } // namespace media_handler
 
 namespace playlist {
     static const std::string kPlaylist      = "playlist";
     static const std::string kPlaylistProps = "playlist_props";
     static const std::string kPlaylistItems = "playlist_items";
+    static const std::string kBackground    = "background";
 
     static const std::string kUid      = "uid";
     static const std::string kSplitUid = "split_uid";
@@ -62,10 +67,9 @@ namespace playlist {
     static const std::string kItemProps   = "play_props";
     static const std::string kSwitchProps = "switch_props";
 
-    static const std::string kStartSec  = "start_sec";
-    static const std::string kPin       = "pin";
-    static const std::string kBreak     = "break";
-    static const std::string kFixedTime = "fixed_time";
+    static const std::string kPin         = "pin";
+    static const std::string kBreak       = "break";
+    static const std::string kFixedPosSec = "fixed_pos_sec";
 
     static const std::string kInSec       = "in_sec";
     static const std::string kOutSec      = "out_sec";

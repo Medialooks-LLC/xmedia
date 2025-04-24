@@ -6,8 +6,8 @@
 /* at Tue Jan 19 05:14:07 2038
  */
 /* Compiler settings for ..\..\Include\IDL\MFormats.idl:
-    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 8.01.0628
-    protocol : dce , ms_ext, c_ext, robust
+    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 8.01.0628
+    protocol : all , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data
     VC __declspec() decoration level:
          __declspec(uuid()), __declspec(selectany), __declspec(novtable)
@@ -517,6 +517,48 @@ typedef interface IMFDelay IMFDelay;
 
 #endif /* __IMFDelay_FWD_DEFINED__ */
 
+#ifndef __IMFGPUSwitcher_FWD_DEFINED__
+    #define __IMFGPUSwitcher_FWD_DEFINED__
+typedef interface IMFGPUSwitcher IMFGPUSwitcher;
+
+#endif /* __IMFGPUSwitcher_FWD_DEFINED__ */
+
+#ifndef __IMCChannelCallback_FWD_DEFINED__
+    #define __IMCChannelCallback_FWD_DEFINED__
+typedef interface IMCChannelCallback IMCChannelCallback;
+
+#endif /* __IMCChannelCallback_FWD_DEFINED__ */
+
+#ifndef __IMCChannelSGN_FWD_DEFINED__
+    #define __IMCChannelSGN_FWD_DEFINED__
+typedef interface IMCChannelSGN IMCChannelSGN;
+
+#endif /* __IMCChannelSGN_FWD_DEFINED__ */
+
+#ifndef __IMCChannel_FWD_DEFINED__
+    #define __IMCChannel_FWD_DEFINED__
+typedef interface IMCChannel IMCChannel;
+
+#endif /* __IMCChannel_FWD_DEFINED__ */
+
+#ifndef __IMConnect_FWD_DEFINED__
+    #define __IMConnect_FWD_DEFINED__
+typedef interface IMConnect IMConnect;
+
+#endif /* __IMConnect_FWD_DEFINED__ */
+
+#ifndef __IMFSource_FWD_DEFINED__
+    #define __IMFSource_FWD_DEFINED__
+typedef interface IMFSource IMFSource;
+
+#endif /* __IMFSource_FWD_DEFINED__ */
+
+#ifndef __IMFReader_FWD_DEFINED__
+    #define __IMFReader_FWD_DEFINED__
+typedef interface IMFReader IMFReader;
+
+#endif /* __IMFReader_FWD_DEFINED__ */
+
 #ifndef __IMFFormat_FWD_DEFINED__
     #define __IMFFormat_FWD_DEFINED__
 typedef interface IMFFormat IMFFormat;
@@ -541,23 +583,11 @@ typedef interface IMFTransition IMFTransition;
 
 #endif /* __IMFTransition_FWD_DEFINED__ */
 
-#ifndef __IMFSource_FWD_DEFINED__
-    #define __IMFSource_FWD_DEFINED__
-typedef interface IMFSource IMFSource;
-
-#endif /* __IMFSource_FWD_DEFINED__ */
-
 #ifndef __IMFSourceVB6_FWD_DEFINED__
     #define __IMFSourceVB6_FWD_DEFINED__
 typedef interface IMFSourceVB6 IMFSourceVB6;
 
 #endif /* __IMFSourceVB6_FWD_DEFINED__ */
-
-#ifndef __IMFReader_FWD_DEFINED__
-    #define __IMFReader_FWD_DEFINED__
-typedef interface IMFReader IMFReader;
-
-#endif /* __IMFReader_FWD_DEFINED__ */
 
 #ifndef __IMFDevice_FWD_DEFINED__
     #define __IMFDevice_FWD_DEFINED__
@@ -718,6 +748,17 @@ typedef struct MFSink MFSink;
 
 #endif /* __MFSink_FWD_DEFINED__ */
 
+#ifndef __MFSinkReader_FWD_DEFINED__
+    #define __MFSinkReader_FWD_DEFINED__
+
+    #ifdef __cplusplus
+typedef class MFSinkReader MFSinkReader;
+    #else
+typedef struct MFSinkReader MFSinkReader;
+    #endif /* __cplusplus */
+
+#endif /* __MFSinkReader_FWD_DEFINED__ */
+
 #ifndef __MFLive_FWD_DEFINED__
     #define __MFLive_FWD_DEFINED__
 
@@ -860,6 +901,34 @@ typedef struct MFObjectASIO MFObjectASIO;
     #endif /* __cplusplus */
 
 #endif /* __MFObjectASIO_FWD_DEFINED__ */
+
+#ifndef ___IMCChannelEvents_FWD_DEFINED__
+    #define ___IMCChannelEvents_FWD_DEFINED__
+typedef interface _IMCChannelEvents _IMCChannelEvents;
+
+#endif /* ___IMCChannelEvents_FWD_DEFINED__ */
+
+#ifndef __MConnect_FWD_DEFINED__
+    #define __MConnect_FWD_DEFINED__
+
+    #ifdef __cplusplus
+typedef class MConnect MConnect;
+    #else
+typedef struct MConnect MConnect;
+    #endif /* __cplusplus */
+
+#endif /* __MConnect_FWD_DEFINED__ */
+
+#ifndef __MCChannel_FWD_DEFINED__
+    #define __MCChannel_FWD_DEFINED__
+
+    #ifdef __cplusplus
+typedef class MCChannel MCChannel;
+    #else
+typedef struct MCChannel MCChannel;
+    #endif /* __cplusplus */
+
+#endif /* __MCChannel_FWD_DEFINED__ */
 
 /* header files for imported files */
 #include "oaidl.h"
@@ -1629,6 +1698,8 @@ typedef struct M_STREAM_INFO {
     int          nBitsPerCodedSample;
     int          nBitrate;
     BSTR         bsCodecNameOrTag;
+    int          nHasBFrames;
+    int          nFieldOrder;
 } M_STREAM_INFO;
 
 typedef struct M_PACKET_INFO {
@@ -1774,6 +1845,21 @@ typedef /* [v1_enum] */
     } eMFFlashFlags;
 
 #endif // M_DEFINES_INCLUDED
+#ifndef M_ADAPTER_DESC_DEFINED
+    #define M_ADAPTER_DESC_DEFINED
+typedef struct M_ADAPTER_DESC {
+    BSTR     bsDescription;
+    UINT     uiVendorId;
+    UINT     uiDeviceId;
+    UINT     uiSubSysId;
+    UINT     uiRevision;
+    LONGLONG llDedicatedVideoMemory;
+    LONGLONG llDedicatedSystemMemory;
+    LONGLONG llSharedSystemMemory;
+    LONGLONG llAdapterLuid;
+} M_ADAPTER_DESC;
+
+#endif
 #ifndef MFFRAME_DEFINED
     #define MFFRAME_DEFINED
 typedef struct MF_FRAME_INFO {
@@ -1910,11 +1996,10 @@ typedef struct IMFBufferVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFBuffer        *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFBuffer        *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFBuffer *This);
@@ -2229,11 +2314,10 @@ typedef struct IMFFrameVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFFrame         *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFFrame         *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFFrame *This);
@@ -2775,11 +2859,10 @@ typedef struct IMFFrameGPUVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFFrameGPU      *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFFrameGPU      *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFFrameGPU *This);
@@ -3350,11 +3433,10 @@ typedef struct IMFPlanarFrameVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFPlanarFrame   *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFPlanarFrame   *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFPlanarFrame *This);
@@ -3426,12 +3508,12 @@ IMFFactory: public IUnknown
 {
 public:
     virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE MFFrameMakeLocal(
-        /* [in] */ IUnknown * _mf_frame_p,
+        /* [in] */ IUnknown * _pMFFrame,
         /* [out] */ IMFFrame * *_ppFrameLocal,
         /* [in] */ BOOL _bAlwaysClone) = 0;
 
     virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE MFFrameClone(
-        /* [in] */ IUnknown * _mf_frame_p,
+        /* [in] */ IUnknown * _pMFFrame,
         /* [out] */ IMFFrame * *_ppFrameClone,
         /* [in] */ eMFrameClone _eCloneType,
         /* [in] */ eMFCC        _fccPixelFormat) = 0;
@@ -3497,11 +3579,10 @@ typedef struct IMFFactoryVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFFactory       *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFFactory       *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFFactory *This);
@@ -3511,13 +3592,13 @@ typedef struct IMFFactoryVtbl {
 
     DECLSPEC_XFGVIRT(IMFFactory, MFFrameMakeLocal)
     /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *MFFrameMakeLocal)(IMFFactory            *This,
-                                                                    /* [in] */ IUnknown   *_mf_frame_p,
+                                                                    /* [in] */ IUnknown   *_pMFFrame,
                                                                     /* [out] */ IMFFrame **_ppFrameLocal,
                                                                     /* [in] */ BOOL        _bAlwaysClone);
 
     DECLSPEC_XFGVIRT(IMFFactory, MFFrameClone)
     /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *MFFrameClone)(IMFFactory             *This,
-                                                                /* [in] */ IUnknown    *_mf_frame_p,
+                                                                /* [in] */ IUnknown    *_pMFFrame,
                                                                 /* [out] */ IMFFrame  **_ppFrameClone,
                                                                 /* [in] */ eMFrameClone _eCloneType,
                                                                 /* [in] */ eMFCC        _fccPixelFormat);
@@ -3598,11 +3679,11 @@ interface IMFFactory { CONST_VTBL struct IMFFactoryVtbl *lpVtbl; };
 
             #define IMFFactory_Release(This) ((This)->lpVtbl->Release(This))
 
-            #define IMFFactory_MFFrameMakeLocal(This, _mf_frame_p, _ppFrameLocal, _bAlwaysClone) \
-                ((This)->lpVtbl->MFFrameMakeLocal(This, _mf_frame_p, _ppFrameLocal, _bAlwaysClone))
+            #define IMFFactory_MFFrameMakeLocal(This, _pMFFrame, _ppFrameLocal, _bAlwaysClone) \
+                ((This)->lpVtbl->MFFrameMakeLocal(This, _pMFFrame, _ppFrameLocal, _bAlwaysClone))
 
-            #define IMFFactory_MFFrameClone(This, _mf_frame_p, _ppFrameClone, _eCloneType, _fccPixelFormat) \
-                ((This)->lpVtbl->MFFrameClone(This, _mf_frame_p, _ppFrameClone, _eCloneType, _fccPixelFormat))
+            #define IMFFactory_MFFrameClone(This, _pMFFrame, _ppFrameClone, _eCloneType, _fccPixelFormat) \
+                ((This)->lpVtbl->MFFrameClone(This, _pMFFrame, _ppFrameClone, _eCloneType, _fccPixelFormat))
 
             #define IMFFactory_MFFrameCreateFromMem(This,             \
                                                     _pAVProps,        \
@@ -3718,11 +3799,10 @@ typedef struct IMFCreatorVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFCreator       *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFCreator       *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFCreator *This);
@@ -3877,11 +3957,10 @@ typedef struct IMAttributesVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMAttributes     *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMAttributes     *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMAttributes *This);
@@ -4155,11 +4234,10 @@ typedef struct IMNodeVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMNode           *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMNode           *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMNode *This);
@@ -4505,11 +4583,10 @@ typedef struct IMCallbackVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMCallback       *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMCallback       *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMCallback *This);
@@ -4633,11 +4710,10 @@ typedef struct IMPreviewVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMPreview        *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMPreview        *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMPreview *This);
@@ -4809,11 +4885,10 @@ typedef struct IMWebRTCVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMWebRTC         *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMWebRTC         *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMWebRTC *This);
@@ -4960,11 +5035,10 @@ typedef struct IMFSignalingDTMFVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFSignalingDTMF *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFSignalingDTMF *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFSignalingDTMF *This);
@@ -5036,11 +5110,10 @@ typedef struct IMCCDisplayVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMCCDisplay      *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMCCDisplay      *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMCCDisplay *This);
@@ -5087,11 +5160,10 @@ typedef struct IMFShaderVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFShader        *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFShader        *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFShader *This);
@@ -5184,11 +5256,10 @@ typedef struct IMColorsVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMColors         *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMColors         *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMColors *This);
@@ -5372,11 +5443,10 @@ typedef struct IMStorageVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMStorage        *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMStorage        *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMStorage *This);
@@ -5683,11 +5753,10 @@ typedef struct IMFrameVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFrame          *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFrame          *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFrame *This);
@@ -5900,11 +5969,10 @@ typedef struct IMFramesVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFrames         *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFrames         *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFrames *This);
@@ -6055,11 +6123,10 @@ typedef struct IMPropsVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMProps          *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMProps          *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMProps *This);
@@ -6209,11 +6276,10 @@ typedef struct IMPersistVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMPersist        *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMPersist        *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMPersist *This);
@@ -6304,11 +6370,10 @@ typedef struct IMFPersistVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFPersist       *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFPersist       *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFPersist *This);
@@ -6426,11 +6491,10 @@ typedef struct IMObjectVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMObject         *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMObject         *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMObject *This);
@@ -6600,11 +6664,10 @@ typedef struct IMFormatVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFormat         *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFormat         *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFormat *This);
@@ -6786,11 +6849,10 @@ typedef struct IMAudioTrackVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMAudioTrack     *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMAudioTrack     *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMAudioTrack *This);
@@ -6988,11 +7050,10 @@ typedef struct IMAudioVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMAudio          *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMAudio          *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMAudio *This);
@@ -7141,11 +7202,10 @@ typedef struct IMReceiverVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMReceiver       *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMReceiver       *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMReceiver *This);
@@ -7283,11 +7343,10 @@ typedef struct IMSendersVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMSenders        *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMSenders        *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMSenders *This);
@@ -7425,11 +7484,10 @@ typedef struct IMFileVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFile           *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFile           *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFile *This);
@@ -7637,11 +7695,10 @@ typedef struct IMItemVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMItem           *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMItem           *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMItem *This);
@@ -7945,11 +8002,10 @@ typedef struct IMPlaylistVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMPlaylist       *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMPlaylist       *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMPlaylist *This);
@@ -8163,11 +8219,10 @@ typedef struct IMBreaksVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMBreaks         *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMBreaks         *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMBreaks *This);
@@ -8326,11 +8381,10 @@ typedef struct IMSchedulerVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMScheduler      *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMScheduler      *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMScheduler *This);
@@ -8499,11 +8553,10 @@ typedef struct IMDeviceVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMDevice         *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMDevice         *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMDevice *This);
@@ -8628,11 +8681,10 @@ typedef struct IMPluginsVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMPlugins        *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMPlugins        *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMPlugins *This);
@@ -8751,11 +8803,10 @@ typedef struct IMPluginVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMPlugin         *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMPlugin         *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMPlugin *This);
@@ -8902,11 +8953,10 @@ typedef struct IMElementVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMElement        *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMElement        *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMElement *This);
@@ -9274,11 +9324,10 @@ typedef struct IMElementsVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMElements       *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMElements       *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMElements *This);
@@ -9429,11 +9478,10 @@ typedef struct IMScenesVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMScenes         *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMScenes         *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMScenes *This);
@@ -9593,11 +9641,10 @@ typedef struct IMStreamsVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMStreams        *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMStreams        *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMStreams *This);
@@ -9759,11 +9806,10 @@ typedef struct IMWriterVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMWriter         *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMWriter         *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMWriter *This);
@@ -9954,11 +10000,10 @@ typedef struct IMDeckControlVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMDeckControl    *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMDeckControl    *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMDeckControl *This);
@@ -10311,11 +10356,10 @@ typedef struct IMConfigVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMConfig         *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMConfig         *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMConfig *This);
@@ -10624,8 +10668,8 @@ public:
         /* [out] */ IMDevice * *_ppRenderer,
         /* [in] */ BSTR _bsProps) = 0;
 
-    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE MWrapperCreate(
-        /* [out] */ IMReceiver * *_ppWrapper,
+    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE MProxyCreate(
+        /* [out] */ IMReceiver * *_ppProxy,
         /* [in] */ BSTR _bsProps) = 0;
 
     virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE MWriterCreate(
@@ -10639,11 +10683,10 @@ typedef struct IMFactoryVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFactory        *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFactory        *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFactory *This);
@@ -10691,10 +10734,10 @@ typedef struct IMFactoryVtbl {
                                                                    /* [out] */ IMDevice **_ppRenderer,
                                                                    /* [in] */ BSTR        _bsProps);
 
-    DECLSPEC_XFGVIRT(IMFactory, MWrapperCreate)
-    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *MWrapperCreate)(IMFactory               *This,
-                                                                  /* [out] */ IMReceiver **_ppWrapper,
-                                                                  /* [in] */ BSTR          _bsProps);
+    DECLSPEC_XFGVIRT(IMFactory, MProxyCreate)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *MProxyCreate)(IMFactory               *This,
+                                                                /* [out] */ IMReceiver **_ppProxy,
+                                                                /* [in] */ BSTR          _bsProps);
 
     DECLSPEC_XFGVIRT(IMFactory, MWriterCreate)
     /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *MWriterCreate)(IMFactory             *This,
@@ -10739,8 +10782,8 @@ interface IMFactory { CONST_VTBL struct IMFactoryVtbl *lpVtbl; };
             #define IMFactory_MRendererCreate(This, _ppRenderer, _bsProps) \
                 ((This)->lpVtbl->MRendererCreate(This, _ppRenderer, _bsProps))
 
-            #define IMFactory_MWrapperCreate(This, _ppWrapper, _bsProps) \
-                ((This)->lpVtbl->MWrapperCreate(This, _ppWrapper, _bsProps))
+            #define IMFactory_MProxyCreate(This, _ppProxy, _bsProps) \
+                ((This)->lpVtbl->MProxyCreate(This, _ppProxy, _bsProps))
 
             #define IMFactory_MWriterCreate(This, _ppWriter, _bsProps) \
                 ((This)->lpVtbl->MWriterCreate(This, _ppWriter, _bsProps))
@@ -10784,11 +10827,10 @@ typedef struct IMSyncVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMSync           *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMSync           *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMSync *This);
@@ -10875,11 +10917,10 @@ typedef struct IMSourceVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMSource         *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMSource         *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMSource *This);
@@ -10962,11 +11003,10 @@ typedef struct IMLLogVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMLLog           *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMLLog           *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMLLog *This);
@@ -11057,11 +11097,10 @@ typedef struct IMSource_IVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMSource_I       *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMSource_I       *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMSource_I *This);
@@ -11083,29 +11122,24 @@ typedef struct IMSource_IVtbl {
                                                                     /* [in] */ eFrameGetFlags _eGetType);
 
     DECLSPEC_XFGVIRT(IMSource_I, SourceInit)
-    HRESULT(STDMETHODCALLTYPE *SourceInit)
-    (IMSource_I               *This,
-     /* [out][in] */ LONGLONG *_plUserData);
+    HRESULT(STDMETHODCALLTYPE *SourceInit)(IMSource_I               *This,
+                                           /* [out][in] */ LONGLONG *_plUserData);
 
     DECLSPEC_XFGVIRT(IMSource_I, SourceClose)
-    HRESULT(STDMETHODCALLTYPE *SourceClose)
-    (IMSource_I         *This,
-     /* [in] */ LONGLONG _lUserData);
+    HRESULT(STDMETHODCALLTYPE *SourceClose)(IMSource_I         *This,
+                                            /* [in] */ LONGLONG _lUserData);
 
     DECLSPEC_XFGVIRT(IMSource_I, SourceRefAdd)
-    HRESULT(STDMETHODCALLTYPE *SourceRefAdd)
-    (IMSource_I      *This,
-     /* [in] */ DWORD _dwProcessID);
+    HRESULT(STDMETHODCALLTYPE *SourceRefAdd)(IMSource_I      *This,
+                                             /* [in] */ DWORD _dwProcessID);
 
     DECLSPEC_XFGVIRT(IMSource_I, SourceRefRemove)
-    HRESULT(STDMETHODCALLTYPE *SourceRefRemove)
-    (IMSource_I      *This,
-     /* [in] */ DWORD _dwProcessID);
+    HRESULT(STDMETHODCALLTYPE *SourceRefRemove)(IMSource_I      *This,
+                                                /* [in] */ DWORD _dwProcessID);
 
     DECLSPEC_XFGVIRT(IMSource_I, SourceHaveRefs)
-    HRESULT(STDMETHODCALLTYPE *SourceHaveRefs)
-    (IMSource_I           *This,
-     /* [out] */ LONGLONG *_phWaitHandle);
+    HRESULT(STDMETHODCALLTYPE *SourceHaveRefs)(IMSource_I           *This,
+                                               /* [out] */ LONGLONG *_phWaitHandle);
 
     END_INTERFACE
 } IMSource_IVtbl;
@@ -11176,11 +11210,10 @@ typedef struct IMFExternalVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFExternal      *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFExternal      *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFExternal *This);
@@ -11189,24 +11222,20 @@ typedef struct IMFExternalVtbl {
     ULONG(STDMETHODCALLTYPE *Release)(IMFExternal *This);
 
     DECLSPEC_XFGVIRT(IMFExternal, ExternalPIDGet)
-    HRESULT(STDMETHODCALLTYPE *ExternalPIDGet)
-    (IMFExternal       *This,
-     /* [out] */ DWORD *_pdwProcessID);
+    HRESULT(STDMETHODCALLTYPE *ExternalPIDGet)(IMFExternal       *This,
+                                               /* [out] */ DWORD *_pdwProcessID);
 
     DECLSPEC_XFGVIRT(IMFExternal, ExternalRefAdd)
-    HRESULT(STDMETHODCALLTYPE *ExternalRefAdd)
-    (IMFExternal     *This,
-     /* [in] */ DWORD _dwProcessID);
+    HRESULT(STDMETHODCALLTYPE *ExternalRefAdd)(IMFExternal     *This,
+                                               /* [in] */ DWORD _dwProcessID);
 
     DECLSPEC_XFGVIRT(IMFExternal, ExternalRefRemove)
-    HRESULT(STDMETHODCALLTYPE *ExternalRefRemove)
-    (IMFExternal     *This,
-     /* [in] */ DWORD _dwProcessID);
+    HRESULT(STDMETHODCALLTYPE *ExternalRefRemove)(IMFExternal     *This,
+                                                  /* [in] */ DWORD _dwProcessID);
 
     DECLSPEC_XFGVIRT(IMFExternal, ExternalHaveRefs)
-    HRESULT(STDMETHODCALLTYPE *ExternalHaveRefs)
-    (IMFExternal          *This,
-     /* [out] */ LONGLONG *_phWaitHandle);
+    HRESULT(STDMETHODCALLTYPE *ExternalHaveRefs)(IMFExternal          *This,
+                                                 /* [out] */ LONGLONG *_phWaitHandle);
 
     END_INTERFACE
 } IMFExternalVtbl;
@@ -11304,11 +11333,10 @@ typedef struct IMFrame_IVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFrame_I        *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFrame_I        *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFrame_I *This);
@@ -11404,68 +11432,58 @@ typedef struct IMFrame_IVtbl {
     /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *FrameRelease)(IMFrame_I *This);
 
     DECLSPEC_XFGVIRT(IMFrame_I, GetProcessID)
-    HRESULT(STDMETHODCALLTYPE *GetProcessID)
-    (IMFrame_I         *This,
-     /* [out] */ DWORD *_pdwProcessID);
+    HRESULT(STDMETHODCALLTYPE *GetProcessID)(IMFrame_I         *This,
+                                             /* [out] */ DWORD *_pdwProcessID);
 
     DECLSPEC_XFGVIRT(IMFrame_I, GetID)
-    HRESULT(STDMETHODCALLTYPE *GetID)
-    (IMFrame_I            *This,
-     /* [out] */ LONGLONG *_plFrameID);
+    HRESULT(STDMETHODCALLTYPE *GetID)(IMFrame_I            *This,
+                                      /* [out] */ LONGLONG *_plFrameID);
 
     DECLSPEC_XFGVIRT(IMFrame_I, AudioGet)
-    HRESULT(STDMETHODCALLTYPE *AudioGet)
-    (IMFrame_I                           *This,
-     /* [out] */ DWORD                   *_pcbAudio,
-     /* [size_is][size_is][out] */ BYTE **_ppbAudio);
+    HRESULT(STDMETHODCALLTYPE *AudioGet)(IMFrame_I                           *This,
+                                         /* [out] */ DWORD                   *_pcbAudio,
+                                         /* [size_is][size_is][out] */ BYTE **_ppbAudio);
 
     DECLSPEC_XFGVIRT(IMFrame_I, VideoGet)
-    HRESULT(STDMETHODCALLTYPE *VideoGet)
-    (IMFrame_I                           *This,
-     /* [out] */ DWORD                   *_pcbVideo,
-     /* [size_is][size_is][out] */ BYTE **_ppbVideo);
+    HRESULT(STDMETHODCALLTYPE *VideoGet)(IMFrame_I                           *This,
+                                         /* [out] */ DWORD                   *_pcbVideo,
+                                         /* [size_is][size_is][out] */ BYTE **_ppbVideo);
 
     DECLSPEC_XFGVIRT(IMFrame_I, VideoGetOffset)
-    HRESULT(STDMETHODCALLTYPE *VideoGetOffset)
-    (IMFrame_I        *This,
-     /* [out] */ LONG *_plOffset);
+    HRESULT(STDMETHODCALLTYPE *VideoGetOffset)(IMFrame_I        *This,
+                                               /* [out] */ LONG *_plOffset);
 
     DECLSPEC_XFGVIRT(IMFrame_I, AudioSet)
-    HRESULT(STDMETHODCALLTYPE *AudioSet)
-    (IMFrame_I                *This,
-     /* [in] */ DWORD          _cbAudio,
-     /* [size_is][in] */ BYTE *_pbAudio);
+    HRESULT(STDMETHODCALLTYPE *AudioSet)(IMFrame_I                *This,
+                                         /* [in] */ DWORD          _cbAudio,
+                                         /* [size_is][in] */ BYTE *_pbAudio);
 
     DECLSPEC_XFGVIRT(IMFrame_I, GetFrameProps)
-    HRESULT(STDMETHODCALLTYPE *GetFrameProps)
-    (IMFrame_I              *This,
-     /* [out] */ M_TIME     *_pTime,
-     /* [out] */ M_AV_PROPS *_pProps,
-     /* [out] */ DWORD      *_pcbVideo,
-     /* [out] */ DWORD      *_pcbAudio);
+    HRESULT(STDMETHODCALLTYPE *GetFrameProps)(IMFrame_I              *This,
+                                              /* [out] */ M_TIME     *_pTime,
+                                              /* [out] */ M_AV_PROPS *_pProps,
+                                              /* [out] */ DWORD      *_pcbVideo,
+                                              /* [out] */ DWORD      *_pcbAudio);
 
     DECLSPEC_XFGVIRT(IMFrame_I, GetFramePropsAll)
-    HRESULT(STDMETHODCALLTYPE *GetFramePropsAll)
-    (IMFrame_I              *This,
-     /* [out] */ M_TIME     *_pTime,
-     /* [out] */ M_AV_PROPS *_pProps,
-     /* [out] */ DWORD      *_pcbAudio,
-     /* [out] */ BYTE      **_ppbAudio,
-     /* [out] */ DWORD      *_pcbVideo,
-     /* [out] */ BYTE      **_ppbVideo);
+    HRESULT(STDMETHODCALLTYPE *GetFramePropsAll)(IMFrame_I              *This,
+                                                 /* [out] */ M_TIME     *_pTime,
+                                                 /* [out] */ M_AV_PROPS *_pProps,
+                                                 /* [out] */ DWORD      *_pcbAudio,
+                                                 /* [out] */ BYTE      **_ppbAudio,
+                                                 /* [out] */ DWORD      *_pcbVideo,
+                                                 /* [out] */ BYTE      **_ppbVideo);
 
     DECLSPEC_XFGVIRT(IMFrame_I, ANCDataGet_I)
-    HRESULT(STDMETHODCALLTYPE *ANCDataGet_I)
-    (IMFrame_I                           *This,
-     /* [in] */ DWORD                     _dwDataFCC,
-     /* [out] */ DWORD                   *_pcbANCData,
-     /* [size_is][size_is][out] */ BYTE **_ppbANCData);
+    HRESULT(STDMETHODCALLTYPE *ANCDataGet_I)(IMFrame_I                           *This,
+                                             /* [in] */ DWORD                     _dwDataFCC,
+                                             /* [out] */ DWORD                   *_pcbANCData,
+                                             /* [size_is][size_is][out] */ BYTE **_ppbANCData);
 
     DECLSPEC_XFGVIRT(IMFrame_I, ANCDataCopyFrom_I)
-    HRESULT(STDMETHODCALLTYPE *ANCDataCopyFrom_I)
-    (IMFrame_I            *This,
-     /* [in] */ IMFrame_I *_pSource,
-     /* [in] */ int        _nCopyType);
+    HRESULT(STDMETHODCALLTYPE *ANCDataCopyFrom_I)(IMFrame_I            *This,
+                                                  /* [in] */ IMFrame_I *_pSource,
+                                                  /* [in] */ int        _nCopyType);
 
     END_INTERFACE
 } IMFrame_IVtbl;
@@ -11606,11 +11624,10 @@ typedef struct IMFrames_IVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFrames_I       *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFrames_I       *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFrames_I *This);
@@ -11656,40 +11673,35 @@ typedef struct IMFrames_IVtbl {
                                                                            /* [in] */ BSTR       _bsPropsList);
 
     DECLSPEC_XFGVIRT(IMFrames_I, FramesCreate_I)
-    HRESULT(STDMETHODCALLTYPE *FramesCreate_I)
-    (IMFrames_I             *This,
-     /* [in] */ int          _cbVideoSize,
-     /* [in] */ int          _cbAudioSize,
-     /* [in] */ BSTR         _bsProps,
-     /* [out] */ IMFrame_I **_ppFrame);
+    HRESULT(STDMETHODCALLTYPE *FramesCreate_I)(IMFrames_I             *This,
+                                               /* [in] */ int          _cbVideoSize,
+                                               /* [in] */ int          _cbAudioSize,
+                                               /* [in] */ BSTR         _bsProps,
+                                               /* [out] */ IMFrame_I **_ppFrame);
 
     DECLSPEC_XFGVIRT(IMFrames_I, FramesClone_I)
-    HRESULT(STDMETHODCALLTYPE *FramesClone_I)
-    (IMFrames_I             *This,
-     /* [in] */ IMFrame     *_pFrame,
-     /* [out] */ IMFrame_I **_ppFrameClone,
-     /* [in] */ eMFrameClone _eCloneType,
-     /* [in] */ eMFCC        _fccPixelFormat);
+    HRESULT(STDMETHODCALLTYPE *FramesClone_I)(IMFrames_I             *This,
+                                              /* [in] */ IMFrame     *_pFrame,
+                                              /* [out] */ IMFrame_I **_ppFrameClone,
+                                              /* [in] */ eMFrameClone _eCloneType,
+                                              /* [in] */ eMFCC        _fccPixelFormat);
 
     DECLSPEC_XFGVIRT(IMFrames_I, FramesConvert_I)
-    HRESULT(STDMETHODCALLTYPE *FramesConvert_I)
-    (IMFrames_I             *This,
-     /* [in] */ IMFrame     *_pFrameSrcL_F1,
-     /* [in] */ IMFrame     *_pFrameSrcR_F2,
-     /* [in] */ M_VID_PROPS *_pVidPropsDest,
-     /* [out] */ IMFrame   **_ppFrameDest,
-     /* [in] */ BSTR         _bsPropsList);
+    HRESULT(STDMETHODCALLTYPE *FramesConvert_I)(IMFrames_I             *This,
+                                                /* [in] */ IMFrame     *_pFrameSrcL_F1,
+                                                /* [in] */ IMFrame     *_pFrameSrcR_F2,
+                                                /* [in] */ M_VID_PROPS *_pVidPropsDest,
+                                                /* [out] */ IMFrame   **_ppFrameDest,
+                                                /* [in] */ BSTR         _bsPropsList);
 
     DECLSPEC_XFGVIRT(IMFrames_I, AllocBuffer)
-    HRESULT(STDMETHODCALLTYPE *AllocBuffer)
-    (IMFrames_I           *This,
-     /* [in] */ DWORD      _cbSize,
-     /* [out] */ LONGLONG *_ppBuffer);
+    HRESULT(STDMETHODCALLTYPE *AllocBuffer)(IMFrames_I           *This,
+                                            /* [in] */ DWORD      _cbSize,
+                                            /* [out] */ LONGLONG *_ppBuffer);
 
     DECLSPEC_XFGVIRT(IMFrames_I, ReleaseBuffer)
-    HRESULT(STDMETHODCALLTYPE *ReleaseBuffer)
-    (IMFrames_I         *This,
-     /* [in] */ LONGLONG _pBuffer);
+    HRESULT(STDMETHODCALLTYPE *ReleaseBuffer)(IMFrames_I         *This,
+                                              /* [in] */ LONGLONG _pBuffer);
 
     END_INTERFACE
 } IMFrames_IVtbl;
@@ -11793,11 +11805,10 @@ typedef struct IMDevice_IVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMDevice_I       *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMDevice_I       *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMDevice_I *This);
@@ -11883,7 +11894,7 @@ public:
         /* [in] */ IUnknown * _pReceiverOrSender,
         /* [in] */ BOOL _bNoEOS) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE GetMediaUnit(
+    virtual HRESULT STDMETHODCALLTYPE GetMediaProps(
         /* [out] */ M_VID_PROPS * _pVidProps,
         /* [out] */ M_AUD_PROPS * _pAudProps) = 0;
 
@@ -11902,11 +11913,10 @@ typedef struct IMObject_IVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMObject_I       *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMObject_I       *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMObject_I *This);
@@ -11915,36 +11925,31 @@ typedef struct IMObject_IVtbl {
     ULONG(STDMETHODCALLTYPE *Release)(IMObject_I *This);
 
     DECLSPEC_XFGVIRT(IMObject_I, Init)
-    HRESULT(STDMETHODCALLTYPE *Init)
-    (IMObject_I          *This,
-     /* [in] */ IUnknown *_pReceiverOrSender);
+    HRESULT(STDMETHODCALLTYPE *Init)(IMObject_I          *This,
+                                     /* [in] */ IUnknown *_pReceiverOrSender);
 
     DECLSPEC_XFGVIRT(IMObject_I, Close)
     HRESULT(STDMETHODCALLTYPE *Close)(IMObject_I *This);
 
     DECLSPEC_XFGVIRT(IMObject_I, SetInterface)
-    HRESULT(STDMETHODCALLTYPE *SetInterface)
-    (IMObject_I          *This,
-     /* [in] */ IUnknown *_pReceiverOrSender,
-     /* [in] */ BOOL      _bNoEOS);
+    HRESULT(STDMETHODCALLTYPE *SetInterface)(IMObject_I          *This,
+                                             /* [in] */ IUnknown *_pReceiverOrSender,
+                                             /* [in] */ BOOL      _bNoEOS);
 
-    DECLSPEC_XFGVIRT(IMObject_I, GetMediaUnit)
-    HRESULT(STDMETHODCALLTYPE *GetMediaUnit)
-    (IMObject_I              *This,
-     /* [out] */ M_VID_PROPS *_pVidProps,
-     /* [out] */ M_AUD_PROPS *_pAudProps);
+    DECLSPEC_XFGVIRT(IMObject_I, GetMediaProps)
+    HRESULT(STDMETHODCALLTYPE *GetMediaProps)(IMObject_I              *This,
+                                              /* [out] */ M_VID_PROPS *_pVidProps,
+                                              /* [out] */ M_AUD_PROPS *_pAudProps);
 
     DECLSPEC_XFGVIRT(IMObject_I, GetState)
-    HRESULT(STDMETHODCALLTYPE *GetState)
-    (IMObject_I            *This,
-     /* [out] */ eMState   *_peState,
-     /* [out] */ IUnknown **_ppReceiverOrSender);
+    HRESULT(STDMETHODCALLTYPE *GetState)(IMObject_I            *This,
+                                         /* [out] */ eMState   *_peState,
+                                         /* [out] */ IUnknown **_ppReceiverOrSender);
 
     DECLSPEC_XFGVIRT(IMObject_I, GetInternalInterface)
-    HRESULT(STDMETHODCALLTYPE *GetInternalInterface)
-    (IMObject_I            *This,
-     /* [in] */ BSTR        _bsType,
-     /* [out] */ IUnknown **_ppObject);
+    HRESULT(STDMETHODCALLTYPE *GetInternalInterface)(IMObject_I            *This,
+                                                     /* [in] */ BSTR        _bsType,
+                                                     /* [out] */ IUnknown **_ppObject);
 
     END_INTERFACE
 } IMObject_IVtbl;
@@ -11967,8 +11972,8 @@ interface IMObject_I { CONST_VTBL struct IMObject_IVtbl *lpVtbl; };
             #define IMObject_I_SetInterface(This, _pReceiverOrSender, _bNoEOS) \
                 ((This)->lpVtbl->SetInterface(This, _pReceiverOrSender, _bNoEOS))
 
-            #define IMObject_I_GetMediaUnit(This, _pVidProps, _pAudProps) \
-                ((This)->lpVtbl->GetMediaUnit(This, _pVidProps, _pAudProps))
+            #define IMObject_I_GetMediaProps(This, _pVidProps, _pAudProps) \
+                ((This)->lpVtbl->GetMediaProps(This, _pVidProps, _pAudProps))
 
             #define IMObject_I_GetState(This, _peState, _ppReceiverOrSender) \
                 ((This)->lpVtbl->GetState(This, _peState, _ppReceiverOrSender))
@@ -12016,7 +12021,7 @@ public:
     virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE SenderGetName(
         /* [out] */ BSTR * _pbsName) = 0;
 
-    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE SenderGetMediaUnit(
+    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE SenderGetMediaProps(
         /* [out] */ M_VID_PROPS * _pVidProps,
         /* [out] */ M_AUD_PROPS * _pAudProps) = 0;
 
@@ -12034,11 +12039,10 @@ typedef struct IMSender_IVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMSender_I       *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMSender_I       *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMSender_I *This);
@@ -12071,10 +12075,10 @@ typedef struct IMSender_IVtbl {
     /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SenderGetName)(IMSender_I       *This,
                                                                  /* [out] */ BSTR *_pbsName);
 
-    DECLSPEC_XFGVIRT(IMSender_I, SenderGetMediaUnit)
-    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SenderGetMediaUnit)(IMSender_I              *This,
-                                                                      /* [out] */ M_VID_PROPS *_pVidProps,
-                                                                      /* [out] */ M_AUD_PROPS *_pAudProps);
+    DECLSPEC_XFGVIRT(IMSender_I, SenderGetMediaProps)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SenderGetMediaProps)(IMSender_I              *This,
+                                                                       /* [out] */ M_VID_PROPS *_pVidProps,
+                                                                       /* [out] */ M_AUD_PROPS *_pAudProps);
 
     DECLSPEC_XFGVIRT(IMSender_I, SenderCallbackAdd)
     /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SenderCallbackAdd)(IMSender_I          *This,
@@ -12113,8 +12117,8 @@ interface IMSender_I { CONST_VTBL struct IMSender_IVtbl *lpVtbl; };
 
             #define IMSender_I_SenderGetName(This, _pbsName) ((This)->lpVtbl->SenderGetName(This, _pbsName))
 
-            #define IMSender_I_SenderGetMediaUnit(This, _pVidProps, _pAudProps) \
-                ((This)->lpVtbl->SenderGetMediaUnit(This, _pVidProps, _pAudProps))
+            #define IMSender_I_SenderGetMediaProps(This, _pVidProps, _pAudProps) \
+                ((This)->lpVtbl->SenderGetMediaProps(This, _pVidProps, _pAudProps))
 
             #define IMSender_I_SenderCallbackAdd(This, _pCallback, _llCallbackUserData) \
                 ((This)->lpVtbl->SenderCallbackAdd(This, _pCallback, _llCallbackUserData))
@@ -12164,11 +12168,10 @@ typedef struct IMReceiver_IVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMReceiver_I     *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMReceiver_I     *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMReceiver_I *This);
@@ -12249,11 +12252,10 @@ typedef struct IMFReceiverVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFReceiver      *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFReceiver      *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFReceiver *This);
@@ -12316,11 +12318,10 @@ typedef struct IMFReceiverVB6Vtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFReceiverVB6   *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFReceiverVB6   *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFReceiverVB6 *This);
@@ -12385,11 +12386,10 @@ typedef struct IMFSinkVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFSink          *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFSink          *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFSink *This);
@@ -12523,11 +12523,10 @@ typedef struct IMFPipeVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFPipe          *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFPipe          *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFPipe *This);
@@ -12713,11 +12712,10 @@ typedef struct IMFBasicStreamVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFBasicStream   *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFBasicStream   *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFBasicStream *This);
@@ -12830,11 +12828,10 @@ typedef struct IMFPipesVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFPipes         *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFPipes         *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFPipes *This);
@@ -12915,11 +12912,10 @@ typedef struct IMFPipe_SourceVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFPipe_Source   *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFPipe_Source   *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFPipe_Source *This);
@@ -13148,11 +13144,10 @@ typedef struct IMFPropsVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFProps         *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFProps         *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFProps *This);
@@ -13331,11 +13326,10 @@ typedef struct IMFBrowserVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFBrowser       *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFBrowser       *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFBrowser *This);
@@ -13465,11 +13459,10 @@ typedef struct IMFConfigVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFConfig        *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFConfig        *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFConfig *This);
@@ -13540,11 +13533,10 @@ typedef struct IMFProcessVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFProcess       *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFProcess       *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFProcess *This);
@@ -13629,11 +13621,10 @@ typedef struct IMFAllocatorVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFAllocator     *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFAllocator     *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFAllocator *This);
@@ -13742,11 +13733,10 @@ typedef struct IMFPacketVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFPacket        *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFPacket        *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFPacket *This);
@@ -13844,11 +13834,10 @@ typedef struct IMFBuffersAllocatorVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFBuffersAllocator *This,
-     /* [in] */ REFIID    riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFBuffersAllocator *This,
+                                               /* [in] */ REFIID    riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFBuffersAllocator *This);
@@ -13942,11 +13931,10 @@ typedef struct IMFCacheVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFCache         *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFCache         *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFCache *This);
@@ -14080,11 +14068,10 @@ typedef struct IMFSideDataVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFSideData      *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFSideData      *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFSideData *This);
@@ -14231,11 +14218,10 @@ typedef struct IMFObjectVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFObject        *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFObject        *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFObject *This);
@@ -14337,11 +14323,10 @@ typedef struct IMDelayVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMDelay          *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMDelay          *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMDelay *This);
@@ -14356,20 +14341,18 @@ typedef struct IMDelayVtbl {
     HRESULT(STDMETHODCALLTYPE *IsInit)(IMDelay *This);
 
     DECLSPEC_XFGVIRT(IMDelay, Available)
-    HRESULT(STDMETHODCALLTYPE *Available)
-    (IMDelay                    *This,
-     /* [out] */ REFERENCE_TIME *_prtStart,
-     /* [out] */ REFERENCE_TIME *_prtStop);
+    HRESULT(STDMETHODCALLTYPE *Available)(IMDelay                    *This,
+                                          /* [out] */ REFERENCE_TIME *_prtStart,
+                                          /* [out] */ REFERENCE_TIME *_prtStop);
 
     DECLSPEC_XFGVIRT(IMDelay, Close)
     HRESULT(STDMETHODCALLTYPE *Close)(IMDelay *This);
 
     DECLSPEC_XFGVIRT(IMDelay, GetFrameForPos)
-    HRESULT(STDMETHODCALLTYPE *GetFrameForPos)
-    (IMDelay                  *This,
-     /* [in] */ REFERENCE_TIME _rtPos,
-     /* [in] */ int            _nNextOrPrevFrame,
-     /* [out] */ IUnknown    **_ppMFFrame);
+    HRESULT(STDMETHODCALLTYPE *GetFrameForPos)(IMDelay                  *This,
+                                               /* [in] */ REFERENCE_TIME _rtPos,
+                                               /* [in] */ int            _nNextOrPrevFrame,
+                                               /* [out] */ IUnknown    **_ppMFFrame);
 
     END_INTERFACE
 } IMDelayVtbl;
@@ -14420,7 +14403,7 @@ public:
         /* [in] */ IMFPacket * _pMFPacket) = 0;
 
     virtual HRESULT STDMETHODCALLTYPE UpdateFrameCC(
-        /* [in] */ IMFFrame * _mf_frame_p,
+        /* [in] */ IMFFrame * _pMFFrame,
         /* [in] */ BSTR _bsProps) = 0;
 
     virtual HRESULT STDMETHODCALLTYPE OpenCCFile(
@@ -14438,11 +14421,10 @@ typedef struct IMFCaptionsDecoderVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFCaptionsDecoder *This,
-     /* [in] */ REFIID   riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFCaptionsDecoder *This,
+                                               /* [in] */ REFIID   riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFCaptionsDecoder *This);
@@ -14451,27 +14433,23 @@ typedef struct IMFCaptionsDecoderVtbl {
     ULONG(STDMETHODCALLTYPE *Release)(IMFCaptionsDecoder *This);
 
     DECLSPEC_XFGVIRT(IMFCaptionsDecoder, AnalyzePacketForCC)
-    HRESULT(STDMETHODCALLTYPE *AnalyzePacketForCC)
-    (IMFCaptionsDecoder   *This,
-     /* [in] */ IMFPacket *_pMFPacket);
+    HRESULT(STDMETHODCALLTYPE *AnalyzePacketForCC)(IMFCaptionsDecoder   *This,
+                                                   /* [in] */ IMFPacket *_pMFPacket);
 
     DECLSPEC_XFGVIRT(IMFCaptionsDecoder, UpdateFrameCC)
-    HRESULT(STDMETHODCALLTYPE *UpdateFrameCC)
-    (IMFCaptionsDecoder  *This,
-     /* [in] */ IMFFrame *_mf_frame_p,
-     /* [in] */ BSTR      _bsProps);
+    HRESULT(STDMETHODCALLTYPE *UpdateFrameCC)(IMFCaptionsDecoder  *This,
+                                              /* [in] */ IMFFrame *_pMFFrame,
+                                              /* [in] */ BSTR      _bsProps);
 
     DECLSPEC_XFGVIRT(IMFCaptionsDecoder, OpenCCFile)
-    HRESULT(STDMETHODCALLTYPE *OpenCCFile)
-    (IMFCaptionsDecoder *This,
-     /* [in] */ BSTR     _bsMediaFile,
-     /* [in] */ double   _dblRate,
-     /* [out] */ int    *_pnFileType);
+    HRESULT(STDMETHODCALLTYPE *OpenCCFile)(IMFCaptionsDecoder *This,
+                                           /* [in] */ BSTR     _bsMediaFile,
+                                           /* [in] */ double   _dblRate,
+                                           /* [out] */ int    *_pnFileType);
 
     DECLSPEC_XFGVIRT(IMFCaptionsDecoder, SetStartTimecode)
-    HRESULT(STDMETHODCALLTYPE *SetStartTimecode)
-    (IMFCaptionsDecoder   *This,
-     /* [in] */ M_TIMECODE _tcStart);
+    HRESULT(STDMETHODCALLTYPE *SetStartTimecode)(IMFCaptionsDecoder   *This,
+                                                 /* [in] */ M_TIMECODE _tcStart);
 
     END_INTERFACE
 } IMFCaptionsDecoderVtbl;
@@ -14490,8 +14468,8 @@ interface IMFCaptionsDecoder { CONST_VTBL struct IMFCaptionsDecoderVtbl *lpVtbl;
             #define IMFCaptionsDecoder_AnalyzePacketForCC(This, _pMFPacket) \
                 ((This)->lpVtbl->AnalyzePacketForCC(This, _pMFPacket))
 
-            #define IMFCaptionsDecoder_UpdateFrameCC(This, _mf_frame_p, _bsProps) \
-                ((This)->lpVtbl->UpdateFrameCC(This, _mf_frame_p, _bsProps))
+            #define IMFCaptionsDecoder_UpdateFrameCC(This, _pMFFrame, _bsProps) \
+                ((This)->lpVtbl->UpdateFrameCC(This, _pMFFrame, _bsProps))
 
             #define IMFCaptionsDecoder_OpenCCFile(This, _bsMediaFile, _dblRate, _pnFileType) \
                 ((This)->lpVtbl->OpenCCFile(This, _bsMediaFile, _dblRate, _pnFileType))
@@ -14538,11 +14516,10 @@ typedef struct IMSourceDSVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMSourceDS       *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMSourceDS       *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMSourceDS *This);
@@ -14607,8 +14584,8 @@ MIDL_INTERFACE("82503DDF-C56C-4AB9-BBC8-63F4F1A93CF2")
 IMSinkDS: public IUnknown
 {
 public:
-    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE SetWrapper(
-        /* [in] */ IUnknown * _pWrapper,
+    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE SetProxy(
+        /* [in] */ IUnknown * _pProxy,
         /* [in] */ IUnknown * _pCallbackSender,
         /* [in] */ BOOL _bAuto) = 0;
 };
@@ -14619,11 +14596,10 @@ typedef struct IMSinkDSVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMSinkDS         *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMSinkDS         *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMSinkDS *This);
@@ -14631,11 +14607,11 @@ typedef struct IMSinkDSVtbl {
     DECLSPEC_XFGVIRT(IUnknown, Release)
     ULONG(STDMETHODCALLTYPE *Release)(IMSinkDS *This);
 
-    DECLSPEC_XFGVIRT(IMSinkDS, SetWrapper)
-    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SetWrapper)(IMSinkDS            *This,
-                                                              /* [in] */ IUnknown *_pWrapper,
-                                                              /* [in] */ IUnknown *_pCallbackSender,
-                                                              /* [in] */ BOOL      _bAuto);
+    DECLSPEC_XFGVIRT(IMSinkDS, SetProxy)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SetProxy)(IMSinkDS            *This,
+                                                            /* [in] */ IUnknown *_pProxy,
+                                                            /* [in] */ IUnknown *_pCallbackSender,
+                                                            /* [in] */ BOOL      _bAuto);
 
     END_INTERFACE
 } IMSinkDSVtbl;
@@ -14651,8 +14627,8 @@ interface IMSinkDS { CONST_VTBL struct IMSinkDSVtbl *lpVtbl; };
 
             #define IMSinkDS_Release(This) ((This)->lpVtbl->Release(This))
 
-            #define IMSinkDS_SetWrapper(This, _pWrapper, _pCallbackSender, _bAuto) \
-                ((This)->lpVtbl->SetWrapper(This, _pWrapper, _pCallbackSender, _bAuto))
+            #define IMSinkDS_SetProxy(This, _pProxy, _pCallbackSender, _bAuto) \
+                ((This)->lpVtbl->SetProxy(This, _pProxy, _pCallbackSender, _bAuto))
 
         #endif /* COBJMACROS */
 
@@ -14764,11 +14740,10 @@ typedef struct IMFObjectASIOVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFObjectASIO    *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFObjectASIO    *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFObjectASIO *This);
@@ -14947,11 +14922,10 @@ typedef struct IMFAsyncOperationVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFAsyncOperation *This,
-     /* [in] */ REFIID  riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFAsyncOperation *This,
+                                               /* [in] */ REFIID  riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFAsyncOperation *This);
@@ -15052,11 +15026,10 @@ typedef struct IMFDelayVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFDelay         *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFDelay         *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFDelay *This);
@@ -15150,9 +15123,1148 @@ interface IMFDelay { CONST_VTBL struct IMFDelayVtbl *lpVtbl; };
 
 #endif /* __IMFDelay_INTERFACE_DEFINED__ */
 
-/* interface __MIDL_itf_MFormats_0000_0078 */
+#ifndef __IMFGPUSwitcher_INTERFACE_DEFINED__
+    #define __IMFGPUSwitcher_INTERFACE_DEFINED__
+
+/* interface IMFGPUSwitcher */
+/* [unique][helpstring][uuid][object] */
+
+EXTERN_C const IID IID_IMFGPUSwitcher;
+
+    #if defined(__cplusplus) && !defined(CINTERFACE)
+
+MIDL_INTERFACE("171A6373-E5BF-40DE-A378-EBD3CFF7227B")
+IMFGPUSwitcher: public IUnknown
+{
+public:
+    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE GPUGetCount(
+        /* [out] */ int *_piCount) = 0;
+
+    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE GPUGetAdapterDescByIndex(
+        /* [in] */ int              _nIndex,
+        /* [out] */ M_ADAPTER_DESC *_pDesc) = 0;
+
+    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE GPUSetAdapterByLuid(
+        /* [in] */ LONGLONG _llLUID,
+        /* [in] */ BSTR     _bsParam) = 0;
+
+    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE GPUGetCurrentAdapterDesc(
+        /* [out] */ M_ADAPTER_DESC * _pDesc) = 0;
+};
+
+    #else /* C style interface */
+
+typedef struct IMFGPUSwitcherVtbl {
+    BEGIN_INTERFACE
+
+    DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFGPUSwitcher   *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
+
+    DECLSPEC_XFGVIRT(IUnknown, AddRef)
+    ULONG(STDMETHODCALLTYPE *AddRef)(IMFGPUSwitcher *This);
+
+    DECLSPEC_XFGVIRT(IUnknown, Release)
+    ULONG(STDMETHODCALLTYPE *Release)(IMFGPUSwitcher *This);
+
+    DECLSPEC_XFGVIRT(IMFGPUSwitcher, GPUGetCount)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *GPUGetCount)(IMFGPUSwitcher  *This,
+                                                               /* [out] */ int *_piCount);
+
+    DECLSPEC_XFGVIRT(IMFGPUSwitcher, GPUGetAdapterDescByIndex)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *GPUGetAdapterDescByIndex)(IMFGPUSwitcher             *This,
+                                                                            /* [in] */ int              _nIndex,
+                                                                            /* [out] */ M_ADAPTER_DESC *_pDesc);
+
+    DECLSPEC_XFGVIRT(IMFGPUSwitcher, GPUSetAdapterByLuid)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *GPUSetAdapterByLuid)(IMFGPUSwitcher     *This,
+                                                                       /* [in] */ LONGLONG _llLUID,
+                                                                       /* [in] */ BSTR     _bsParam);
+
+    DECLSPEC_XFGVIRT(IMFGPUSwitcher, GPUGetCurrentAdapterDesc)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *GPUGetCurrentAdapterDesc)(IMFGPUSwitcher             *This,
+                                                                            /* [out] */ M_ADAPTER_DESC *_pDesc);
+
+    END_INTERFACE
+} IMFGPUSwitcherVtbl;
+
+interface IMFGPUSwitcher { CONST_VTBL struct IMFGPUSwitcherVtbl *lpVtbl; };
+
+        #ifdef COBJMACROS
+
+            #define IMFGPUSwitcher_QueryInterface(This, riid, ppvObject) \
+                ((This)->lpVtbl->QueryInterface(This, riid, ppvObject))
+
+            #define IMFGPUSwitcher_AddRef(This) ((This)->lpVtbl->AddRef(This))
+
+            #define IMFGPUSwitcher_Release(This) ((This)->lpVtbl->Release(This))
+
+            #define IMFGPUSwitcher_GPUGetCount(This, _piCount) ((This)->lpVtbl->GPUGetCount(This, _piCount))
+
+            #define IMFGPUSwitcher_GPUGetAdapterDescByIndex(This, _nIndex, _pDesc) \
+                ((This)->lpVtbl->GPUGetAdapterDescByIndex(This, _nIndex, _pDesc))
+
+            #define IMFGPUSwitcher_GPUSetAdapterByLuid(This, _llLUID, _bsParam) \
+                ((This)->lpVtbl->GPUSetAdapterByLuid(This, _llLUID, _bsParam))
+
+            #define IMFGPUSwitcher_GPUGetCurrentAdapterDesc(This, _pDesc) \
+                ((This)->lpVtbl->GPUGetCurrentAdapterDesc(This, _pDesc))
+
+        #endif /* COBJMACROS */
+
+    #endif /* C style interface */
+
+#endif /* __IMFGPUSwitcher_INTERFACE_DEFINED__ */
+
+/* interface __MIDL_itf_MFormats_0000_0079 */
 /* [local] */
 
+#ifndef VTSG_STATE_DEFINED
+    #define VTSG_STATE_DEFINED
+typedef enum eVTSG_State {
+    eVTSG_Closed                  = 0,
+    eVTSG_Connecting              = 0x2,
+    eVTSG_LoggedIn                = 0x3,
+    eVTSG_Connected               = 0x4,
+    eVTSG_Disconnecting           = 0x5,
+    eVTSG_Disconnected            = 0x6,
+    eVTSG_Error                   = 0x10,
+    eVTSG_Reconnect               = 0x100,
+    eVTSG_Reconnect_Connecting    = 0x102,
+    eVTSG_Reconnect_LoggedIn      = 0x103,
+    eVTSG_Reconnect_Disconnecting = 0x105,
+    eVTSG_Reconnect_Disconnected  = 0x106,
+    eVTSG_Reconnect_Error         = 0x110
+} eVTSG_State;
+
+#endif // VTSG_STATE_DEFINED
+#ifndef MCONNECT_TYPEDEF_DEFINED
+    #define MCONNECT_TYPEDEF_DEFINED
+typedef enum eMC_ChannelState { eMCCS_Closed = 0, eMCCS_Connected = 1, eMCCS_Reconnecting = 2 } eMC_ChannelState;
+
+typedef enum eChannelMode { eCM_Closed = 0, eCM_Receiver = 1, eCM_Transmitter = 2, eCM_Transiever = 3 } eChannelMode;
+
+typedef struct CHANNEL_INFO {
+    eMC_ChannelState eDataState;
+    eChannelMode     eChannelMode;
+    eVTSG_State      eSGNState;
+    int              nChannelsConnected;
+    LONGLONG         cbDataSend;
+    LONGLONG         cbDataReceived;
+    double           dblRcvBandwidth;
+    double           dblSendBandwidth;
+} CHANNEL_INFO;
+
+#endif // MCONNECT_TYPEDEF_DEFINED
+
+extern RPC_IF_HANDLE __MIDL_itf_MFormats_0000_0079_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_MFormats_0000_0079_v0_0_s_ifspec;
+
+#ifndef __IMCChannelCallback_INTERFACE_DEFINED__
+    #define __IMCChannelCallback_INTERFACE_DEFINED__
+
+/* interface IMCChannelCallback */
+/* [unique][uuid][object] */
+
+EXTERN_C const IID IID_IMCChannelCallback;
+
+    #if defined(__cplusplus) && !defined(CINTERFACE)
+
+MIDL_INTERFACE("978e1a01-3984-4a9f-8d55-463702ccc535")
+IMCChannelCallback: public IUnknown
+{
+public:
+    virtual HRESULT STDMETHODCALLTYPE OnChannelEvent(
+        /* [in] */ IUnknown * _pChannel,
+        /* [in] */ BSTR _bsEventName,
+        /* [in] */ BSTR _bsEventParam,
+        /* [in] */ IUnknown * _pEventData) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE OnChannelSGNMessage(
+        /* [in] */ IUnknown * _pChannel,
+        /* [in] */ BSTR _bsSourceUPI,
+        /* [in] */ BSTR _bsMessageName,
+        /* [in] */ BSTR _bsMessageBody,
+        /* [in] */ IUnknown * _pMessageObj) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE OnChannelMessage(
+        /* [in] */ IUnknown * _pChannel,
+        /* [in] */ BSTR _bsSourceUPI,
+        /* [in] */ BSTR _bsMessageName,
+        /* [in] */ BSTR _bsMessageBody) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE OnChannelData(
+        /* [in] */ IUnknown * _pChannel,
+        /* [in] */ BSTR _bsSourceUPI,
+        /* [in] */ IUnknown * _pFrameOrData) = 0;
+};
+
+    #else /* C style interface */
+
+typedef struct IMCChannelCallbackVtbl {
+    BEGIN_INTERFACE
+
+    DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMCChannelCallback *This,
+                                               /* [in] */ REFIID   riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
+
+    DECLSPEC_XFGVIRT(IUnknown, AddRef)
+    ULONG(STDMETHODCALLTYPE *AddRef)(IMCChannelCallback *This);
+
+    DECLSPEC_XFGVIRT(IUnknown, Release)
+    ULONG(STDMETHODCALLTYPE *Release)(IMCChannelCallback *This);
+
+    DECLSPEC_XFGVIRT(IMCChannelCallback, OnChannelEvent)
+    HRESULT(STDMETHODCALLTYPE *OnChannelEvent)(IMCChannelCallback  *This,
+                                               /* [in] */ IUnknown *_pChannel,
+                                               /* [in] */ BSTR      _bsEventName,
+                                               /* [in] */ BSTR      _bsEventParam,
+                                               /* [in] */ IUnknown *_pEventData);
+
+    DECLSPEC_XFGVIRT(IMCChannelCallback, OnChannelSGNMessage)
+    HRESULT(STDMETHODCALLTYPE *OnChannelSGNMessage)(IMCChannelCallback  *This,
+                                                    /* [in] */ IUnknown *_pChannel,
+                                                    /* [in] */ BSTR      _bsSourceUPI,
+                                                    /* [in] */ BSTR      _bsMessageName,
+                                                    /* [in] */ BSTR      _bsMessageBody,
+                                                    /* [in] */ IUnknown *_pMessageObj);
+
+    DECLSPEC_XFGVIRT(IMCChannelCallback, OnChannelMessage)
+    HRESULT(STDMETHODCALLTYPE *OnChannelMessage)(IMCChannelCallback  *This,
+                                                 /* [in] */ IUnknown *_pChannel,
+                                                 /* [in] */ BSTR      _bsSourceUPI,
+                                                 /* [in] */ BSTR      _bsMessageName,
+                                                 /* [in] */ BSTR      _bsMessageBody);
+
+    DECLSPEC_XFGVIRT(IMCChannelCallback, OnChannelData)
+    HRESULT(STDMETHODCALLTYPE *OnChannelData)(IMCChannelCallback  *This,
+                                              /* [in] */ IUnknown *_pChannel,
+                                              /* [in] */ BSTR      _bsSourceUPI,
+                                              /* [in] */ IUnknown *_pFrameOrData);
+
+    END_INTERFACE
+} IMCChannelCallbackVtbl;
+
+interface IMCChannelCallback { CONST_VTBL struct IMCChannelCallbackVtbl *lpVtbl; };
+
+        #ifdef COBJMACROS
+
+            #define IMCChannelCallback_QueryInterface(This, riid, ppvObject) \
+                ((This)->lpVtbl->QueryInterface(This, riid, ppvObject))
+
+            #define IMCChannelCallback_AddRef(This) ((This)->lpVtbl->AddRef(This))
+
+            #define IMCChannelCallback_Release(This) ((This)->lpVtbl->Release(This))
+
+            #define IMCChannelCallback_OnChannelEvent(This, _pChannel, _bsEventName, _bsEventParam, _pEventData) \
+                ((This)->lpVtbl->OnChannelEvent(This, _pChannel, _bsEventName, _bsEventParam, _pEventData))
+
+            #define IMCChannelCallback_OnChannelSGNMessage(This,           \
+                                                           _pChannel,      \
+                                                           _bsSourceUPI,   \
+                                                           _bsMessageName, \
+                                                           _bsMessageBody, \
+                                                           _pMessageObj)   \
+                ((This)->lpVtbl->OnChannelSGNMessage(This,                 \
+                                                     _pChannel,            \
+                                                     _bsSourceUPI,         \
+                                                     _bsMessageName,       \
+                                                     _bsMessageBody,       \
+                                                     _pMessageObj))
+
+            #define IMCChannelCallback_OnChannelMessage(This, _pChannel, _bsSourceUPI, _bsMessageName, _bsMessageBody) \
+                ((This)->lpVtbl->OnChannelMessage(This, _pChannel, _bsSourceUPI, _bsMessageName, _bsMessageBody))
+
+            #define IMCChannelCallback_OnChannelData(This, _pChannel, _bsSourceUPI, _pFrameOrData) \
+                ((This)->lpVtbl->OnChannelData(This, _pChannel, _bsSourceUPI, _pFrameOrData))
+
+        #endif /* COBJMACROS */
+
+    #endif /* C style interface */
+
+#endif /* __IMCChannelCallback_INTERFACE_DEFINED__ */
+
+#ifndef __IMCChannelSGN_INTERFACE_DEFINED__
+    #define __IMCChannelSGN_INTERFACE_DEFINED__
+
+/* interface IMCChannelSGN */
+/* [unique][uuid][object] */
+
+EXTERN_C const IID IID_IMCChannelSGN;
+
+    #if defined(__cplusplus) && !defined(CINTERFACE)
+
+MIDL_INTERFACE("978e1f01-3984-4a9f-8d55-463702ccc535")
+IMCChannelSGN: public IUnknown
+{
+public:
+    virtual HRESULT STDMETHODCALLTYPE VTSG_InfoGet(
+        /* [out] */ BSTR * _pbsUPI,
+        /* [out] */ BSTR * _pbsID,
+        /* [out] */ eVTSG_State * _peState,
+        /* [out] */ int *_pnMessagesHave) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE VTSG_EnumFind(
+        /* [in] */ BSTR _bsPrefix,
+        /* [in] */ BSTR _bsFindUPIorID,
+        /* [out] */ BSTR * _pbsChannelUPI,
+        /* [out] */ IMAttributes * *_ppChannelProps) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE VTSG_EnumGetCount(
+        /* [in] */ BSTR  _bsPrefix,
+        /* [out] */ int *_pnCount,
+        /* [in] */ BSTR  _bsHints) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE VTSG_EnumGetByIndex(
+        /* [in] */ BSTR            _bsPrefix,
+        /* [in] */ int             _nIndex,
+        /* [out] */ BSTR          *_pbsChannelUPI,
+        /* [out] */ IMAttributes **_ppChannelProps) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE VTSG_EnumGetChannelProps(
+        /* [in] */ BSTR _bsPrefix,
+        /* [in] */ BSTR _bsChannelUPI,
+        /* [in] */ BSTR _bsPropName,
+        /* [out] */ BSTR * _pbsPropsValue) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE VTSG_MessageSend(
+        /* [in] */ BSTR _bsDestinationUPI,
+        /* [in] */ BSTR _bsMessageName,
+        /* [in] */ BSTR _bsMessageBody,
+        /* [in] */ IUnknown * _pMessageObj,
+        /* [in] */ BSTR _bsHints) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE VTSG_MessageTake(
+        /* [in] */ int         _nTimeoutMsec,
+        /* [out] */ BSTR      *_pbsSourceUPI,
+        /* [out] */ BSTR      *_pbsMessageName,
+        /* [out] */ BSTR      *_pbsMessageBody,
+        /* [out] */ IUnknown **_ppMessageObj) = 0;
+};
+
+    #else /* C style interface */
+
+typedef struct IMCChannelSGNVtbl {
+    BEGIN_INTERFACE
+
+    DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMCChannelSGN    *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
+
+    DECLSPEC_XFGVIRT(IUnknown, AddRef)
+    ULONG(STDMETHODCALLTYPE *AddRef)(IMCChannelSGN *This);
+
+    DECLSPEC_XFGVIRT(IUnknown, Release)
+    ULONG(STDMETHODCALLTYPE *Release)(IMCChannelSGN *This);
+
+    DECLSPEC_XFGVIRT(IMCChannelSGN, VTSG_InfoGet)
+    HRESULT(STDMETHODCALLTYPE *VTSG_InfoGet)(IMCChannelSGN           *This,
+                                             /* [out] */ BSTR        *_pbsUPI,
+                                             /* [out] */ BSTR        *_pbsID,
+                                             /* [out] */ eVTSG_State *_peState,
+                                             /* [out] */ int         *_pnMessagesHave);
+
+    DECLSPEC_XFGVIRT(IMCChannelSGN, VTSG_EnumFind)
+    HRESULT(STDMETHODCALLTYPE *VTSG_EnumFind)(IMCChannelSGN             *This,
+                                              /* [in] */ BSTR            _bsPrefix,
+                                              /* [in] */ BSTR            _bsFindUPIorID,
+                                              /* [out] */ BSTR          *_pbsChannelUPI,
+                                              /* [out] */ IMAttributes **_ppChannelProps);
+
+    DECLSPEC_XFGVIRT(IMCChannelSGN, VTSG_EnumGetCount)
+    HRESULT(STDMETHODCALLTYPE *VTSG_EnumGetCount)(IMCChannelSGN   *This,
+                                                  /* [in] */ BSTR  _bsPrefix,
+                                                  /* [out] */ int *_pnCount,
+                                                  /* [in] */ BSTR  _bsHints);
+
+    DECLSPEC_XFGVIRT(IMCChannelSGN, VTSG_EnumGetByIndex)
+    HRESULT(STDMETHODCALLTYPE *VTSG_EnumGetByIndex)(IMCChannelSGN             *This,
+                                                    /* [in] */ BSTR            _bsPrefix,
+                                                    /* [in] */ int             _nIndex,
+                                                    /* [out] */ BSTR          *_pbsChannelUPI,
+                                                    /* [out] */ IMAttributes **_ppChannelProps);
+
+    DECLSPEC_XFGVIRT(IMCChannelSGN, VTSG_EnumGetChannelProps)
+    HRESULT(STDMETHODCALLTYPE *VTSG_EnumGetChannelProps)(IMCChannelSGN    *This,
+                                                         /* [in] */ BSTR   _bsPrefix,
+                                                         /* [in] */ BSTR   _bsChannelUPI,
+                                                         /* [in] */ BSTR   _bsPropName,
+                                                         /* [out] */ BSTR *_pbsPropsValue);
+
+    DECLSPEC_XFGVIRT(IMCChannelSGN, VTSG_MessageSend)
+    HRESULT(STDMETHODCALLTYPE *VTSG_MessageSend)(IMCChannelSGN       *This,
+                                                 /* [in] */ BSTR      _bsDestinationUPI,
+                                                 /* [in] */ BSTR      _bsMessageName,
+                                                 /* [in] */ BSTR      _bsMessageBody,
+                                                 /* [in] */ IUnknown *_pMessageObj,
+                                                 /* [in] */ BSTR      _bsHints);
+
+    DECLSPEC_XFGVIRT(IMCChannelSGN, VTSG_MessageTake)
+    HRESULT(STDMETHODCALLTYPE *VTSG_MessageTake)(IMCChannelSGN         *This,
+                                                 /* [in] */ int         _nTimeoutMsec,
+                                                 /* [out] */ BSTR      *_pbsSourceUPI,
+                                                 /* [out] */ BSTR      *_pbsMessageName,
+                                                 /* [out] */ BSTR      *_pbsMessageBody,
+                                                 /* [out] */ IUnknown **_ppMessageObj);
+
+    END_INTERFACE
+} IMCChannelSGNVtbl;
+
+interface IMCChannelSGN { CONST_VTBL struct IMCChannelSGNVtbl *lpVtbl; };
+
+        #ifdef COBJMACROS
+
+            #define IMCChannelSGN_QueryInterface(This, riid, ppvObject) \
+                ((This)->lpVtbl->QueryInterface(This, riid, ppvObject))
+
+            #define IMCChannelSGN_AddRef(This) ((This)->lpVtbl->AddRef(This))
+
+            #define IMCChannelSGN_Release(This) ((This)->lpVtbl->Release(This))
+
+            #define IMCChannelSGN_VTSG_InfoGet(This, _pbsUPI, _pbsID, _peState, _pnMessagesHave) \
+                ((This)->lpVtbl->VTSG_InfoGet(This, _pbsUPI, _pbsID, _peState, _pnMessagesHave))
+
+            #define IMCChannelSGN_VTSG_EnumFind(This, _bsPrefix, _bsFindUPIorID, _pbsChannelUPI, _ppChannelProps) \
+                ((This)->lpVtbl->VTSG_EnumFind(This, _bsPrefix, _bsFindUPIorID, _pbsChannelUPI, _ppChannelProps))
+
+            #define IMCChannelSGN_VTSG_EnumGetCount(This, _bsPrefix, _pnCount, _bsHints) \
+                ((This)->lpVtbl->VTSG_EnumGetCount(This, _bsPrefix, _pnCount, _bsHints))
+
+            #define IMCChannelSGN_VTSG_EnumGetByIndex(This, _bsPrefix, _nIndex, _pbsChannelUPI, _ppChannelProps) \
+                ((This)->lpVtbl->VTSG_EnumGetByIndex(This, _bsPrefix, _nIndex, _pbsChannelUPI, _ppChannelProps))
+
+            #define IMCChannelSGN_VTSG_EnumGetChannelProps(This,           \
+                                                           _bsPrefix,      \
+                                                           _bsChannelUPI,  \
+                                                           _bsPropName,    \
+                                                           _pbsPropsValue) \
+                ((This)->lpVtbl->VTSG_EnumGetChannelProps(This, _bsPrefix, _bsChannelUPI, _bsPropName, _pbsPropsValue))
+
+            #define IMCChannelSGN_VTSG_MessageSend(This,              \
+                                                   _bsDestinationUPI, \
+                                                   _bsMessageName,    \
+                                                   _bsMessageBody,    \
+                                                   _pMessageObj,      \
+                                                   _bsHints)          \
+                ((This)->lpVtbl->VTSG_MessageSend(This,               \
+                                                  _bsDestinationUPI,  \
+                                                  _bsMessageName,     \
+                                                  _bsMessageBody,     \
+                                                  _pMessageObj,       \
+                                                  _bsHints))
+
+            #define IMCChannelSGN_VTSG_MessageTake(This,            \
+                                                   _nTimeoutMsec,   \
+                                                   _pbsSourceUPI,   \
+                                                   _pbsMessageName, \
+                                                   _pbsMessageBody, \
+                                                   _ppMessageObj)   \
+                ((This)->lpVtbl->VTSG_MessageTake(This,             \
+                                                  _nTimeoutMsec,    \
+                                                  _pbsSourceUPI,    \
+                                                  _pbsMessageName,  \
+                                                  _pbsMessageBody,  \
+                                                  _ppMessageObj))
+
+        #endif /* COBJMACROS */
+
+    #endif /* C style interface */
+
+#endif /* __IMCChannelSGN_INTERFACE_DEFINED__ */
+
+#ifndef __IMCChannel_INTERFACE_DEFINED__
+    #define __IMCChannel_INTERFACE_DEFINED__
+
+/* interface IMCChannel */
+/* [unique][uuid][object] */
+
+EXTERN_C const IID IID_IMCChannel;
+
+    #if defined(__cplusplus) && !defined(CINTERFACE)
+
+MIDL_INTERFACE("978e1f11-3984-4a9f-8d55-463702ccc535")
+IMCChannel: public IUnknown
+{
+public:
+    virtual HRESULT STDMETHODCALLTYPE ChannelInfoGet(
+        /* [out] */ CHANNEL_INFO * _pChannelInfo) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE ChannelDisconnect(
+        /* [in] */ BSTR _bsConnectedUPIorID,
+        /* [in] */ BSTR _bsReason) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE ChannelSend(
+        /* [in] */ int       _nStreamIdx,
+        /* [in] */ IUnknown *_pFrameOrData,
+        /* [in] */ BSTR      _bsHints) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE ChannelReceive(
+        /* [in] */ int         _nTimeoutMsec,
+        /* [in] */ int         _nStreamIdx,
+        /* [in] */ BSTR        _bsFromUPIorID,
+        /* [out] */ IUnknown **_ppFrameOrData,
+        /* [in] */ BSTR        _bsHints) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE ChannelMsgSend(
+        /* [in] */ BSTR _bsMessageName,
+        /* [in] */ BSTR _bsMessageBody,
+        /* [in] */ BSTR _bsHints) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE ChannelMsgReceive(
+        /* [in] */ int    _nTimeoutMsec,
+        /* [out] */ BSTR *_pbsFromUPIorID,
+        /* [out] */ BSTR *_pbsMessageName,
+        /* [out] */ BSTR *_pbsMessageBody,
+        /* [in] */ BSTR   _bsHints) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE ChannelClose(
+        /* [in] */ BSTR _bsHints) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE ChannelAuthOperation(
+        /* [in] */ BSTR _bsOperation,
+        /* [in] */ BSTR _bsUpdateRemotePropsList,
+        /* [out] */ BSTR * _pbsAuthInfoJson,
+        /* [out] */ BSTR * _pbsPrevInfoJson) = 0;
+};
+
+    #else /* C style interface */
+
+typedef struct IMCChannelVtbl {
+    BEGIN_INTERFACE
+
+    DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMCChannel       *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
+
+    DECLSPEC_XFGVIRT(IUnknown, AddRef)
+    ULONG(STDMETHODCALLTYPE *AddRef)(IMCChannel *This);
+
+    DECLSPEC_XFGVIRT(IUnknown, Release)
+    ULONG(STDMETHODCALLTYPE *Release)(IMCChannel *This);
+
+    DECLSPEC_XFGVIRT(IMCChannel, ChannelInfoGet)
+    HRESULT(STDMETHODCALLTYPE *ChannelInfoGet)(IMCChannel               *This,
+                                               /* [out] */ CHANNEL_INFO *_pChannelInfo);
+
+    DECLSPEC_XFGVIRT(IMCChannel, ChannelDisconnect)
+    HRESULT(STDMETHODCALLTYPE *ChannelDisconnect)(IMCChannel     *This,
+                                                  /* [in] */ BSTR _bsConnectedUPIorID,
+                                                  /* [in] */ BSTR _bsReason);
+
+    DECLSPEC_XFGVIRT(IMCChannel, ChannelSend)
+    HRESULT(STDMETHODCALLTYPE *ChannelSend)(IMCChannel          *This,
+                                            /* [in] */ int       _nStreamIdx,
+                                            /* [in] */ IUnknown *_pFrameOrData,
+                                            /* [in] */ BSTR      _bsHints);
+
+    DECLSPEC_XFGVIRT(IMCChannel, ChannelReceive)
+    HRESULT(STDMETHODCALLTYPE *ChannelReceive)(IMCChannel            *This,
+                                               /* [in] */ int         _nTimeoutMsec,
+                                               /* [in] */ int         _nStreamIdx,
+                                               /* [in] */ BSTR        _bsFromUPIorID,
+                                               /* [out] */ IUnknown **_ppFrameOrData,
+                                               /* [in] */ BSTR        _bsHints);
+
+    DECLSPEC_XFGVIRT(IMCChannel, ChannelMsgSend)
+    HRESULT(STDMETHODCALLTYPE *ChannelMsgSend)(IMCChannel     *This,
+                                               /* [in] */ BSTR _bsMessageName,
+                                               /* [in] */ BSTR _bsMessageBody,
+                                               /* [in] */ BSTR _bsHints);
+
+    DECLSPEC_XFGVIRT(IMCChannel, ChannelMsgReceive)
+    HRESULT(STDMETHODCALLTYPE *ChannelMsgReceive)(IMCChannel       *This,
+                                                  /* [in] */ int    _nTimeoutMsec,
+                                                  /* [out] */ BSTR *_pbsFromUPIorID,
+                                                  /* [out] */ BSTR *_pbsMessageName,
+                                                  /* [out] */ BSTR *_pbsMessageBody,
+                                                  /* [in] */ BSTR   _bsHints);
+
+    DECLSPEC_XFGVIRT(IMCChannel, ChannelClose)
+    HRESULT(STDMETHODCALLTYPE *ChannelClose)(IMCChannel     *This,
+                                             /* [in] */ BSTR _bsHints);
+
+    DECLSPEC_XFGVIRT(IMCChannel, ChannelAuthOperation)
+    HRESULT(STDMETHODCALLTYPE *ChannelAuthOperation)(IMCChannel       *This,
+                                                     /* [in] */ BSTR   _bsOperation,
+                                                     /* [in] */ BSTR   _bsUpdateRemotePropsList,
+                                                     /* [out] */ BSTR *_pbsAuthInfoJson,
+                                                     /* [out] */ BSTR *_pbsPrevInfoJson);
+
+    END_INTERFACE
+} IMCChannelVtbl;
+
+interface IMCChannel { CONST_VTBL struct IMCChannelVtbl *lpVtbl; };
+
+        #ifdef COBJMACROS
+
+            #define IMCChannel_QueryInterface(This, riid, ppvObject) \
+                ((This)->lpVtbl->QueryInterface(This, riid, ppvObject))
+
+            #define IMCChannel_AddRef(This) ((This)->lpVtbl->AddRef(This))
+
+            #define IMCChannel_Release(This) ((This)->lpVtbl->Release(This))
+
+            #define IMCChannel_ChannelInfoGet(This, _pChannelInfo) ((This)->lpVtbl->ChannelInfoGet(This, _pChannelInfo))
+
+            #define IMCChannel_ChannelDisconnect(This, _bsConnectedUPIorID, _bsReason) \
+                ((This)->lpVtbl->ChannelDisconnect(This, _bsConnectedUPIorID, _bsReason))
+
+            #define IMCChannel_ChannelSend(This, _nStreamIdx, _pFrameOrData, _bsHints) \
+                ((This)->lpVtbl->ChannelSend(This, _nStreamIdx, _pFrameOrData, _bsHints))
+
+            #define IMCChannel_ChannelReceive(This,             \
+                                              _nTimeoutMsec,    \
+                                              _nStreamIdx,      \
+                                              _bsFromUPIorID,   \
+                                              _ppFrameOrData,   \
+                                              _bsHints)         \
+                ((This)->lpVtbl->ChannelReceive(This,           \
+                                                _nTimeoutMsec,  \
+                                                _nStreamIdx,    \
+                                                _bsFromUPIorID, \
+                                                _ppFrameOrData, \
+                                                _bsHints))
+
+            #define IMCChannel_ChannelMsgSend(This, _bsMessageName, _bsMessageBody, _bsHints) \
+                ((This)->lpVtbl->ChannelMsgSend(This, _bsMessageName, _bsMessageBody, _bsHints))
+
+            #define IMCChannel_ChannelMsgReceive(This,              \
+                                                 _nTimeoutMsec,     \
+                                                 _pbsFromUPIorID,   \
+                                                 _pbsMessageName,   \
+                                                 _pbsMessageBody,   \
+                                                 _bsHints)          \
+                ((This)->lpVtbl->ChannelMsgReceive(This,            \
+                                                   _nTimeoutMsec,   \
+                                                   _pbsFromUPIorID, \
+                                                   _pbsMessageName, \
+                                                   _pbsMessageBody, \
+                                                   _bsHints))
+
+            #define IMCChannel_ChannelClose(This, _bsHints) ((This)->lpVtbl->ChannelClose(This, _bsHints))
+
+            #define IMCChannel_ChannelAuthOperation(This,                       \
+                                                    _bsOperation,               \
+                                                    _bsUpdateRemotePropsList,   \
+                                                    _pbsAuthInfoJson,           \
+                                                    _pbsPrevInfoJson)           \
+                ((This)->lpVtbl->ChannelAuthOperation(This,                     \
+                                                      _bsOperation,             \
+                                                      _bsUpdateRemotePropsList, \
+                                                      _pbsAuthInfoJson,         \
+                                                      _pbsPrevInfoJson))
+
+        #endif /* COBJMACROS */
+
+    #endif /* C style interface */
+
+#endif /* __IMCChannel_INTERFACE_DEFINED__ */
+
+#ifndef __IMConnect_INTERFACE_DEFINED__
+    #define __IMConnect_INTERFACE_DEFINED__
+
+/* interface IMConnect */
+/* [unique][uuid][object] */
+
+EXTERN_C const IID IID_IMConnect;
+
+    #if defined(__cplusplus) && !defined(CINTERFACE)
+
+MIDL_INTERFACE("978e1e01-3984-4a9f-8d55-463702ccc535")
+IMConnect: public IUnknown
+{
+public:
+    virtual HRESULT STDMETHODCALLTYPE Enum_Create(
+        /* [in] */ BSTR _bsEnumURL,
+        /* [in] */ BSTR _bsRemoteProps,
+        /* [in] */ BSTR _bsHints,
+        /* [in] */ IMCChannelCallback * _pCallback,
+        /* [out] */ IMCChannelSGN * *_ppMChannelSGN) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE Channel_Create(
+        /* [in] */ BSTR _bsChannelUPI,
+        /* [in] */ BSTR _bsRemoteProps,
+        /* [in] */ BSTR _bsHints,
+        /* [in] */ IMCChannelCallback * _pCallback,
+        /* [out] */ IMCChannel * *_ppMChannel) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE Channel_Connect(
+        /* [in] */ BSTR _bsChannelUPI,
+        /* [in] */ BSTR _bsRemoteProps,
+        /* [in] */ BSTR _bsHints,
+        /* [in] */ IMCChannelCallback * _pCallback,
+        /* [out] */ IMCChannel * *_ppMChannel) = 0;
+};
+
+    #else /* C style interface */
+
+typedef struct IMConnectVtbl {
+    BEGIN_INTERFACE
+
+    DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMConnect        *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
+
+    DECLSPEC_XFGVIRT(IUnknown, AddRef)
+    ULONG(STDMETHODCALLTYPE *AddRef)(IMConnect *This);
+
+    DECLSPEC_XFGVIRT(IUnknown, Release)
+    ULONG(STDMETHODCALLTYPE *Release)(IMConnect *This);
+
+    DECLSPEC_XFGVIRT(IMConnect, Enum_Create)
+    HRESULT(STDMETHODCALLTYPE *Enum_Create)(IMConnect                     *This,
+                                            /* [in] */ BSTR                _bsEnumURL,
+                                            /* [in] */ BSTR                _bsRemoteProps,
+                                            /* [in] */ BSTR                _bsHints,
+                                            /* [in] */ IMCChannelCallback *_pCallback,
+                                            /* [out] */ IMCChannelSGN    **_ppMChannelSGN);
+
+    DECLSPEC_XFGVIRT(IMConnect, Channel_Create)
+    HRESULT(STDMETHODCALLTYPE *Channel_Create)(IMConnect                     *This,
+                                               /* [in] */ BSTR                _bsChannelUPI,
+                                               /* [in] */ BSTR                _bsRemoteProps,
+                                               /* [in] */ BSTR                _bsHints,
+                                               /* [in] */ IMCChannelCallback *_pCallback,
+                                               /* [out] */ IMCChannel       **_ppMChannel);
+
+    DECLSPEC_XFGVIRT(IMConnect, Channel_Connect)
+    HRESULT(STDMETHODCALLTYPE *Channel_Connect)(IMConnect                     *This,
+                                                /* [in] */ BSTR                _bsChannelUPI,
+                                                /* [in] */ BSTR                _bsRemoteProps,
+                                                /* [in] */ BSTR                _bsHints,
+                                                /* [in] */ IMCChannelCallback *_pCallback,
+                                                /* [out] */ IMCChannel       **_ppMChannel);
+
+    END_INTERFACE
+} IMConnectVtbl;
+
+interface IMConnect { CONST_VTBL struct IMConnectVtbl *lpVtbl; };
+
+        #ifdef COBJMACROS
+
+            #define IMConnect_QueryInterface(This, riid, ppvObject) \
+                ((This)->lpVtbl->QueryInterface(This, riid, ppvObject))
+
+            #define IMConnect_AddRef(This) ((This)->lpVtbl->AddRef(This))
+
+            #define IMConnect_Release(This) ((This)->lpVtbl->Release(This))
+
+            #define IMConnect_Enum_Create(This, _bsEnumURL, _bsRemoteProps, _bsHints, _pCallback, _ppMChannelSGN) \
+                ((This)->lpVtbl->Enum_Create(This, _bsEnumURL, _bsRemoteProps, _bsHints, _pCallback, _ppMChannelSGN))
+
+            #define IMConnect_Channel_Create(This, _bsChannelUPI, _bsRemoteProps, _bsHints, _pCallback, _ppMChannel) \
+                ((This)->lpVtbl->Channel_Create(This, _bsChannelUPI, _bsRemoteProps, _bsHints, _pCallback, _ppMChannel))
+
+            #define IMConnect_Channel_Connect(This, _bsChannelUPI, _bsRemoteProps, _bsHints, _pCallback, _ppMChannel) \
+                ((This)->lpVtbl->Channel_Connect(This,                                                                \
+                                                 _bsChannelUPI,                                                       \
+                                                 _bsRemoteProps,                                                      \
+                                                 _bsHints,                                                            \
+                                                 _pCallback,                                                          \
+                                                 _ppMChannel))
+
+        #endif /* COBJMACROS */
+
+    #endif /* C style interface */
+
+#endif /* __IMConnect_INTERFACE_DEFINED__ */
+
+/* interface __MIDL_itf_MFormats_0000_0083 */
+/* [local] */
+
+#ifndef MFSOURCE_DEFINED
+    #define MFSOURCE_DEFINED
+
+extern RPC_IF_HANDLE __MIDL_itf_MFormats_0000_0083_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_MFormats_0000_0083_v0_0_s_ifspec;
+
+    #ifndef __IMFSource_INTERFACE_DEFINED__
+        #define __IMFSource_INTERFACE_DEFINED__
+
+/* interface IMFSource */
+/* [unique][helpstring][uuid][object] */
+
+EXTERN_C const IID IID_IMFSource;
+
+        #if defined(__cplusplus) && !defined(CINTERFACE)
+
+MIDL_INTERFACE("CD799B77-3FD4-4237-92D4-D187B588D999")
+IMFSource: public IUnknown
+{
+public:
+    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE SourceAVPropsGet(
+        /* [out] */ M_AV_PROPS * _pAVProps) = 0;
+
+    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE SourceFrameGet(
+        /* [in] */ REFERENCE_TIME _rtMaxWait,
+        /* [out] */ IMFFrame * *_ppFrame,
+        /* [in] */ BSTR _bsHints) = 0;
+
+    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE SourceFrameConvertedGet(
+        /* [in] */ M_AV_PROPS * _pAVPropsOut,
+        /* [in] */ REFERENCE_TIME _rtMaxWait,
+        /* [out] */ IMFFrame * *_ppFrame,
+        /* [in] */ BSTR _bsHints) = 0;
+
+    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE SourceFrameGetByTime(
+        /* [in] */ double         _dblTimeSec,
+        /* [in] */ REFERENCE_TIME _rtMaxWait,
+        /* [out] */ IMFFrame    **_ppFrame,
+        /* [in] */ BSTR           _bsHints) = 0;
+
+    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE SourceFrameGetByNumber(
+        /* [in] */ int            _nFrameNo,
+        /* [in] */ REFERENCE_TIME _rtMaxWait,
+        /* [out] */ IMFFrame    **_ppFrame,
+        /* [in] */ BSTR           _bsHints) = 0;
+
+    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE SourceFrameConvertedGetByTime(
+        /* [in] */ M_AV_PROPS * _pAVPropsOut,
+        /* [in] */ double         _dblTimeSec,
+        /* [in] */ REFERENCE_TIME _rtMaxWait,
+        /* [out] */ IMFFrame    **_ppFrame,
+        /* [in] */ BSTR           _bsHints) = 0;
+
+    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE SourceFrameConvertedGetByNumber(
+        /* [in] */ M_AV_PROPS * _pAVPropsOut,
+        /* [in] */ int            _nFrameNo,
+        /* [in] */ REFERENCE_TIME _rtMaxWait,
+        /* [out] */ IMFFrame    **_ppFrame,
+        /* [in] */ BSTR           _bsHints) = 0;
+};
+
+        #else /* C style interface */
+
+typedef struct IMFSourceVtbl {
+    BEGIN_INTERFACE
+
+    DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFSource        *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
+
+    DECLSPEC_XFGVIRT(IUnknown, AddRef)
+    ULONG(STDMETHODCALLTYPE *AddRef)(IMFSource *This);
+
+    DECLSPEC_XFGVIRT(IUnknown, Release)
+    ULONG(STDMETHODCALLTYPE *Release)(IMFSource *This);
+
+    DECLSPEC_XFGVIRT(IMFSource, SourceAVPropsGet)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceAVPropsGet)(IMFSource              *This,
+                                                                    /* [out] */ M_AV_PROPS *_pAVProps);
+
+    DECLSPEC_XFGVIRT(IMFSource, SourceFrameGet)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceFrameGet)(IMFSource                *This,
+                                                                  /* [in] */ REFERENCE_TIME _rtMaxWait,
+                                                                  /* [out] */ IMFFrame    **_ppFrame,
+                                                                  /* [in] */ BSTR           _bsHints);
+
+    DECLSPEC_XFGVIRT(IMFSource, SourceFrameConvertedGet)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceFrameConvertedGet)(IMFSource                *This,
+                                                                           /* [in] */ M_AV_PROPS    *_pAVPropsOut,
+                                                                           /* [in] */ REFERENCE_TIME _rtMaxWait,
+                                                                           /* [out] */ IMFFrame    **_ppFrame,
+                                                                           /* [in] */ BSTR           _bsHints);
+
+    DECLSPEC_XFGVIRT(IMFSource, SourceFrameGetByTime)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceFrameGetByTime)(IMFSource                *This,
+                                                                        /* [in] */ double         _dblTimeSec,
+                                                                        /* [in] */ REFERENCE_TIME _rtMaxWait,
+                                                                        /* [out] */ IMFFrame    **_ppFrame,
+                                                                        /* [in] */ BSTR           _bsHints);
+
+    DECLSPEC_XFGVIRT(IMFSource, SourceFrameGetByNumber)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceFrameGetByNumber)(IMFSource                *This,
+                                                                          /* [in] */ int            _nFrameNo,
+                                                                          /* [in] */ REFERENCE_TIME _rtMaxWait,
+                                                                          /* [out] */ IMFFrame    **_ppFrame,
+                                                                          /* [in] */ BSTR           _bsHints);
+
+    DECLSPEC_XFGVIRT(IMFSource, SourceFrameConvertedGetByTime)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceFrameConvertedGetByTime)(IMFSource                *This,
+                                                                                 /* [in] */ M_AV_PROPS    *_pAVPropsOut,
+                                                                                 /* [in] */ double         _dblTimeSec,
+                                                                                 /* [in] */ REFERENCE_TIME _rtMaxWait,
+                                                                                 /* [out] */ IMFFrame    **_ppFrame,
+                                                                                 /* [in] */ BSTR           _bsHints);
+
+    DECLSPEC_XFGVIRT(IMFSource, SourceFrameConvertedGetByNumber)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceFrameConvertedGetByNumber)(IMFSource             *This,
+                                                                                   /* [in] */ M_AV_PROPS *_pAVPropsOut,
+                                                                                   /* [in] */ int         _nFrameNo,
+                                                                                   /* [in] */ REFERENCE_TIME _rtMaxWait,
+                                                                                   /* [out] */ IMFFrame    **_ppFrame,
+                                                                                   /* [in] */ BSTR           _bsHints);
+
+    END_INTERFACE
+} IMFSourceVtbl;
+
+interface IMFSource { CONST_VTBL struct IMFSourceVtbl *lpVtbl; };
+
+            #ifdef COBJMACROS
+
+                #define IMFSource_QueryInterface(This, riid, ppvObject) \
+                    ((This)->lpVtbl->QueryInterface(This, riid, ppvObject))
+
+                #define IMFSource_AddRef(This) ((This)->lpVtbl->AddRef(This))
+
+                #define IMFSource_Release(This) ((This)->lpVtbl->Release(This))
+
+                #define IMFSource_SourceAVPropsGet(This, _pAVProps) ((This)->lpVtbl->SourceAVPropsGet(This, _pAVProps))
+
+                #define IMFSource_SourceFrameGet(This, _rtMaxWait, _ppFrame, _bsHints) \
+                    ((This)->lpVtbl->SourceFrameGet(This, _rtMaxWait, _ppFrame, _bsHints))
+
+                #define IMFSource_SourceFrameConvertedGet(This, _pAVPropsOut, _rtMaxWait, _ppFrame, _bsHints) \
+                    ((This)->lpVtbl->SourceFrameConvertedGet(This, _pAVPropsOut, _rtMaxWait, _ppFrame, _bsHints))
+
+                #define IMFSource_SourceFrameGetByTime(This, _dblTimeSec, _rtMaxWait, _ppFrame, _bsHints) \
+                    ((This)->lpVtbl->SourceFrameGetByTime(This, _dblTimeSec, _rtMaxWait, _ppFrame, _bsHints))
+
+                #define IMFSource_SourceFrameGetByNumber(This, _nFrameNo, _rtMaxWait, _ppFrame, _bsHints) \
+                    ((This)->lpVtbl->SourceFrameGetByNumber(This, _nFrameNo, _rtMaxWait, _ppFrame, _bsHints))
+
+                #define IMFSource_SourceFrameConvertedGetByTime(This,            \
+                                                                _pAVPropsOut,    \
+                                                                _dblTimeSec,     \
+                                                                _rtMaxWait,      \
+                                                                _ppFrame,        \
+                                                                _bsHints)        \
+                    ((This)->lpVtbl->SourceFrameConvertedGetByTime(This,         \
+                                                                   _pAVPropsOut, \
+                                                                   _dblTimeSec,  \
+                                                                   _rtMaxWait,   \
+                                                                   _ppFrame,     \
+                                                                   _bsHints))
+
+                #define IMFSource_SourceFrameConvertedGetByNumber(This,            \
+                                                                  _pAVPropsOut,    \
+                                                                  _nFrameNo,       \
+                                                                  _rtMaxWait,      \
+                                                                  _ppFrame,        \
+                                                                  _bsHints)        \
+                    ((This)->lpVtbl->SourceFrameConvertedGetByNumber(This,         \
+                                                                     _pAVPropsOut, \
+                                                                     _nFrameNo,    \
+                                                                     _rtMaxWait,   \
+                                                                     _ppFrame,     \
+                                                                     _bsHints))
+
+            #endif /* COBJMACROS */
+
+        #endif /* C style interface */
+
+    #endif /* __IMFSource_INTERFACE_DEFINED__ */
+
+    /* interface __MIDL_itf_MFormats_0000_0084 */
+    /* [local] */
+
+#endif // MFSOURCE_DEFINED
+#ifndef MFREADER_DEFINED
+    #define MFREADER_DEFINED
+
+extern RPC_IF_HANDLE __MIDL_itf_MFormats_0000_0084_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_MFormats_0000_0084_v0_0_s_ifspec;
+
+    #ifndef __IMFReader_INTERFACE_DEFINED__
+        #define __IMFReader_INTERFACE_DEFINED__
+
+/* interface IMFReader */
+/* [unique][uuid][object] */
+
+EXTERN_C const IID IID_IMFReader;
+
+        #if defined(__cplusplus) && !defined(CINTERFACE)
+
+MIDL_INTERFACE("10DB43C6-89AF-4CD2-90A4-FB91B32DB3E0")
+IMFReader: public IMFSource
+{
+public:
+    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE ReaderOpen(
+        /* [in] */ BSTR _bsPath,
+        /* [in] */ BSTR _bsPropsList) = 0;
+
+    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE ReaderDurationGet(
+        /* [out] */ double *_pdblDuration) = 0;
+
+    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE ReaderNameGet(
+        /* [out] */ BSTR * _pbsFileName) = 0;
+
+    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE ReaderAbort(void) = 0;
+
+    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE ReaderClose(void) = 0;
+};
+
+        #else /* C style interface */
+
+typedef struct IMFReaderVtbl {
+    BEGIN_INTERFACE
+
+    DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFReader        *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
+
+    DECLSPEC_XFGVIRT(IUnknown, AddRef)
+    ULONG(STDMETHODCALLTYPE *AddRef)(IMFReader *This);
+
+    DECLSPEC_XFGVIRT(IUnknown, Release)
+    ULONG(STDMETHODCALLTYPE *Release)(IMFReader *This);
+
+    DECLSPEC_XFGVIRT(IMFSource, SourceAVPropsGet)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceAVPropsGet)(IMFReader              *This,
+                                                                    /* [out] */ M_AV_PROPS *_pAVProps);
+
+    DECLSPEC_XFGVIRT(IMFSource, SourceFrameGet)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceFrameGet)(IMFReader                *This,
+                                                                  /* [in] */ REFERENCE_TIME _rtMaxWait,
+                                                                  /* [out] */ IMFFrame    **_ppFrame,
+                                                                  /* [in] */ BSTR           _bsHints);
+
+    DECLSPEC_XFGVIRT(IMFSource, SourceFrameConvertedGet)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceFrameConvertedGet)(IMFReader                *This,
+                                                                           /* [in] */ M_AV_PROPS    *_pAVPropsOut,
+                                                                           /* [in] */ REFERENCE_TIME _rtMaxWait,
+                                                                           /* [out] */ IMFFrame    **_ppFrame,
+                                                                           /* [in] */ BSTR           _bsHints);
+
+    DECLSPEC_XFGVIRT(IMFSource, SourceFrameGetByTime)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceFrameGetByTime)(IMFReader                *This,
+                                                                        /* [in] */ double         _dblTimeSec,
+                                                                        /* [in] */ REFERENCE_TIME _rtMaxWait,
+                                                                        /* [out] */ IMFFrame    **_ppFrame,
+                                                                        /* [in] */ BSTR           _bsHints);
+
+    DECLSPEC_XFGVIRT(IMFSource, SourceFrameGetByNumber)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceFrameGetByNumber)(IMFReader                *This,
+                                                                          /* [in] */ int            _nFrameNo,
+                                                                          /* [in] */ REFERENCE_TIME _rtMaxWait,
+                                                                          /* [out] */ IMFFrame    **_ppFrame,
+                                                                          /* [in] */ BSTR           _bsHints);
+
+    DECLSPEC_XFGVIRT(IMFSource, SourceFrameConvertedGetByTime)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceFrameConvertedGetByTime)(IMFReader                *This,
+                                                                                 /* [in] */ M_AV_PROPS    *_pAVPropsOut,
+                                                                                 /* [in] */ double         _dblTimeSec,
+                                                                                 /* [in] */ REFERENCE_TIME _rtMaxWait,
+                                                                                 /* [out] */ IMFFrame    **_ppFrame,
+                                                                                 /* [in] */ BSTR           _bsHints);
+
+    DECLSPEC_XFGVIRT(IMFSource, SourceFrameConvertedGetByNumber)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceFrameConvertedGetByNumber)(IMFReader             *This,
+                                                                                   /* [in] */ M_AV_PROPS *_pAVPropsOut,
+                                                                                   /* [in] */ int         _nFrameNo,
+                                                                                   /* [in] */ REFERENCE_TIME _rtMaxWait,
+                                                                                   /* [out] */ IMFFrame    **_ppFrame,
+                                                                                   /* [in] */ BSTR           _bsHints);
+
+    DECLSPEC_XFGVIRT(IMFReader, ReaderOpen)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *ReaderOpen)(IMFReader      *This,
+                                                              /* [in] */ BSTR _bsPath,
+                                                              /* [in] */ BSTR _bsPropsList);
+
+    DECLSPEC_XFGVIRT(IMFReader, ReaderDurationGet)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *ReaderDurationGet)(IMFReader          *This,
+                                                                     /* [out] */ double *_pdblDuration);
+
+    DECLSPEC_XFGVIRT(IMFReader, ReaderNameGet)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *ReaderNameGet)(IMFReader        *This,
+                                                                 /* [out] */ BSTR *_pbsFileName);
+
+    DECLSPEC_XFGVIRT(IMFReader, ReaderAbort)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *ReaderAbort)(IMFReader *This);
+
+    DECLSPEC_XFGVIRT(IMFReader, ReaderClose)
+    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *ReaderClose)(IMFReader *This);
+
+    END_INTERFACE
+} IMFReaderVtbl;
+
+interface IMFReader { CONST_VTBL struct IMFReaderVtbl *lpVtbl; };
+
+            #ifdef COBJMACROS
+
+                #define IMFReader_QueryInterface(This, riid, ppvObject) \
+                    ((This)->lpVtbl->QueryInterface(This, riid, ppvObject))
+
+                #define IMFReader_AddRef(This) ((This)->lpVtbl->AddRef(This))
+
+                #define IMFReader_Release(This) ((This)->lpVtbl->Release(This))
+
+                #define IMFReader_SourceAVPropsGet(This, _pAVProps) ((This)->lpVtbl->SourceAVPropsGet(This, _pAVProps))
+
+                #define IMFReader_SourceFrameGet(This, _rtMaxWait, _ppFrame, _bsHints) \
+                    ((This)->lpVtbl->SourceFrameGet(This, _rtMaxWait, _ppFrame, _bsHints))
+
+                #define IMFReader_SourceFrameConvertedGet(This, _pAVPropsOut, _rtMaxWait, _ppFrame, _bsHints) \
+                    ((This)->lpVtbl->SourceFrameConvertedGet(This, _pAVPropsOut, _rtMaxWait, _ppFrame, _bsHints))
+
+                #define IMFReader_SourceFrameGetByTime(This, _dblTimeSec, _rtMaxWait, _ppFrame, _bsHints) \
+                    ((This)->lpVtbl->SourceFrameGetByTime(This, _dblTimeSec, _rtMaxWait, _ppFrame, _bsHints))
+
+                #define IMFReader_SourceFrameGetByNumber(This, _nFrameNo, _rtMaxWait, _ppFrame, _bsHints) \
+                    ((This)->lpVtbl->SourceFrameGetByNumber(This, _nFrameNo, _rtMaxWait, _ppFrame, _bsHints))
+
+                #define IMFReader_SourceFrameConvertedGetByTime(This,            \
+                                                                _pAVPropsOut,    \
+                                                                _dblTimeSec,     \
+                                                                _rtMaxWait,      \
+                                                                _ppFrame,        \
+                                                                _bsHints)        \
+                    ((This)->lpVtbl->SourceFrameConvertedGetByTime(This,         \
+                                                                   _pAVPropsOut, \
+                                                                   _dblTimeSec,  \
+                                                                   _rtMaxWait,   \
+                                                                   _ppFrame,     \
+                                                                   _bsHints))
+
+                #define IMFReader_SourceFrameConvertedGetByNumber(This,            \
+                                                                  _pAVPropsOut,    \
+                                                                  _nFrameNo,       \
+                                                                  _rtMaxWait,      \
+                                                                  _ppFrame,        \
+                                                                  _bsHints)        \
+                    ((This)->lpVtbl->SourceFrameConvertedGetByNumber(This,         \
+                                                                     _pAVPropsOut, \
+                                                                     _nFrameNo,    \
+                                                                     _rtMaxWait,   \
+                                                                     _ppFrame,     \
+                                                                     _bsHints))
+
+                #define IMFReader_ReaderOpen(This, _bsPath, _bsPropsList) \
+                    ((This)->lpVtbl->ReaderOpen(This, _bsPath, _bsPropsList))
+
+                #define IMFReader_ReaderDurationGet(This, _pdblDuration) \
+                    ((This)->lpVtbl->ReaderDurationGet(This, _pdblDuration))
+
+                #define IMFReader_ReaderNameGet(This, _pbsFileName) ((This)->lpVtbl->ReaderNameGet(This, _pbsFileName))
+
+                #define IMFReader_ReaderAbort(This) ((This)->lpVtbl->ReaderAbort(This))
+
+                #define IMFReader_ReaderClose(This) ((This)->lpVtbl->ReaderClose(This))
+
+            #endif /* COBJMACROS */
+
+        #endif /* C style interface */
+
+    #endif /* __IMFReader_INTERFACE_DEFINED__ */
+
+    /* interface __MIDL_itf_MFormats_0000_0085 */
+    /* [local] */
+
+#endif // MFREADER_DEFINED
 #define MFORMATS_INTERFACES
 typedef enum eMFDeviceType {
     eMFDT_Video       = 0,
@@ -15183,8 +16295,8 @@ typedef enum eMFWriterOption {
     eMFWO_AudioCodec = (eMFWO_VideoCodec + 1)
 } eMFWriterOption;
 
-extern RPC_IF_HANDLE __MIDL_itf_MFormats_0000_0078_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_MFormats_0000_0078_v0_0_s_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_MFormats_0000_0085_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_MFormats_0000_0085_v0_0_s_ifspec;
 
 #ifndef __IMFFormat_INTERFACE_DEFINED__
     #define __IMFFormat_INTERFACE_DEFINED__
@@ -15247,11 +16359,10 @@ typedef struct IMFFormatVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFFormat        *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFFormat        *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFFormat *This);
@@ -15477,11 +16588,10 @@ typedef struct IMFAudioBufferVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFAudioBuffer   *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFAudioBuffer   *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFAudioBuffer *This);
@@ -15768,11 +16878,10 @@ typedef struct IMFConverterVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFConverter     *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFConverter     *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFConverter *This);
@@ -15863,11 +16972,10 @@ typedef struct IMFTransitionVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFTransition    *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFTransition    *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFTransition *This);
@@ -15928,203 +17036,6 @@ interface IMFTransition { CONST_VTBL struct IMFTransitionVtbl *lpVtbl; };
 
 #endif /* __IMFTransition_INTERFACE_DEFINED__ */
 
-/* interface __MIDL_itf_MFormats_0000_0082 */
-/* [local] */
-
-#ifndef MFSOURCE_DEFINED
-    #define MFSOURCE_DEFINED
-
-extern RPC_IF_HANDLE __MIDL_itf_MFormats_0000_0082_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_MFormats_0000_0082_v0_0_s_ifspec;
-
-    #ifndef __IMFSource_INTERFACE_DEFINED__
-        #define __IMFSource_INTERFACE_DEFINED__
-
-/* interface IMFSource */
-/* [unique][helpstring][uuid][object] */
-
-EXTERN_C const IID IID_IMFSource;
-
-        #if defined(__cplusplus) && !defined(CINTERFACE)
-
-MIDL_INTERFACE("CD799B77-3FD4-4237-92D4-D187B588D999")
-IMFSource: public IUnknown
-{
-public:
-    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE SourceAVPropsGet(
-        /* [out] */ M_AV_PROPS * _pAVProps) = 0;
-
-    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE SourceFrameGet(
-        /* [in] */ REFERENCE_TIME _rtMaxWait,
-        /* [out] */ IMFFrame * *_ppFrame,
-        /* [in] */ BSTR _bsHints) = 0;
-
-    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE SourceFrameConvertedGet(
-        /* [in] */ M_AV_PROPS * _pAVPropsOut,
-        /* [in] */ REFERENCE_TIME _rtMaxWait,
-        /* [out] */ IMFFrame * *_ppFrame,
-        /* [in] */ BSTR _bsHints) = 0;
-
-    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE SourceFrameGetByTime(
-        /* [in] */ double         _dblTimeSec,
-        /* [in] */ REFERENCE_TIME _rtMaxWait,
-        /* [out] */ IMFFrame    **_ppFrame,
-        /* [in] */ BSTR           _bsHints) = 0;
-
-    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE SourceFrameGetByNumber(
-        /* [in] */ int            _nFrameNo,
-        /* [in] */ REFERENCE_TIME _rtMaxWait,
-        /* [out] */ IMFFrame    **_ppFrame,
-        /* [in] */ BSTR           _bsHints) = 0;
-
-    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE SourceFrameConvertedGetByTime(
-        /* [in] */ M_AV_PROPS * _pAVPropsOut,
-        /* [in] */ double         _dblTimeSec,
-        /* [in] */ REFERENCE_TIME _rtMaxWait,
-        /* [out] */ IMFFrame    **_ppFrame,
-        /* [in] */ BSTR           _bsHints) = 0;
-
-    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE SourceFrameConvertedGetByNumber(
-        /* [in] */ M_AV_PROPS * _pAVPropsOut,
-        /* [in] */ int            _nFrameNo,
-        /* [in] */ REFERENCE_TIME _rtMaxWait,
-        /* [out] */ IMFFrame    **_ppFrame,
-        /* [in] */ BSTR           _bsHints) = 0;
-};
-
-        #else /* C style interface */
-
-typedef struct IMFSourceVtbl {
-    BEGIN_INTERFACE
-
-    DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFSource        *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
-
-    DECLSPEC_XFGVIRT(IUnknown, AddRef)
-    ULONG(STDMETHODCALLTYPE *AddRef)(IMFSource *This);
-
-    DECLSPEC_XFGVIRT(IUnknown, Release)
-    ULONG(STDMETHODCALLTYPE *Release)(IMFSource *This);
-
-    DECLSPEC_XFGVIRT(IMFSource, SourceAVPropsGet)
-    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceAVPropsGet)(IMFSource              *This,
-                                                                    /* [out] */ M_AV_PROPS *_pAVProps);
-
-    DECLSPEC_XFGVIRT(IMFSource, SourceFrameGet)
-    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceFrameGet)(IMFSource                *This,
-                                                                  /* [in] */ REFERENCE_TIME _rtMaxWait,
-                                                                  /* [out] */ IMFFrame    **_ppFrame,
-                                                                  /* [in] */ BSTR           _bsHints);
-
-    DECLSPEC_XFGVIRT(IMFSource, SourceFrameConvertedGet)
-    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceFrameConvertedGet)(IMFSource                *This,
-                                                                           /* [in] */ M_AV_PROPS    *_pAVPropsOut,
-                                                                           /* [in] */ REFERENCE_TIME _rtMaxWait,
-                                                                           /* [out] */ IMFFrame    **_ppFrame,
-                                                                           /* [in] */ BSTR           _bsHints);
-
-    DECLSPEC_XFGVIRT(IMFSource, SourceFrameGetByTime)
-    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceFrameGetByTime)(IMFSource                *This,
-                                                                        /* [in] */ double         _dblTimeSec,
-                                                                        /* [in] */ REFERENCE_TIME _rtMaxWait,
-                                                                        /* [out] */ IMFFrame    **_ppFrame,
-                                                                        /* [in] */ BSTR           _bsHints);
-
-    DECLSPEC_XFGVIRT(IMFSource, SourceFrameGetByNumber)
-    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceFrameGetByNumber)(IMFSource                *This,
-                                                                          /* [in] */ int            _nFrameNo,
-                                                                          /* [in] */ REFERENCE_TIME _rtMaxWait,
-                                                                          /* [out] */ IMFFrame    **_ppFrame,
-                                                                          /* [in] */ BSTR           _bsHints);
-
-    DECLSPEC_XFGVIRT(IMFSource, SourceFrameConvertedGetByTime)
-    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceFrameConvertedGetByTime)(IMFSource                *This,
-                                                                                 /* [in] */ M_AV_PROPS    *_pAVPropsOut,
-                                                                                 /* [in] */ double         _dblTimeSec,
-                                                                                 /* [in] */ REFERENCE_TIME _rtMaxWait,
-                                                                                 /* [out] */ IMFFrame    **_ppFrame,
-                                                                                 /* [in] */ BSTR           _bsHints);
-
-    DECLSPEC_XFGVIRT(IMFSource, SourceFrameConvertedGetByNumber)
-    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceFrameConvertedGetByNumber)(IMFSource             *This,
-                                                                                   /* [in] */ M_AV_PROPS *_pAVPropsOut,
-                                                                                   /* [in] */ int         _nFrameNo,
-                                                                                   /* [in] */ REFERENCE_TIME _rtMaxWait,
-                                                                                   /* [out] */ IMFFrame    **_ppFrame,
-                                                                                   /* [in] */ BSTR           _bsHints);
-
-    END_INTERFACE
-} IMFSourceVtbl;
-
-interface IMFSource { CONST_VTBL struct IMFSourceVtbl *lpVtbl; };
-
-            #ifdef COBJMACROS
-
-                #define IMFSource_QueryInterface(This, riid, ppvObject) \
-                    ((This)->lpVtbl->QueryInterface(This, riid, ppvObject))
-
-                #define IMFSource_AddRef(This) ((This)->lpVtbl->AddRef(This))
-
-                #define IMFSource_Release(This) ((This)->lpVtbl->Release(This))
-
-                #define IMFSource_SourceAVPropsGet(This, _pAVProps) ((This)->lpVtbl->SourceAVPropsGet(This, _pAVProps))
-
-                #define IMFSource_SourceFrameGet(This, _rtMaxWait, _ppFrame, _bsHints) \
-                    ((This)->lpVtbl->SourceFrameGet(This, _rtMaxWait, _ppFrame, _bsHints))
-
-                #define IMFSource_SourceFrameConvertedGet(This, _pAVPropsOut, _rtMaxWait, _ppFrame, _bsHints) \
-                    ((This)->lpVtbl->SourceFrameConvertedGet(This, _pAVPropsOut, _rtMaxWait, _ppFrame, _bsHints))
-
-                #define IMFSource_SourceFrameGetByTime(This, _dblTimeSec, _rtMaxWait, _ppFrame, _bsHints) \
-                    ((This)->lpVtbl->SourceFrameGetByTime(This, _dblTimeSec, _rtMaxWait, _ppFrame, _bsHints))
-
-                #define IMFSource_SourceFrameGetByNumber(This, _nFrameNo, _rtMaxWait, _ppFrame, _bsHints) \
-                    ((This)->lpVtbl->SourceFrameGetByNumber(This, _nFrameNo, _rtMaxWait, _ppFrame, _bsHints))
-
-                #define IMFSource_SourceFrameConvertedGetByTime(This,            \
-                                                                _pAVPropsOut,    \
-                                                                _dblTimeSec,     \
-                                                                _rtMaxWait,      \
-                                                                _ppFrame,        \
-                                                                _bsHints)        \
-                    ((This)->lpVtbl->SourceFrameConvertedGetByTime(This,         \
-                                                                   _pAVPropsOut, \
-                                                                   _dblTimeSec,  \
-                                                                   _rtMaxWait,   \
-                                                                   _ppFrame,     \
-                                                                   _bsHints))
-
-                #define IMFSource_SourceFrameConvertedGetByNumber(This,            \
-                                                                  _pAVPropsOut,    \
-                                                                  _nFrameNo,       \
-                                                                  _rtMaxWait,      \
-                                                                  _ppFrame,        \
-                                                                  _bsHints)        \
-                    ((This)->lpVtbl->SourceFrameConvertedGetByNumber(This,         \
-                                                                     _pAVPropsOut, \
-                                                                     _nFrameNo,    \
-                                                                     _rtMaxWait,   \
-                                                                     _ppFrame,     \
-                                                                     _bsHints))
-
-            #endif /* COBJMACROS */
-
-        #endif /* C style interface */
-
-    #endif /* __IMFSource_INTERFACE_DEFINED__ */
-
-    /* interface __MIDL_itf_MFormats_0000_0083 */
-    /* [local] */
-
-#endif // MFSOURCE_DEFINED
-
-extern RPC_IF_HANDLE __MIDL_itf_MFormats_0000_0083_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_MFormats_0000_0083_v0_0_s_ifspec;
-
 #ifndef __IMFSourceVB6_INTERFACE_DEFINED__
     #define __IMFSourceVB6_INTERFACE_DEFINED__
 
@@ -16153,11 +17064,10 @@ typedef struct IMFSourceVB6Vtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFSourceVB6     *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFSourceVB6     *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFSourceVB6 *This);
@@ -16205,208 +17115,6 @@ interface IMFSourceVB6 { CONST_VTBL struct IMFSourceVB6Vtbl *lpVtbl; };
     #endif /* C style interface */
 
 #endif /* __IMFSourceVB6_INTERFACE_DEFINED__ */
-
-/* interface __MIDL_itf_MFormats_0000_0084 */
-/* [local] */
-
-#ifndef MFREADER_DEFINED
-    #define MFREADER_DEFINED
-
-extern RPC_IF_HANDLE __MIDL_itf_MFormats_0000_0084_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_MFormats_0000_0084_v0_0_s_ifspec;
-
-    #ifndef __IMFReader_INTERFACE_DEFINED__
-        #define __IMFReader_INTERFACE_DEFINED__
-
-/* interface IMFReader */
-/* [unique][uuid][object] */
-
-EXTERN_C const IID IID_IMFReader;
-
-        #if defined(__cplusplus) && !defined(CINTERFACE)
-
-MIDL_INTERFACE("10DB43C6-89AF-4CD2-90A4-FB91B32DB3E0")
-IMFReader: public IMFSource
-{
-public:
-    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE ReaderOpen(
-        /* [in] */ BSTR _bsPath,
-        /* [in] */ BSTR _bsPropsList) = 0;
-
-    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE ReaderDurationGet(
-        /* [out] */ double *_pdblDuration) = 0;
-
-    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE ReaderNameGet(
-        /* [out] */ BSTR * _pbsFileName) = 0;
-
-    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE ReaderAbort(void) = 0;
-
-    virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE ReaderClose(void) = 0;
-};
-
-        #else /* C style interface */
-
-typedef struct IMFReaderVtbl {
-    BEGIN_INTERFACE
-
-    DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFReader        *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
-
-    DECLSPEC_XFGVIRT(IUnknown, AddRef)
-    ULONG(STDMETHODCALLTYPE *AddRef)(IMFReader *This);
-
-    DECLSPEC_XFGVIRT(IUnknown, Release)
-    ULONG(STDMETHODCALLTYPE *Release)(IMFReader *This);
-
-    DECLSPEC_XFGVIRT(IMFSource, SourceAVPropsGet)
-    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceAVPropsGet)(IMFReader              *This,
-                                                                    /* [out] */ M_AV_PROPS *_pAVProps);
-
-    DECLSPEC_XFGVIRT(IMFSource, SourceFrameGet)
-    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceFrameGet)(IMFReader                *This,
-                                                                  /* [in] */ REFERENCE_TIME _rtMaxWait,
-                                                                  /* [out] */ IMFFrame    **_ppFrame,
-                                                                  /* [in] */ BSTR           _bsHints);
-
-    DECLSPEC_XFGVIRT(IMFSource, SourceFrameConvertedGet)
-    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceFrameConvertedGet)(IMFReader                *This,
-                                                                           /* [in] */ M_AV_PROPS    *_pAVPropsOut,
-                                                                           /* [in] */ REFERENCE_TIME _rtMaxWait,
-                                                                           /* [out] */ IMFFrame    **_ppFrame,
-                                                                           /* [in] */ BSTR           _bsHints);
-
-    DECLSPEC_XFGVIRT(IMFSource, SourceFrameGetByTime)
-    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceFrameGetByTime)(IMFReader                *This,
-                                                                        /* [in] */ double         _dblTimeSec,
-                                                                        /* [in] */ REFERENCE_TIME _rtMaxWait,
-                                                                        /* [out] */ IMFFrame    **_ppFrame,
-                                                                        /* [in] */ BSTR           _bsHints);
-
-    DECLSPEC_XFGVIRT(IMFSource, SourceFrameGetByNumber)
-    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceFrameGetByNumber)(IMFReader                *This,
-                                                                          /* [in] */ int            _nFrameNo,
-                                                                          /* [in] */ REFERENCE_TIME _rtMaxWait,
-                                                                          /* [out] */ IMFFrame    **_ppFrame,
-                                                                          /* [in] */ BSTR           _bsHints);
-
-    DECLSPEC_XFGVIRT(IMFSource, SourceFrameConvertedGetByTime)
-    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceFrameConvertedGetByTime)(IMFReader                *This,
-                                                                                 /* [in] */ M_AV_PROPS    *_pAVPropsOut,
-                                                                                 /* [in] */ double         _dblTimeSec,
-                                                                                 /* [in] */ REFERENCE_TIME _rtMaxWait,
-                                                                                 /* [out] */ IMFFrame    **_ppFrame,
-                                                                                 /* [in] */ BSTR           _bsHints);
-
-    DECLSPEC_XFGVIRT(IMFSource, SourceFrameConvertedGetByNumber)
-    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *SourceFrameConvertedGetByNumber)(IMFReader             *This,
-                                                                                   /* [in] */ M_AV_PROPS *_pAVPropsOut,
-                                                                                   /* [in] */ int         _nFrameNo,
-                                                                                   /* [in] */ REFERENCE_TIME _rtMaxWait,
-                                                                                   /* [out] */ IMFFrame    **_ppFrame,
-                                                                                   /* [in] */ BSTR           _bsHints);
-
-    DECLSPEC_XFGVIRT(IMFReader, ReaderOpen)
-    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *ReaderOpen)(IMFReader      *This,
-                                                              /* [in] */ BSTR _bsPath,
-                                                              /* [in] */ BSTR _bsPropsList);
-
-    DECLSPEC_XFGVIRT(IMFReader, ReaderDurationGet)
-    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *ReaderDurationGet)(IMFReader          *This,
-                                                                     /* [out] */ double *_pdblDuration);
-
-    DECLSPEC_XFGVIRT(IMFReader, ReaderNameGet)
-    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *ReaderNameGet)(IMFReader        *This,
-                                                                 /* [out] */ BSTR *_pbsFileName);
-
-    DECLSPEC_XFGVIRT(IMFReader, ReaderAbort)
-    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *ReaderAbort)(IMFReader *This);
-
-    DECLSPEC_XFGVIRT(IMFReader, ReaderClose)
-    /* [helpstring] */ HRESULT(STDMETHODCALLTYPE *ReaderClose)(IMFReader *This);
-
-    END_INTERFACE
-} IMFReaderVtbl;
-
-interface IMFReader { CONST_VTBL struct IMFReaderVtbl *lpVtbl; };
-
-            #ifdef COBJMACROS
-
-                #define IMFReader_QueryInterface(This, riid, ppvObject) \
-                    ((This)->lpVtbl->QueryInterface(This, riid, ppvObject))
-
-                #define IMFReader_AddRef(This) ((This)->lpVtbl->AddRef(This))
-
-                #define IMFReader_Release(This) ((This)->lpVtbl->Release(This))
-
-                #define IMFReader_SourceAVPropsGet(This, _pAVProps) ((This)->lpVtbl->SourceAVPropsGet(This, _pAVProps))
-
-                #define IMFReader_SourceFrameGet(This, _rtMaxWait, _ppFrame, _bsHints) \
-                    ((This)->lpVtbl->SourceFrameGet(This, _rtMaxWait, _ppFrame, _bsHints))
-
-                #define IMFReader_SourceFrameConvertedGet(This, _pAVPropsOut, _rtMaxWait, _ppFrame, _bsHints) \
-                    ((This)->lpVtbl->SourceFrameConvertedGet(This, _pAVPropsOut, _rtMaxWait, _ppFrame, _bsHints))
-
-                #define IMFReader_SourceFrameGetByTime(This, _dblTimeSec, _rtMaxWait, _ppFrame, _bsHints) \
-                    ((This)->lpVtbl->SourceFrameGetByTime(This, _dblTimeSec, _rtMaxWait, _ppFrame, _bsHints))
-
-                #define IMFReader_SourceFrameGetByNumber(This, _nFrameNo, _rtMaxWait, _ppFrame, _bsHints) \
-                    ((This)->lpVtbl->SourceFrameGetByNumber(This, _nFrameNo, _rtMaxWait, _ppFrame, _bsHints))
-
-                #define IMFReader_SourceFrameConvertedGetByTime(This,            \
-                                                                _pAVPropsOut,    \
-                                                                _dblTimeSec,     \
-                                                                _rtMaxWait,      \
-                                                                _ppFrame,        \
-                                                                _bsHints)        \
-                    ((This)->lpVtbl->SourceFrameConvertedGetByTime(This,         \
-                                                                   _pAVPropsOut, \
-                                                                   _dblTimeSec,  \
-                                                                   _rtMaxWait,   \
-                                                                   _ppFrame,     \
-                                                                   _bsHints))
-
-                #define IMFReader_SourceFrameConvertedGetByNumber(This,            \
-                                                                  _pAVPropsOut,    \
-                                                                  _nFrameNo,       \
-                                                                  _rtMaxWait,      \
-                                                                  _ppFrame,        \
-                                                                  _bsHints)        \
-                    ((This)->lpVtbl->SourceFrameConvertedGetByNumber(This,         \
-                                                                     _pAVPropsOut, \
-                                                                     _nFrameNo,    \
-                                                                     _rtMaxWait,   \
-                                                                     _ppFrame,     \
-                                                                     _bsHints))
-
-                #define IMFReader_ReaderOpen(This, _bsPath, _bsPropsList) \
-                    ((This)->lpVtbl->ReaderOpen(This, _bsPath, _bsPropsList))
-
-                #define IMFReader_ReaderDurationGet(This, _pdblDuration) \
-                    ((This)->lpVtbl->ReaderDurationGet(This, _pdblDuration))
-
-                #define IMFReader_ReaderNameGet(This, _pbsFileName) ((This)->lpVtbl->ReaderNameGet(This, _pbsFileName))
-
-                #define IMFReader_ReaderAbort(This) ((This)->lpVtbl->ReaderAbort(This))
-
-                #define IMFReader_ReaderClose(This) ((This)->lpVtbl->ReaderClose(This))
-
-            #endif /* COBJMACROS */
-
-        #endif /* C style interface */
-
-    #endif /* __IMFReader_INTERFACE_DEFINED__ */
-
-    /* interface __MIDL_itf_MFormats_0000_0085 */
-    /* [local] */
-
-#endif // MFREADER_DEFINED
-
-extern RPC_IF_HANDLE __MIDL_itf_MFormats_0000_0085_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_MFormats_0000_0085_v0_0_s_ifspec;
 
 #ifndef __IMFDevice_INTERFACE_DEFINED__
     #define __IMFDevice_INTERFACE_DEFINED__
@@ -16464,11 +17172,10 @@ typedef struct IMFDeviceVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFDevice        *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFDevice        *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFDevice *This);
@@ -16620,11 +17327,10 @@ typedef struct IMFWriterVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFWriter        *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFWriter        *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFWriter *This);
@@ -16779,11 +17485,10 @@ typedef struct IMFSplitterVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFSplitter      *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFSplitter      *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFSplitter *This);
@@ -16908,11 +17613,10 @@ typedef struct IMFDecoderVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFDecoder       *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFDecoder       *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFDecoder *This);
@@ -17028,11 +17732,10 @@ typedef struct IMFMuxerVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFMuxer         *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFMuxer         *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFMuxer *This);
@@ -17139,11 +17842,10 @@ typedef struct IMFEncoderVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFEncoder       *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFEncoder       *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFEncoder *This);
@@ -17254,11 +17956,10 @@ typedef struct IMFSource_IVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMFSource_I      *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMFSource_I      *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMFSource_I *This);
@@ -17267,49 +17968,41 @@ typedef struct IMFSource_IVtbl {
     ULONG(STDMETHODCALLTYPE *Release)(IMFSource_I *This);
 
     DECLSPEC_XFGVIRT(IMFSource_I, MFSourceFrameGet)
-    HRESULT(STDMETHODCALLTYPE *MFSourceFrameGet)
-    (IMFSource_I              *This,
-     /* [out] */ IMFFrame    **_ppFrame,
-     /* [in] */ REFERENCE_TIME _rtMaxWaitTime,
-     /* [in] */ BSTR           _bsPropsList);
+    HRESULT(STDMETHODCALLTYPE *MFSourceFrameGet)(IMFSource_I              *This,
+                                                 /* [out] */ IMFFrame    **_ppFrame,
+                                                 /* [in] */ REFERENCE_TIME _rtMaxWaitTime,
+                                                 /* [in] */ BSTR           _bsPropsList);
 
     DECLSPEC_XFGVIRT(IMFSource_I, MFSourceFrameGetEx)
-    HRESULT(STDMETHODCALLTYPE *MFSourceFrameGetEx)
-    (IMFSource_I              *This,
-     /* [out][in] */ LONGLONG *_plReaderID,
-     /* [out] */ IMFFrame    **_ppFrame,
-     /* [in] */ REFERENCE_TIME _rtMaxWaitTime,
-     /* [in] */ BSTR           _bsPropsList);
+    HRESULT(STDMETHODCALLTYPE *MFSourceFrameGetEx)(IMFSource_I              *This,
+                                                   /* [out][in] */ LONGLONG *_plReaderID,
+                                                   /* [out] */ IMFFrame    **_ppFrame,
+                                                   /* [in] */ REFERENCE_TIME _rtMaxWaitTime,
+                                                   /* [in] */ BSTR           _bsPropsList);
 
     DECLSPEC_XFGVIRT(IMFSource_I, MFSourceInit)
-    HRESULT(STDMETHODCALLTYPE *MFSourceInit)
-    (IMFSource_I              *This,
-     /* [out][in] */ LONGLONG *_plUserData);
+    HRESULT(STDMETHODCALLTYPE *MFSourceInit)(IMFSource_I              *This,
+                                             /* [out][in] */ LONGLONG *_plUserData);
 
     DECLSPEC_XFGVIRT(IMFSource_I, MFSourceClose)
-    HRESULT(STDMETHODCALLTYPE *MFSourceClose)
-    (IMFSource_I        *This,
-     /* [in] */ LONGLONG _lUserData);
+    HRESULT(STDMETHODCALLTYPE *MFSourceClose)(IMFSource_I        *This,
+                                              /* [in] */ LONGLONG _lUserData);
 
     DECLSPEC_XFGVIRT(IMFSource_I, MFSourceRefAdd)
-    HRESULT(STDMETHODCALLTYPE *MFSourceRefAdd)
-    (IMFSource_I     *This,
-     /* [in] */ DWORD _dwProcessID);
+    HRESULT(STDMETHODCALLTYPE *MFSourceRefAdd)(IMFSource_I     *This,
+                                               /* [in] */ DWORD _dwProcessID);
 
     DECLSPEC_XFGVIRT(IMFSource_I, MFSourceRefRemove)
-    HRESULT(STDMETHODCALLTYPE *MFSourceRefRemove)
-    (IMFSource_I     *This,
-     /* [in] */ DWORD _dwProcessID);
+    HRESULT(STDMETHODCALLTYPE *MFSourceRefRemove)(IMFSource_I     *This,
+                                                  /* [in] */ DWORD _dwProcessID);
 
     DECLSPEC_XFGVIRT(IMFSource_I, MFSourceHaveRefs)
-    HRESULT(STDMETHODCALLTYPE *MFSourceHaveRefs)
-    (IMFSource_I          *This,
-     /* [out] */ LONGLONG *_phWaitHandle);
+    HRESULT(STDMETHODCALLTYPE *MFSourceHaveRefs)(IMFSource_I          *This,
+                                                 /* [out] */ LONGLONG *_phWaitHandle);
 
     DECLSPEC_XFGVIRT(IMFSource_I, MFSourcePropsGet)
-    HRESULT(STDMETHODCALLTYPE *MFSourcePropsGet)
-    (IMFSource_I            *This,
-     /* [out] */ M_AV_PROPS *_pAVProps);
+    HRESULT(STDMETHODCALLTYPE *MFSourcePropsGet)(IMFSource_I            *This,
+                                                 /* [out] */ M_AV_PROPS *_pAVProps);
 
     END_INTERFACE
 } IMFSource_IVtbl;
@@ -17378,11 +18071,10 @@ typedef struct IMEventsVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMEvents         *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMEvents         *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMEvents *This);
@@ -17391,25 +18083,22 @@ typedef struct IMEventsVtbl {
     ULONG(STDMETHODCALLTYPE *Release)(IMEvents *This);
 
     DECLSPEC_XFGVIRT(IDispatch, GetTypeInfoCount)
-    HRESULT(STDMETHODCALLTYPE *GetTypeInfoCount)
-    (IMEvents         *This,
-     /* [out] */ UINT *pctinfo);
+    HRESULT(STDMETHODCALLTYPE *GetTypeInfoCount)(IMEvents         *This,
+                                                 /* [out] */ UINT *pctinfo);
 
     DECLSPEC_XFGVIRT(IDispatch, GetTypeInfo)
-    HRESULT(STDMETHODCALLTYPE *GetTypeInfo)
-    (IMEvents               *This,
-     /* [in] */ UINT         iTInfo,
-     /* [in] */ LCID         lcid,
-     /* [out] */ ITypeInfo **ppTInfo);
+    HRESULT(STDMETHODCALLTYPE *GetTypeInfo)(IMEvents               *This,
+                                            /* [in] */ UINT         iTInfo,
+                                            /* [in] */ LCID         lcid,
+                                            /* [out] */ ITypeInfo **ppTInfo);
 
     DECLSPEC_XFGVIRT(IDispatch, GetIDsOfNames)
-    HRESULT(STDMETHODCALLTYPE *GetIDsOfNames)
-    (IMEvents                     *This,
-     /* [in] */ REFIID             riid,
-     /* [size_is][in] */ LPOLESTR *rgszNames,
-     /* [range][in] */ UINT        cNames,
-     /* [in] */ LCID               lcid,
-     /* [size_is][out] */ DISPID  *rgDispId);
+    HRESULT(STDMETHODCALLTYPE *GetIDsOfNames)(IMEvents                     *This,
+                                              /* [in] */ REFIID             riid,
+                                              /* [size_is][in] */ LPOLESTR *rgszNames,
+                                              /* [range][in] */ UINT        cNames,
+                                              /* [in] */ LCID               lcid,
+                                              /* [size_is][out] */ DISPID  *rgDispId);
 
     DECLSPEC_XFGVIRT(IDispatch, Invoke)
     /* [local] */ HRESULT(STDMETHODCALLTYPE *Invoke)(IMEvents *This,
@@ -17496,11 +18185,10 @@ typedef struct IMEventsEventVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMEventsEvent    *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMEventsEvent    *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMEventsEvent *This);
@@ -17509,25 +18197,22 @@ typedef struct IMEventsEventVtbl {
     ULONG(STDMETHODCALLTYPE *Release)(IMEventsEvent *This);
 
     DECLSPEC_XFGVIRT(IDispatch, GetTypeInfoCount)
-    HRESULT(STDMETHODCALLTYPE *GetTypeInfoCount)
-    (IMEventsEvent    *This,
-     /* [out] */ UINT *pctinfo);
+    HRESULT(STDMETHODCALLTYPE *GetTypeInfoCount)(IMEventsEvent    *This,
+                                                 /* [out] */ UINT *pctinfo);
 
     DECLSPEC_XFGVIRT(IDispatch, GetTypeInfo)
-    HRESULT(STDMETHODCALLTYPE *GetTypeInfo)
-    (IMEventsEvent          *This,
-     /* [in] */ UINT         iTInfo,
-     /* [in] */ LCID         lcid,
-     /* [out] */ ITypeInfo **ppTInfo);
+    HRESULT(STDMETHODCALLTYPE *GetTypeInfo)(IMEventsEvent          *This,
+                                            /* [in] */ UINT         iTInfo,
+                                            /* [in] */ LCID         lcid,
+                                            /* [out] */ ITypeInfo **ppTInfo);
 
     DECLSPEC_XFGVIRT(IDispatch, GetIDsOfNames)
-    HRESULT(STDMETHODCALLTYPE *GetIDsOfNames)
-    (IMEventsEvent                *This,
-     /* [in] */ REFIID             riid,
-     /* [size_is][in] */ LPOLESTR *rgszNames,
-     /* [range][in] */ UINT        cNames,
-     /* [in] */ LCID               lcid,
-     /* [size_is][out] */ DISPID  *rgDispId);
+    HRESULT(STDMETHODCALLTYPE *GetIDsOfNames)(IMEventsEvent                *This,
+                                              /* [in] */ REFIID             riid,
+                                              /* [size_is][in] */ LPOLESTR *rgszNames,
+                                              /* [range][in] */ UINT        cNames,
+                                              /* [in] */ LCID               lcid,
+                                              /* [size_is][out] */ DISPID  *rgDispId);
 
     DECLSPEC_XFGVIRT(IDispatch, Invoke)
     /* [local] */ HRESULT(STDMETHODCALLTYPE *Invoke)(IMEventsEvent *This,
@@ -17614,11 +18299,10 @@ typedef struct IMEventsFrameVtbl {
     BEGIN_INTERFACE
 
     DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
-    HRESULT(STDMETHODCALLTYPE *QueryInterface)
-    (IMEventsFrame    *This,
-     /* [in] */ REFIID riid,
-     /* [annotation][iid_is][out] */
-     _COM_Outptr_ void **ppvObject);
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(IMEventsFrame    *This,
+                                               /* [in] */ REFIID riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
 
     DECLSPEC_XFGVIRT(IUnknown, AddRef)
     ULONG(STDMETHODCALLTYPE *AddRef)(IMEventsFrame *This);
@@ -17627,25 +18311,22 @@ typedef struct IMEventsFrameVtbl {
     ULONG(STDMETHODCALLTYPE *Release)(IMEventsFrame *This);
 
     DECLSPEC_XFGVIRT(IDispatch, GetTypeInfoCount)
-    HRESULT(STDMETHODCALLTYPE *GetTypeInfoCount)
-    (IMEventsFrame    *This,
-     /* [out] */ UINT *pctinfo);
+    HRESULT(STDMETHODCALLTYPE *GetTypeInfoCount)(IMEventsFrame    *This,
+                                                 /* [out] */ UINT *pctinfo);
 
     DECLSPEC_XFGVIRT(IDispatch, GetTypeInfo)
-    HRESULT(STDMETHODCALLTYPE *GetTypeInfo)
-    (IMEventsFrame          *This,
-     /* [in] */ UINT         iTInfo,
-     /* [in] */ LCID         lcid,
-     /* [out] */ ITypeInfo **ppTInfo);
+    HRESULT(STDMETHODCALLTYPE *GetTypeInfo)(IMEventsFrame          *This,
+                                            /* [in] */ UINT         iTInfo,
+                                            /* [in] */ LCID         lcid,
+                                            /* [out] */ ITypeInfo **ppTInfo);
 
     DECLSPEC_XFGVIRT(IDispatch, GetIDsOfNames)
-    HRESULT(STDMETHODCALLTYPE *GetIDsOfNames)
-    (IMEventsFrame                *This,
-     /* [in] */ REFIID             riid,
-     /* [size_is][in] */ LPOLESTR *rgszNames,
-     /* [range][in] */ UINT        cNames,
-     /* [in] */ LCID               lcid,
-     /* [size_is][out] */ DISPID  *rgDispId);
+    HRESULT(STDMETHODCALLTYPE *GetIDsOfNames)(IMEventsFrame                *This,
+                                              /* [in] */ REFIID             riid,
+                                              /* [size_is][in] */ LPOLESTR *rgszNames,
+                                              /* [range][in] */ UINT        cNames,
+                                              /* [in] */ LCID               lcid,
+                                              /* [size_is][out] */ DISPID  *rgDispId);
 
     DECLSPEC_XFGVIRT(IDispatch, Invoke)
     /* [local] */ HRESULT(STDMETHODCALLTYPE *Invoke)(IMEventsFrame *This,
@@ -17776,6 +18457,13 @@ EXTERN_C const CLSID CLSID_MFSink;
 class DECLSPEC_UUID("C08B164D-5CCF-4251-B22F-27AAA7ECABF3") MFSink;
     #endif
 
+EXTERN_C const CLSID CLSID_MFSinkReader;
+
+    #ifdef __cplusplus
+
+class DECLSPEC_UUID("C08B164E-7CCF-4251-B22F-27AAA7ECABF3") MFSinkReader;
+    #endif
+
 EXTERN_C const CLSID CLSID_MFLive;
 
     #ifdef __cplusplus
@@ -17865,6 +18553,135 @@ EXTERN_C const CLSID CLSID_MFObjectASIO;
     #ifdef __cplusplus
 
 class DECLSPEC_UUID("95D508BF-A5F0-4FA0-83D0-B20782874B75") MFObjectASIO;
+    #endif
+
+    #ifndef ___IMCChannelEvents_DISPINTERFACE_DEFINED__
+        #define ___IMCChannelEvents_DISPINTERFACE_DEFINED__
+
+/* dispinterface _IMCChannelEvents */
+/* [helpstring][uuid] */
+
+EXTERN_C const IID DIID__IMCChannelEvents;
+
+        #if defined(__cplusplus) && !defined(CINTERFACE)
+
+MIDL_INTERFACE("bac54e48-ffaa-40ff-98f5-14f9ef00935c")
+_IMCChannelEvents: public IDispatch {};
+
+        #else /* C style interface */
+
+typedef struct _IMCChannelEventsVtbl {
+    BEGIN_INTERFACE
+
+    DECLSPEC_XFGVIRT(IUnknown, QueryInterface)
+    HRESULT(STDMETHODCALLTYPE *QueryInterface)(_IMCChannelEvents *This,
+                                               /* [in] */ REFIID  riid,
+                                               /* [annotation][iid_is][out] */
+                                               _COM_Outptr_ void **ppvObject);
+
+    DECLSPEC_XFGVIRT(IUnknown, AddRef)
+    ULONG(STDMETHODCALLTYPE *AddRef)(_IMCChannelEvents *This);
+
+    DECLSPEC_XFGVIRT(IUnknown, Release)
+    ULONG(STDMETHODCALLTYPE *Release)(_IMCChannelEvents *This);
+
+    DECLSPEC_XFGVIRT(IDispatch, GetTypeInfoCount)
+    HRESULT(STDMETHODCALLTYPE *GetTypeInfoCount)(_IMCChannelEvents *This,
+                                                 /* [out] */ UINT  *pctinfo);
+
+    DECLSPEC_XFGVIRT(IDispatch, GetTypeInfo)
+    HRESULT(STDMETHODCALLTYPE *GetTypeInfo)(_IMCChannelEvents      *This,
+                                            /* [in] */ UINT         iTInfo,
+                                            /* [in] */ LCID         lcid,
+                                            /* [out] */ ITypeInfo **ppTInfo);
+
+    DECLSPEC_XFGVIRT(IDispatch, GetIDsOfNames)
+    HRESULT(STDMETHODCALLTYPE *GetIDsOfNames)(_IMCChannelEvents            *This,
+                                              /* [in] */ REFIID             riid,
+                                              /* [size_is][in] */ LPOLESTR *rgszNames,
+                                              /* [range][in] */ UINT        cNames,
+                                              /* [in] */ LCID               lcid,
+                                              /* [size_is][out] */ DISPID  *rgDispId);
+
+    DECLSPEC_XFGVIRT(IDispatch, Invoke)
+    /* [local] */ HRESULT(STDMETHODCALLTYPE *Invoke)(_IMCChannelEvents *This,
+                                                     /* [annotation][in] */
+                                                     _In_ DISPID dispIdMember,
+                                                     /* [annotation][in] */
+                                                     _In_ REFIID riid,
+                                                     /* [annotation][in] */
+                                                     _In_ LCID lcid,
+                                                     /* [annotation][in] */
+                                                     _In_ WORD wFlags,
+                                                     /* [annotation][out][in] */
+                                                     _In_ DISPPARAMS *pDispParams,
+                                                     /* [annotation][out] */
+                                                     _Out_opt_ VARIANT *pVarResult,
+                                                     /* [annotation][out] */
+                                                     _Out_opt_ EXCEPINFO *pExcepInfo,
+                                                     /* [annotation][out] */
+                                                     _Out_opt_ UINT *puArgErr);
+
+    END_INTERFACE
+} _IMCChannelEventsVtbl;
+
+interface _IMCChannelEvents { CONST_VTBL struct _IMCChannelEventsVtbl *lpVtbl; };
+
+            #ifdef COBJMACROS
+
+                #define _IMCChannelEvents_QueryInterface(This, riid, ppvObject) \
+                    ((This)->lpVtbl->QueryInterface(This, riid, ppvObject))
+
+                #define _IMCChannelEvents_AddRef(This) ((This)->lpVtbl->AddRef(This))
+
+                #define _IMCChannelEvents_Release(This) ((This)->lpVtbl->Release(This))
+
+                #define _IMCChannelEvents_GetTypeInfoCount(This, pctinfo) \
+                    ((This)->lpVtbl->GetTypeInfoCount(This, pctinfo))
+
+                #define _IMCChannelEvents_GetTypeInfo(This, iTInfo, lcid, ppTInfo) \
+                    ((This)->lpVtbl->GetTypeInfo(This, iTInfo, lcid, ppTInfo))
+
+                #define _IMCChannelEvents_GetIDsOfNames(This, riid, rgszNames, cNames, lcid, rgDispId) \
+                    ((This)->lpVtbl->GetIDsOfNames(This, riid, rgszNames, cNames, lcid, rgDispId))
+
+                #define _IMCChannelEvents_Invoke(This,         \
+                                                 dispIdMember, \
+                                                 riid,         \
+                                                 lcid,         \
+                                                 wFlags,       \
+                                                 pDispParams,  \
+                                                 pVarResult,   \
+                                                 pExcepInfo,   \
+                                                 puArgErr)     \
+                    ((This)->lpVtbl->Invoke(This,              \
+                                            dispIdMember,      \
+                                            riid,              \
+                                            lcid,              \
+                                            wFlags,            \
+                                            pDispParams,       \
+                                            pVarResult,        \
+                                            pExcepInfo,        \
+                                            puArgErr))
+
+            #endif /* COBJMACROS */
+
+        #endif /* C style interface */
+
+    #endif /* ___IMCChannelEvents_DISPINTERFACE_DEFINED__ */
+
+EXTERN_C const CLSID CLSID_MConnect;
+
+    #ifdef __cplusplus
+
+class DECLSPEC_UUID("09f8f9f4-2f3f-4f1c-ab72-06d4532791a2") MConnect;
+    #endif
+
+EXTERN_C const CLSID CLSID_MCChannel;
+
+    #ifdef __cplusplus
+
+class DECLSPEC_UUID("09f8f9f5-2f3f-4f1c-ab72-06d4532791a2") MCChannel;
     #endif
 #endif /* __MFORMATSLib_LIBRARY_DEFINED__ */
 

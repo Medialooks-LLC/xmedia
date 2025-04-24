@@ -136,10 +136,10 @@ namespace xmedia {
      */
     template <typename TInterface>
     xbase::XResult<std::vector<std::shared_ptr<const TInterface>>> MediaGetVec(
-        IMediaHandler*               _handler_p,
-        const std::optional<size_t>& _output_idx  = std::nullopt,
-        const INode::SPtrC&          _first_hints = nullptr,
-        size_t                       _max_size    = 128)
+        IMediaHandler*                 _handler_p,
+        const std::optional<uint64_t>& _output_idx  = std::nullopt,
+        const INode::SPtrC&            _first_hints = nullptr,
+        size_t                         _max_size    = 128)
     {
         if (!_handler_p)
             return XError::NullPointer;
@@ -167,6 +167,16 @@ namespace xmedia {
 
         return media_vec;
     }
+
+    /**
+     * @brief Reuest media from each stream, request and wait if no stream media
+     */
+    std::vector<xbase::XResult<IMediaUnit::SPtrC>> MediaGetForAllStreams(
+        IMediaOutput* const            _output_p,
+        const bool                     _remove_from_buffer,
+        const std::optional<uint32_t>& _timeout_for_each_msec = {},
+        std::optional<XObjectType>&&   _obj_type              = {});
+
     // 2Think: replace bt ToString?
     /**
      * @brief Return the name of a state of a media handler.
@@ -181,10 +191,8 @@ namespace xmedia {
      */
     const XStreamInfo* StreamInfo(const IMediaObject* _object_p);
     /**
-     * @brief Check if the end of a stream has been reached for a given packet or frame.
+     * @brief Return Format for a given packet or frame.
      * @param _packet_or_frame Pointer to the packet or frame.
-     * @return true if this packet or frame is the end of the stream. If the media object is neither a packet nor a
-     * frame, std::nullopt is returned.
      */
     const XFormat* Format(const IMediaObject* _packet_or_frame);
     /**
@@ -205,19 +213,26 @@ namespace xmedia {
      * @return The name of the stream if it exists.
      */
     std::string StreamNameGen(const IMediaObject* _object_p);
+
     /**
-     * @brief Check if the end of a stream has been reached for a given packet or frame.
+     * @brief Check if it's the end of a stream mark for a given packet or frame.
      * @param _packet_or_frame Pointer to the packet or frame.
      * @return true if this packet or frame is the end of the stream. If the media object is neither a packet nor a
      * frame, std::nullopt is returned.
      */
     bool IsEndOfStream(const IMediaObject* _packet_or_frame, const bool _value_for_null);
-
     /**
-     * @brief Creating a new media object from a given packet or frame with the end-of-stream flag added.
+     * @brief Check if the given packet or frame is duplicated.
      * @param _packet_or_frame Pointer to the packet or frame.
      * @return true if this packet or frame is the end of the stream. If the media object is neither a packet nor a
      * frame, std::nullopt is returned.
+     */
+    bool IsDuplicated(const IMediaObject* _packet_or_frame, const bool _value_for_null);
+
+    /**
+     * @brief Creating a new media object from a given packet or frame with the end-of-stream flag added.
+     * @param pointer for base _packet_or_frame.
+     * @return cloned frame with eos flag.
      */
     IMediaUnit::SPtrC MakeEndOfStream(const IMediaObject* _packet_or_frame);
 
@@ -236,6 +251,16 @@ namespace xmedia {
 
         return xobject::PtrQuery<TInterface>(eos_media.get());
     }
+
+    /**
+     * @brief Creating a new media object from a given packet with the end-of-stream flag added and next time or
+     * specified eos time
+     * @param _frame Pointer to the base (or eos) frame.
+     * @param _eos_index Optional index for eos frame (from base frame).
+     * @return cloned frame with eos flag and correct times.
+     */
+    std::pair<IMediaUnit::SPtrC, xtime::SegmentPos> MakeNextEosFrame(const IMediaUnit::SPtrC&    _frame,
+                                                                     const std::optional<size_t> _eos_index = {});
 
     /**
      * @brief Compare two media formats of media objects by their properties.
@@ -321,6 +346,9 @@ namespace xrational {
 
 namespace xoptions {
 
+    std::string OpenURL(const IMediaHandler::InitParamsVariant& _init_url_or_func, const INode::SPtrC& _options);
+    std::optional<Media>                MediaForOpen(const IMediaHandler::InitParamsVariant& _init_url_or_func,
+                                                     const INode::SPtrC&                     _options);
     std::pair<std::string, std::string> DeviceClassAndName(std::string_view _open_url, const INode::SPtrC& _options);
 } // namespace xoptions
 

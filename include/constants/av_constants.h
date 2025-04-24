@@ -6,16 +6,17 @@
 
 namespace xsdk {
 
-static constexpr std::string_view kAvSourceUid      = "av_source_uid";
-static constexpr std::string_view kAvMediaType      = "av_media_type";
-static constexpr std::string_view kAvStreamUid      = "av_stream_uid";
-static constexpr std::string_view kAvVideoStreamIdx = "av_video_stream_idx";
-static constexpr std::string_view kAvAudioStreamIdx = "av_audio_stream_idx";
-static constexpr std::string_view kAvOptions        = "av_options";
-static constexpr std::string_view kAvFormatName     = "av_format_name";
-static constexpr std::string_view kAvDeviceClass    = "av_device_class";
-static constexpr std::string_view kAvDeviceName     = "av_device_name";
-
+static constexpr std::string_view kAvSourceUid            = "av_source_uid";
+static constexpr std::string_view kAvMediaType            = "av_media_type";
+static constexpr std::string_view kAvStreamUid            = "av_stream_uid";
+static constexpr std::string_view kAvVideoStreamIdx       = "av_video_stream_idx";
+static constexpr std::string_view kAvAudioStreamIdx       = "av_audio_stream_idx";
+static constexpr std::string_view kAvSubStreamIdx         = "av_sub_stream_idx";
+static constexpr std::string_view kAvOptions              = "av_options";
+static constexpr std::string_view kAvFormatName           = "av_format_name";
+static constexpr std::string_view kAvDeviceClass          = "av_device_class";
+static constexpr std::string_view kAvDeviceName           = "av_device_name";
+static constexpr std::string_view kAvCorrectStartEndTimes = "correct_start_end_times";
 /**
  * @breif Constant used for handling input or output URL. Unlike the old filename field, this field has no
  * length restriction.
@@ -132,6 +133,7 @@ static constexpr std::string_view kAvCodec_UseStreamTimebase = "av_codec_use_str
 
 static constexpr std::string_view kAvInSec         = "in";
 static constexpr std::string_view kAvOutSec        = "out";
+static constexpr std::string_view kAvDurationSec   = "duration";
 static constexpr std::string_view kAvLoop          = "loop";
 static constexpr std::string_view kAvPosSec        = "pos";
 static constexpr std::string_view kAvStreamForSeek = "stream_for_seek";
@@ -161,7 +163,7 @@ static constexpr std::string_view kBitPerSample = "bits_per_sample";
 
 static constexpr std::string_view kDevices        = "devices";
 static constexpr std::string_view kSelectedDevice = "selected_device";
-
+static constexpr std::string_view kEnabled        = "enabled";
 // HW Accell
 static constexpr std::string_view kHwDevice = "hw_device";
 

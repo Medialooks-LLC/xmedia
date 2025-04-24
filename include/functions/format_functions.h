@@ -229,6 +229,18 @@ namespace xformat {
     bool IsEmpty(const XFormatA* _p);
 
     /**
+     * @brief Checks if an XFormat object is empty
+     *
+     * This function checks if an XFormatA object is a null pointer and has
+     * empty specifications such as zero sample rate and channels, and an empty
+     * sample format and a empty codec.
+     *
+     * @param _p A pointer to an XFormat object.
+     * @return true if the XFormatA object is empty, false otherwise.
+     */
+    bool IsEmpty(const XFormat* _p);
+
+    /**
      * @brief Checks if an XFormatV object is hardware accelerated format, and return hw devicve type
      */
     std::optional<HWDeviceType> HWDeviceTypeGet(const XFormatV* _format_v_p);

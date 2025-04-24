@@ -28,13 +28,6 @@ public:
 
     /// @brief Unique IDs for media objects.
     struct Uids {
-        // Candidate for remove: use multistream logic instead
-        /**
-         * @brief Constant representing the highest possible UID value.
-         * This constant is used to grab and store the first suitable UID for a media object.
-         */
-        static constexpr uint64_t kGrabFirst = std::numeric_limits<uint64_t>::max();
-
         /// @brief Optional UID for the stream associated with the media object
         std::optional<uint64_t> stream_uid;
         /// @brief Optional UID for the group (e.g. ts program) of the media object.

@@ -16,37 +16,45 @@ IMediaPlayer::SPtr CreateMediaPlayer(const IMediaNotification::SPtr& _notificati
                                      const xbase::IClock*            _clock_p      = nullptr);
 
 // Playlist Player
-IPlaylistPlayer::SPtr CreatePlaylistPlayer(const IPlaylist::SPtrC&         _playlist,
-                                           const IMediaNotification::SPtr& _notification,
+IPlaylistPlayer::SPtr CreatePlaylistPlayer(const IMediaNotification::SPtr& _notification,
                                            const INode::SPtrC&             _player_props,
                                            IMediaPlayer::SPtr&&            _media_player);
 
-IPlaylistPlayer::SPtr CreatePlaylistPlayer(const IPlaylist::SPtrC&         _playlist,
-                                           const IMediaNotification::SPtr& _notification = {},
+IPlaylistPlayer::SPtr CreatePlaylistPlayer(const IMediaNotification::SPtr& _notification = {},
                                            const INode::SPtrC&             _player_props = {},
                                            const xbase::IClock*            _clock_p      = nullptr);
 
 // [Start:12:35:00.000 Pos:12:50:30.000 (650.000)] audi.mp4 (12.000) -> (9.050) ori.mp4
-std::string ToString(const IPlaylistPlayer::Status& _status);
+std::string ToString(const IPlaylistPlayerControl::Status& _status);
 
 // Playlist
-IPlaylist::UPtr CreatePlaylist(const INode::SPtrC& _playlist_props = {});
+IPlaylist::UPtr CreatePlaylist(IPlaylist::OnPlaylistChangesPf&& _on_playlist_changes = {},
+                               const INode::SPtrC&              _playlist_props      = {});
 
-INode::SPtr StorePlaylist(const IPlaylist*             _playlist_p,
-                          const std::optional<double>& _from_pos_sec = {},
-                          const std::optional<double>& _to_pos_sec   = {});
+// Helpers
+double MediaDuration(const Media& _media);
 
-xbase::XResult<IPlaylist::UPtr> LoadPlaylist(const INode::SPtrC& _playlist_node);
+IPlaylist::PlaylistItem ConvertItemRate(const IPlaylist::PlaylistItem&  _base_item,
+                                        const std::optional<XRational>& _frame_rate);
 
-xbase::XResult<size_t> StorePlaylistItems(const IPlaylist*             _playlist_p,
-                                          const INode::SPtr&           _playlist_items,
-                                          const std::optional<double>& _from_pos_sec = {},
-                                          const std::optional<double>& _to_pos_sec   = {});
+std::vector<IPlaylist::PlaylistItem> ConvertItemsRate(const std::vector<IPlaylist::PlaylistItem>& _base_items,
+                                                      const std::optional<XRational>&             _frame_rate);
 
-xbase::XResult<size_t> LoadPlaylistItems(IPlaylist* _playlist_p, const INode::SPtrC& _playlist_items);
+// Playlist persistance methods
 
-INode::SPtr StoreItem(const IPlaylist::PlaylistMedia& _item, const std::optional<double>& _start_pos_sec = {});
+INode::SPtr                     StorePlaylist(const IPlaylist*             _playlist_p,
+                                              const std::optional<double>& _from_pos_sec = {},
+                                              const std::optional<double>& _to_pos_sec   = {});
+xbase::XResult<IPlaylist::UPtr> LoadPlaylist(const INode::SPtrC&              _playlist_node,
+                                             IPlaylist::OnPlaylistChangesPf&& _on_playlist_changes = {});
 
-xbase::XResult<std::pair<IPlaylist::PlaylistMedia, std::optional<double>>> LoadItem(const INode::SPtrC& _item_node);
+INode::SPtr StorePlaylistItems(const std::vector<IPlaylist::PlaylistMedia>& _media_items,
+                               INode::SPtr&&                                _dest_node = {});
+INode::SPtr StorePlaylistItems(const std::vector<IPlaylist::PlaylistItem>& _playlist_items,
+                               INode::SPtr&&                               _dest_node = {});
+xbase::XResult<std::vector<IPlaylist::PlaylistMedia>> LoadPlaylistItems(const INode::SPtrC& _playlist_items);
+
+INode::SPtr StorePlaylistItem(const IPlaylist::PlaylistMedia& _item, INode::SPtr&& _dest_node = {});
+xbase::XResult<IPlaylist::PlaylistMedia> LoadPlaylistItem(const INode::SPtrC& _item_node);
 
 } // namespace xsdk::xplaylist

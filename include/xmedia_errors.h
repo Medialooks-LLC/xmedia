@@ -98,7 +98,12 @@ XENUM_CLASS(XError,
             DurationOrOutRequired,
             OpenUrlMissed,
             Busy,
-            Canceled)
+            Canceled,
+            IsEmpty,
+            StreamBufferIsFull,
+            BuffersIsEmpty,
+            StreamBufferIsEmpty,
+            NotPlaying)
 
 /**
  * @brief Creates an std::error_code object from an XError

@@ -113,8 +113,8 @@ struct XTime {
     struct Frame {
         /// @brief Picture type
         PictureType picture_type = PictureType::None; // AV_PICTURE_TYPE_xxx map
-        /// @brief Original frame PTS (used for duplicated frames)
-        int64_t original_pts = time64::kNoVal;
+        /// @brief Extra counter used for duplicated eos and paused frames (started from 1)
+        int64_t dup_counter = 0;
     };
 
     /// @brief Extra information, can be either Packet or Frame
@@ -144,7 +144,9 @@ struct XStreamInfo {
     std::optional<int64_t> frames_num;
     /// @brief Optional timebase for the stream.
     /// @note If not set, 1/10'000'000 timescale used (xbase::Time64 units)
-    std::optional<XRational> stream_timebase;
+    std::optional<XRational> stream_timebase; // 2Think: Remove for do not have two timebases
+    /// @brief Optional clock of the stream.
+    xbase::IClock::SPtrC stream_clock;
 };
 /**
  * @brief Struct representation of side-data packet.

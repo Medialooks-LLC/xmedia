@@ -34,6 +34,17 @@ namespace xrational {
      * @note The resulting string will look like this: "num/den" or "3/4"
      */
     std::string ToString(const XRational& _rat, char _ch_delimer = '/');
+    /**
+     * @brief Converts a optional XRational object to a std::string.
+     * @param _rat The XRational object to convert.
+     * @param _ch_delimer The character to use as delimiter, default is '/'.
+     * @param _value_for_nullopt The string returned if _rat is std::nullopt, default is empty string.
+     * @return A std::string representing the rational number.
+     * @note The resulting string will look like this: "num/den" or "3/4"
+     */
+    std::string ToString(const std::optional<XRational>& _rat,
+                         char                            _ch_delimer        = '/',
+                         const std::string_view          _value_for_nullopt = {});
 } // namespace xrational
 
 namespace xsize {

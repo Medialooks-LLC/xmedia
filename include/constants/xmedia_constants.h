@@ -32,17 +32,18 @@ namespace xmedia::handlers {
     static const std::string kParallelContainer = "parallel_container";
     static const std::string kSelectorContainer = "selector_container";
     // Complex handlers
-    static const std::string kMediaPlayer   = "media_player";
-    static const std::string kMediaPlaylist = "media_playlist";
+    static const std::string kMediaPlayer    = "media_player";
+    static const std::string kPlaylistPlayer = "playlist_player";
 } // namespace xmedia::handlers
 
 namespace xmedia::wrappers {
-    static const std::string kActiveHandler = "active_handler";
-    static const std::string kMultistream   = "multistream"; // 2Think
-    static const std::string kAvConverter   = "av_converter";
-    static const std::string kRateControl   = "rate_control";
-    static const std::string kRecreation    = "recreation";
-    static const std::string kFixedSegment  = "fixed_segment";
+    static const std::string kActiveHandler    = "active_handler";
+    static const std::string kMultistream      = "multistream"; // 2Think
+    static const std::string kAvConverter      = "av_converter";
+    static const std::string kRateControl      = "rate_control";
+    static const std::string kRecreation       = "recreation";
+    static const std::string kFixedSegment     = "fixed_segment";
+    static const std::string kStreamBuffersOut = "stream_buffers_out";
 } // namespace xmedia::wrappers
 
 namespace xmedia::links {
@@ -115,5 +116,9 @@ namespace xmedia::recreation {
     static const std::string kInternalMaxSec = "interval_max_sec";
     static const std::string kInternalsSteps = "intervals_steps";
 } // namespace xmedia::recreation
+
+namespace xmedia::streams_buffer {
+    static const std::string kFixedSegment = "fixed_segment";
+} // namespace xmedia::streams_buffer
 
 } // namespace xsdk

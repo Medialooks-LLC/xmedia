@@ -11,7 +11,13 @@
 
 namespace xsdk::xtime {
 
+// Have to be removed as switched to IMediaUnit
 const XTime* TimeGet(const IMediaObject* _obj_p);
+
+/**
+ * @brief Helper function to check is _time_p non null and _time_p->timestamp != kNoVal.
+ **/
+bool IsValid(const XTime* _time_p);
 /**
  * @brief Helper function to retrieve a timebase from an XTime object.
  * @param _time_p Pointer to an XTime object.
@@ -63,36 +69,76 @@ bool IsNewSegment(const XTime* _time_p, const XTime& _recent_time);
  */
 XTime::Packet PacketExtra(const XTime* _time_p);
 /**
+ * @brief Helper function to update Packet extra data for an XTime object.
+ * @param _time an XTime object.
+ * @param _create_new create new packet extradata with default values.
+ * @return The packet extra data pointer or nullptr if no packet extra
+ */
+XTime::Packet* PacketExtra(XTime& _time, bool _create_new);
+/**
+ * @brief Helper function to extract Packet extra data from an XTime object.
+ * @param _time_p Pointer to an XTime object.
+ * @return The packet extra data or an empty packet if the input time object is null or its extra data
+ * is not set.
+ */
+bool IsKeyPacket(const XTime* _time_p, const bool _value_for_frames);
+/**
  * @brief Helper function to extract Frame extra data from an XTime object.
  * @param _time_p Pointer to an XTime object.
  * @return The frame extra data or an empty frame if the input time object is null or its extra data is
  * not set.
  */
 XTime::Frame FrameExtra(const XTime* _time_p);
+/**
+ * @brief Helper function to update Frame extra data for an XTime object.
+ * @param _time an XTime object.
+ * @param _create_new create new frame extradata with default values.
+ * @return The frame extra data pointer or nullptr if no frame extra
+ */
+XTime::Frame* FrameExtra(XTime& _time, bool _create_new);
 
 /**
  * @brief Function for calculate end frame time based on duration.
  * @return The end frame time if possible to calulate it's
  */
-std::optional<xbase::Time64> EndTime(const XTime* _time_p, const xbase::Time64 _default_duration_rt);
+std::optional<xbase::Time64> EndTime(const XTime* _time_p, const std::optional<XRational>& _frame_rate);
 /**
  * @brief Function for calculate next frame time from given one.
  * @return The next frame time if possible to calulate it's
  */
-std::optional<XTime> NextFrameTime(const XTime* _time_p, const std::optional<XRational>& _frame_rate = {});
+std::optional<XTime> NextFrameTime(const XTime*                    _time_p,
+                                   const int32_t                   _number_of_frames = 1,
+                                   const std::optional<XRational>& _frame_rate       = {});
 
-enum class SegmentPos {
-    kTimeInvalid = 0,
-    kBeforeStart = 0x01,
-    kInside      = 0x10,
-    kInsideFirst = 0x02 | kInside,
-    kInsideLast  = 0x04 | kInside,
-    kOpenSegment = 0x08 | kInside,
-    kAfterEnd    = 0x20
-};
-XENUM_OPS32(SegmentPos)
+std::pair<double, int64_t> FrameLenAlignSec(const double                    _value_sec,
+                                            const std::optional<XRational>& _frame_rate,
+                                            const time64::AlignType         _align_type     = time64::AlignType::kLower,
+                                            const double                    _base_value_sec = 0.0);
 
-SegmentPos CheckSegment(const XTime* _time_p);
+std::pair<xbase::Time64, int64_t> FrameLenAlign64(const xbase::Time64             _value_rt,
+                                                  const std::optional<XRational>& _frame_rate,
+                                                  const time64::AlignType _align_type    = time64::AlignType::kLower,
+                                                  const xbase::Time64     _base_value_rt = 0);
+
+int64_t FrameStartTime64(const int64_t                   _frame_idx,
+                         const std::optional<XRational>& _frame_rate,
+                         const int64_t                   _base_value_rt = 0);
+double  FrameStartTimeSec(const int64_t                   _frame_idx,
+                          const std::optional<XRational>& _frame_rate,
+                          const double                    _base_value_sec = 0.0);
+
+XENUM_CLASS(SegmentPos,
+            kTimeInvalid = 0,
+            kBeforeStart = 0x01,
+            kInside      = 0x10,
+            kInsideFirst = 0x02 | kInside,
+            kInsideLast  = 0x04 | kInside,
+            kOpenSegment = 0x08 | kInside,
+            kAfterEnd    = 0x20);
+
+SegmentPos CheckSegment(const XTime* _time_p, const std::optional<XRational>& _frame_rate = {});
+
+std::optional<xbase::Time64> TimeInSegment(const XTime* _time_p, const XSegment& _override_segment = {});
 /**
  * @brief Function for store XSegment into INode
  * @return The node with XSegment 'in', 'out'

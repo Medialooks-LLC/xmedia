@@ -50,34 +50,31 @@ XENUM_CLASS(XObjectType,
             FrameAV       = Frame | AV)
 
 /// @brief Enum class representing different flags of media packet or frame
-XENUM_CLASS(XMediaFlags,
-            kRegular,
-            // kFirst         = 0x01,
-            kEndOfStream   = 0x02,
-            kDuplicated    = 0x04,
-            kDuplicatedEOS = kEndOfStream | kDuplicated)
-
-/**
+XENUM_CLASS(XMediaFlags, kRegular, kEndOfStream = 0x01, kDuplicatedOut = 0x02, kPaused = 0x04)
+    /**
  * @brief Enum class representing different rate control modes.
  * @details This enum class represents different rate control modes, namely:
  *          - Rate controlled by destination (e.g. File streams)
  *          - Rate controlled by source (e.g. Live streams)
  *          - Rate controlled by hardware devices (e.g. SDI capture)
  */
-enum class RateControl {
-    /**
-     * Rate controlled by destination (e.g. File streams)
-     */
-    Dest = 0,
-    /**
-     * Rate controlled by source (e.g. Live streams)
-     */
-    Source = 1,
-    /**
-     * Rate controlled by harware devices (e.g. SDI capture)
-     */
-    SourceSync = 2
-};
+XENUM_CLASS(RateControl,
+            /**
+             * Rate controlled by destination (e.g. File streams)
+             */
+            kFileStream = 0,
+            /**
+             * Rate controlled by destination (e.g. File streams)
+             */
+            kMasterFileStream = 1,
+            /**
+             * Rate controlled by source (e.g. Live streams)
+             */
+            kLiveStream = 2,
+            /**
+             * Rate controlled by harware devices (e.g. SDI capture)
+             */
+            kLiveWithOwnClock = 3);
 
 // Direct map of AV_PKT_FLAG_xxx
 XENUM_CLASS(PacketFlags,
