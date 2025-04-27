@@ -1,5 +1,15 @@
 # Windows
-###### Extract binaries from `xmedia-1.0.1.10-beta-windows.zip` to `lib/windows` folder.
+###### Create and change build directory:
+```shell
+md xmedia
+cd xmedia
+```
+###### Checkout sources:
+```shell
+git clone https://github.com/Medialooks-LLC/xmedia . --branch=v1.0.1.10-beta
+git submodule update --init
+```
+###### Extract binaries from `https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.10-beta/xmedia-1.0.1.10-beta-windows.zip` to `lib` folder.
 ###### Build project:
 ```shell
 cmake -DDYNAMIC_RUNTIME=ON -DDYNAMIC_BUILD=ON -DUSE_PREBUILD=ON -DWITH_TESTS=OFF -S . -B build
