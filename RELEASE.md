@@ -43,9 +43,9 @@ apt-get install -y \
         cmake \
         wget
 ```
-###### Download and extract binaries from `https://github.com/Medialooks-LLC/xmedia/releases/download/beta-0.0.1/xmedia-1.0.1.10-beta-linux.tar.gz` to `lib` folder.
+###### Download and extract binaries from `https://github.com/Medialooks-LLC/xmedia/releases/download/1.0.1.10-beta/xmedia-1.0.1.10-beta-linux.tar.gz` to `lib` folder.
 ```shell script
-wget https://github.com/Medialooks-LLC/xmedia/releases/download/beta-0.0.1/xmedia-1.0.1.10-beta-linux.tar.gz
+wget https://github.com/Medialooks-LLC/xmedia/releases/download/1.0.1.10-beta/xmedia-1.0.1.10-beta-linux.tar.gz
 tar xvfz xmedia-1.0.1.10-beta-C lib/
 ```
 ###### Build project:
