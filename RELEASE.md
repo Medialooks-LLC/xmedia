@@ -1,13 +1,3 @@
-# Get sources
-###### Create and change build directory:
-```shell
-mkdir -p xmedia && cd xmedia
-```
-###### Checkout sources:
-```shell
-git clone https://github.com/Medialooks-LLC/xmedia . --branch=v1.0.1.10-beta
-git submodule update --init
-```
 # Windows
 ###### Extract binaries from `xmedia-1.0.1.10-beta-windows.zip` to `lib/windows` folder.
 ###### Build project:
@@ -43,10 +33,19 @@ apt-get install -y \
         cmake \
         wget
 ```
-###### Download and extract binaries from `https://github.com/Medialooks-LLC/xmedia/releases/download/1.0.1.10-beta/xmedia-1.0.1.10-beta-linux.tar.gz` to `lib` folder.
+###### Create and change build directory:
+```shell
+mkdir -p xmedia && cd xmedia
+```
+###### Checkout sources:
+```shell
+git clone https://github.com/Medialooks-LLC/xmedia . --branch=v1.0.1.10-beta
+git submodule update --init
+```
+###### Download and extract binaries from `https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.10-beta/xmedia-1.0.1.10-beta-linux.tar.gz` to `lib` folder.
 ```shell script
-wget https://github.com/Medialooks-LLC/xmedia/releases/download/1.0.1.10-beta/xmedia-1.0.1.10-beta-linux.tar.gz
-tar xvfz xmedia-1.0.1.10-beta-C lib/
+wget https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.10-beta/xmedia-1.0.1.10-beta-linux.tar.gz
+tar xvfz xmedia-1.0.1.10-beta-linux.tar.gz -C lib/
 ```
 ###### Build project:
 ```shell
