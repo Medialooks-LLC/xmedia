@@ -1,8 +1,6 @@
 [submodule "submodules/xnode"]
 	path = submodules/xnode
 	url = https://github.com/Medialooks-LLC/xnode.git
-	branch = xm-v1.0.1.10-beta
-[submodule "submodules/xbase"]
+submodule "submodules/xbase"]
 	path = submodules/xbase
 	url = https://github.com/Medialooks-LLC/xbase.git
-	branch = xm-v1.0.1.10-beta
