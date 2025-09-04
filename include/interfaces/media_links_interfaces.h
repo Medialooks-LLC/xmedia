@@ -111,6 +111,11 @@ public:
 
     // Set link to exired state
     virtual void SetExpired(bool _flush_data, bool _wait_for_finish) = 0;
+
+    // Make copy of link with updated props and same callback
+    virtual xbase::XResult<ILink::SPtr> Clone(const ILink::Props&         _update_props     = {},
+                                              const INode::SPtrC&         _update_details   = {},
+                                              const xbase::IWorker::SPtr& _dedicated_worker = {}) = 0;
 };
 
 class IMediaLink: public ILink, public IMediaUnitAgent {
@@ -166,6 +171,10 @@ namespace xlink {
                     const MediaUnitsVec&     _current_props,
                     const size_t             _updated_idx,
                     const IMediaUnit::SPtrC& _new_props);
+
+    xbase::Uid OriginalLinkUid(const ILink* _link);
+
+    bool IsCloned(const ILink* _first_p, const ILink* _second_p);
 
 } // namespace xlink
 

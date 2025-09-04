@@ -51,12 +51,18 @@ static constexpr std::string_view kAvFilterGraphDescIn       = "av_filter_graph_
 static constexpr std::string_view kAvFilterGraphDescOut      = "av_filter_graph_desc_out";
 
 // 2Think: move to namespace
-static constexpr std::string_view kAvScalerName       = "av_scaler_name";
-static constexpr std::string_view kAvScalerDefault    = "scale";
-static constexpr std::string_view kAvScalerOptions    = "av_scaler_options";
-static constexpr std::string_view kAvFrameRateName    = "av_frame_rate_name";
-static constexpr std::string_view kAvFrameRateDefault = "fps";
-static constexpr std::string_view kAvFrameRateOptions = "av_frame_rate_options";
+static constexpr std::string_view kAvScalerName         = "av_scaler_name";
+static constexpr std::string_view kAvScalerDefault      = "scale";
+static constexpr std::string_view kAvScalerOptions      = "av_scaler_options";
+static constexpr std::string_view kAvFrameRateName      = "av_frame_rate_name";
+static constexpr std::string_view kAvFrameRateDefault   = "fps";
+static constexpr std::string_view kAvFrameRateOptions   = "av_frame_rate_options";
+static constexpr std::string_view kAvDeinterlaceName    = "av_deinterlace_name";
+static constexpr std::string_view kAvDeinterlaceDefault = "yadif";
+static constexpr std::string_view kAvDeinterlaceOptions = "av_deinterlace_options";
+static constexpr std::string_view kAvInterlaceName      = "av_interlace_name";
+static constexpr std::string_view kAvInterlaceDefault   = "tinterlace";
+static constexpr std::string_view kAvInterlaceOptions   = "av_interlace_options";
 
 static constexpr std::string_view kAvFilterGraph_VideoOut = "video_out";
 static constexpr std::string_view kAvFilterGraph_AudioOut = "audio_out";
@@ -133,6 +139,7 @@ static constexpr std::string_view kAvCodec_UseStreamTimebase = "av_codec_use_str
 
 static constexpr std::string_view kAvInSec         = "in";
 static constexpr std::string_view kAvOutSec        = "out";
+static constexpr std::string_view kSegmentUid      = "segment_uid";
 static constexpr std::string_view kAvDurationSec   = "duration";
 static constexpr std::string_view kAvLoop          = "loop";
 static constexpr std::string_view kAvPosSec        = "pos";

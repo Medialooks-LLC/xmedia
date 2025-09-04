@@ -8,6 +8,8 @@
 
 namespace xsdk::v_sdk {
 
+static constexpr std::string_view kSeiUser = "sei_user";
+
 namespace video {
     // {fcc, planes}
     std::pair<eMFCC, size_t> FromPixelFormat(std::string_view _pixel_format);
@@ -31,21 +33,33 @@ namespace audio {
 } // namespace audio
 
 namespace time {
-    XTime  Convert(const M_TIME& _mtime);
+    XTime  Convert(const M_TIME& _mtime, const XSegment& _segment = {});
     M_TIME Convert(const XTime& _mtime);
 } // namespace time
 
 namespace mframe {
     std::vector<std::string_view> PixelFormatsList();
 
-    CComPtr<IMFFrame> MakeCPU(IMFFrame* _mf_frame_p);
+    CComPtr<IMFFrame> MakeCPU(IMFFrame* const _mf_frame_p);
 
-    xbase::XResult<IMediaFrame::SPtr> ExtractVideo(IMFFrame* _mf_frame_p, const IMediaUnit::SPtrC& _base_props);
+    std::pair<std::vector<XFrameSideData>, INode::SPtr> ExtractSideData(IMFFrame* const _mf_frame_p);
 
-    xbase::XResult<IMediaFrame::SPtr> ExtractAudio(IMFFrame* _mf_frame_p, const IMediaUnit::SPtrC& _base_props);
+    // return {string, binary (include integer)} counters
+    std::pair<size_t, size_t> CopySideData(const IMediaFrame* _source_p,
+                                           IMFFrame* const    _dest_p,
+                                           const bool         _set_integer_as_data = false);
+
+    xbase::XResult<IMediaFrame::SPtr> ExtractVideo(IMFFrame* const          _mf_frame_p,
+                                                   const IMediaUnit::SPtrC& _base_props,
+                                                   const bool               _copy_side_data);
+
+    xbase::XResult<IMediaFrame::SPtr> ExtractAudio(IMFFrame* const          _mf_frame_p,
+                                                   const IMediaUnit::SPtrC& _base_props,
+                                                   const bool               _copy_side_data);
 
     xbase::XResult<CComPtr<IMFFrame>> MakeFrame(const IMediaFrame::SPtrC& _media_frame,
-                                                bool                      _use_reference = false,
-                                                IMFFactory*               _mf_factory_p  = nullptr);
+                                                const bool                _use_reference  = false,
+                                                IMFFactory* const         _mf_factory_p   = nullptr,
+                                                const bool                _copy_side_data = false);
 } // namespace mframe
 } // namespace xsdk::v_sdk

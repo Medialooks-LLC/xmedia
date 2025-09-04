@@ -32,10 +32,9 @@ XENUM_CLASS(XError,
             NotRegistered,
             NotImplemented,
             WrongStream,
-            StreamsNotSpecified,
             DecoderNotFound,
             TimeGetFailed,
-            BuffersIsFull,
+            BuffersAreFull,
             NotRunning,
             Stopped,
             Closed,
@@ -103,7 +102,15 @@ XENUM_CLASS(XError,
             StreamBufferIsFull,
             BuffersIsEmpty,
             StreamBufferIsEmpty,
-            NotPlaying)
+            NotPlaying,
+            NetTimeout,
+            WrongStreamUid,
+            AllStreamsAreUsed,
+            NoValidStreams,
+            StreamsNotSpecified,
+            NoAutomaticLinks,
+            OperationAborted,
+            CloneAlreadyExist)
 
 /**
  * @brief Creates an std::error_code object from an XError

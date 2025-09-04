@@ -28,16 +28,16 @@ target_link_libraries(${PROJECT_NAME}
                         xutils
                         xmedia
 )
-if(USE_PREBUILD)
-target_link_libraries(${PROJECT_NAME}
-                        ${AVCODEC}
-                        ${AVDEVICE}
-                        ${AVFORMAT}
-                        ${AVFILTER}
-                        ${AVUTIL}
-                        ${XERCES}
-                        ${NDI}
-)
+
+if(USE_PREBUILD AND (NOT DYNAMIC_BUILD AND WIN32) OR NOT WIN32)
+    target_link_libraries(${PROJECT_NAME}
+                            ${AVCODEC}
+                            ${AVDEVICE}
+                            ${AVFORMAT}
+                            ${AVFILTER}
+                            ${AVUTIL}
+                            ${NDI}
+    )
 endif()
 
 source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${FILES})

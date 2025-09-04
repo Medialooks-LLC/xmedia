@@ -6,6 +6,8 @@
 namespace xsdk {
 
 namespace xmedia {
+    // For time-rounding errors
+    static constexpr int64_t kMinTimeQuant = 100; // 1/100 msec (10 microsec)
 
     static constexpr std::string_view kWrappers  = "wrappers";
     static constexpr std::string_view kContainer = "container";
@@ -44,6 +46,7 @@ namespace xmedia::wrappers {
     static const std::string kRecreation       = "recreation";
     static const std::string kFixedSegment     = "fixed_segment";
     static const std::string kStreamBuffersOut = "stream_buffers_out";
+    static const std::string kTimesCorrector   = "times_corrector";
 } // namespace xmedia::wrappers
 
 namespace xmedia::links {
@@ -56,6 +59,8 @@ namespace xmedia::links {
     static constexpr std::string_view kMaxDeqSize       = "max_deq_size";
     static constexpr std::string_view kWaitForFreeMsec  = "wait_for_free_msec";
     static constexpr std::string_view kOverflowBehavior = "overflow_behavior";
+    // For multi media link
+    static constexpr std::string_view kThreadPerStream = "thread_per_stream";
 
     // Link details
     static const std::string kLinkDetails = "link_details";
@@ -73,6 +78,10 @@ namespace xmedia::links {
     static constexpr std::string_view kProgramNumbers = "program_numbers";
     static constexpr std::string_view kStreamUids     = "stream_uids";
     static constexpr std::string_view kStreamPids     = "stream_pids";
+    static constexpr std::string_view kSourceUids     = "source_uids";
+
+    // For cloned links
+    static constexpr std::string_view kClonedFromUid = "cloned_from_uid";
 
 } // namespace xmedia::links
 
@@ -106,19 +115,40 @@ namespace xmedia::conversion {
     static const std::string kDiscardForFormatChanges = "discard_for_format_changes";
     static const std::string kBypassOtherTypes        = "bypass_other_types";
     static const std::string kAudioSamplesPerFrame    = "audio_samples_per_frame"; // Better name ?
+    static const std::string kDuplicateMetadata       = "duplicate_metadata";
 
-    static const std::string kAudioFormat = "audio_format";
-    static const std::string kVideoFormat = "video_format";
+    static const std::string kAudioFormat     = "audio_format";
+    static const std::string kVideoFormat     = "video_format";
+    static const std::string kConversionProps = "conversion_props";
 } // namespace xmedia::conversion
 
 namespace xmedia::recreation {
     static const std::string kInternalMinSec = "interval_min_sec";
     static const std::string kInternalMaxSec = "interval_max_sec";
     static const std::string kInternalsSteps = "intervals_steps";
+    static const std::string kAsyncInit      = "async_init";
 } // namespace xmedia::recreation
 
+namespace xmedia::times_corrector {
+    static const std::string kMaxTimeGapSec        = "max_time_gap_sec";
+    static const std::string kCutOffAudio          = "cut_off_audio";
+    static const double      kDefaultMaxTimeGapSec = 1.0;
+    static const std::string kCorrectionSide       = "correction_side";
+    static const std::string kInput                = "input";
+    static const std::string kOutput               = "output";
+} // namespace xmedia::times_corrector
+
 namespace xmedia::streams_buffer {
-    static const std::string kFixedSegment = "fixed_segment";
+    static const std::string kFixedSegment     = "fixed_segment";
+    static const std::string kActiveBuffersMax = "active_buffers_max";
+    static const std::string kActiveBuffersMin = "active_buffers_min";
+
+    static const std::string kDynamicStreams = "dynamic_streams";
+
+    static const std::string kOverwriteOld     = "overwrite_old";
+    static const std::string kStreamBufferMax  = "stream_buffers_max";
+    static const std::string kTotalBufferMax   = "total_buffers_max";
+    static const std::string kAudioPrerollMsec = "audio_preroll_msec";
 } // namespace xmedia::streams_buffer
 
 } // namespace xsdk

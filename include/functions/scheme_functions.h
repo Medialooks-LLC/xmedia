@@ -67,6 +67,8 @@ xbase::XResult<INode::SPtr> StoreItemDesc(const IContainerScheme::ItemDesc& _ite
 xbase::XResult<IContainerScheme::ItemDesc> LoadItemDesc(const INode::SPtrC&               _item_node,
                                                         const std::optional<std::string>& _instance_name_update = {});
 
+xbase::XResult<INode::SPtr> StoreContainerScheme(const IContainerScheme::SPtrC& _scheme, INode::SPtr&& _dest_node = {});
+
 xbase::XResult<IContainerScheme::SPtr> LoadContainerScheme(const INode::SPtrC&               _item_node,
                                                            const std::optional<std::string>& _instance_name = {});
 

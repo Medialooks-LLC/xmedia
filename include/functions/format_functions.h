@@ -119,7 +119,15 @@ namespace xformat {
      * @param _one_plane_bytes The flag for calculate sample count based on one audio plane size.
      * @return The number of samples.
      */
-    size_t ToSamples(size_t _bytes, const XFormatA* _format_a_p, const bool _one_plane_bytes);
+    size_t BytesToSamples(const size_t _bytes, const XFormatA* _format_a_p, const bool _one_plane_bytes);
+    /**
+     * @brief Converts the number of samples to the number of bytes, based on the given sample format and channel count.
+     * @param _samples The number of samples to convert.
+     * @param _format_a_p A pointer to the given audio format.
+     * @param _one_plane_bytes The flag for calculate sample count based on one audio plane size.
+     * @return The number of samples.
+     */
+    size_t SamplesToBytes(const size_t _samples, const XFormatA* _format_a_p, const bool _one_plane_bytes);
 
     /**
      * @brief Compare two media formats by their properties.
@@ -200,10 +208,25 @@ namespace xformat {
     INode::SPtr ToNode(const XFormatV* _format_p, bool _with_codec_props, const INode::SPtr& _dst_node = {});
     INode::SPtr ToNode(const XFormatA* _format_p, bool _with_codec_props, const INode::SPtr& _dst_node = {});
     INode::SPtr ToNode(const XFormat* _format_p, bool _with_codec_props, const INode::SPtr& _dst_node = {});
+    INode::SPtr ToConversionProps(const XFormat& _format, const INode::SPtr& _dst_node = {});
 
-    std::optional<XFormatV> VideoFromNode(const INode::SPtrC& _format_desc);
-    std::optional<XFormatA> AudioFromNode(const INode::SPtrC& _format_desc);
-    XFormat                 FromNodes(const std::vector<INode::SPtrC>& _format_nodes);
+    inline const XFormatA* Audio(const XFormat* _format_p) { return _format_p ? _format_p->Audio() : nullptr; }
+    inline const XFormatV* Video(const XFormat* _format_p) { return _format_p ? _format_p->Video() : nullptr; }
+    inline const XFormatS* Subtitle(const XFormat* _format_p) { return _format_p ? _format_p->Subtitle() : nullptr; }
+
+    std::optional<XFormatV> VideoFromNode(const INode::SPtrC& _format_desc,
+                                          const XFormatV*     _base_format_p,
+                                          const bool          _override_base);
+    std::optional<XFormatA> AudioFromNode(const INode::SPtrC& _format_desc,
+                                          const XFormatA*     _base_format_p,
+                                          const bool          _override_base);
+    XFormat                 FromNodes(const std::vector<INode::SPtrC>& _format_nodes,
+                                      const XFormat*                   _base_format_p,
+                                      const bool                       _override_base);
+    XFormat                 FromConversionProps(const INode::SPtrC& _conversion_props,
+                                                const XFormat*      _base_format_p,
+                                                const bool          _override_base);
+
     /**
      * @brief Checks if an XFormatV object is empty.
      *

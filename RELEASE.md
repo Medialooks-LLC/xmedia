@@ -1,4 +1,5 @@
-# Windows
+﻿# Build
+## Windows
 ###### Create and change build directory:
 ```shell
 md xmedia
@@ -6,16 +7,17 @@ cd xmedia
 ```
 ###### Checkout sources:
 ```shell
-git clone https://github.com/Medialooks-LLC/xmedia . --branch=v1.0.1.10-beta
+git clone https://github.com/Medialooks-LLC/xmedia.git . --branch=<build_version>
 git submodule update --init
 ```
-###### Extract binaries from `https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.10-beta/xmedia-1.0.1.10-beta-windows.zip` to `lib` folder.
+###### Extract binaries from [here](https://github.com/Medialooks-LLC/xmedia/releases/download/<build_version>/xmedia-<build_version>-windows.zip) to `lib` folder.
 ###### Build project:
 ```shell
 cmake -DDYNAMIC_RUNTIME=ON -DDYNAMIC_BUILD=ON -DUSE_PREBUILD=ON -DWITH_TESTS=OFF -S . -B build
 cmake --build build
 ```
-# Linux (Ubuntu 22.04 LTS (jammy))
+
+## Linux (Ubuntu 22.04 LTS (jammy))
 ###### Setup runtime environment:
  ```shell script
 apt-get update
@@ -49,16 +51,76 @@ mkdir -p xmedia && cd xmedia
 ```
 ###### Checkout sources:
 ```shell
-git clone https://github.com/Medialooks-LLC/xmedia . --branch=v1.0.1.10-beta
+git clone https://github.com/Medialooks-LLC/xmedia.git . --branch=<build_version>
 git submodule update --init
 ```
-###### Download and extract binaries from `https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.10-beta/xmedia-1.0.1.10-beta-linux.tar.gz` to `lib` folder.
+###### Download and extract binaries from [here](https://github.com/Medialooks-LLC/xmedia/releases/download/<build_version>/xmedia-<build_version>-linux.tar.gz) to `lib` folder.
 ```shell script
-wget https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.10-beta/xmedia-1.0.1.10-beta-linux.tar.gz
-tar xvfz xmedia-1.0.1.10-beta-linux.tar.gz -C lib/
+wget https://github.com/Medialooks-LLC/xmedia/releases/download/<build_version>/xmedia-<build_version>-linux.tar.gz
+tar xvfz xmedia-<build_version>-linux.tar.gz -C lib/
 ```
 ###### Build project:
 ```shell
 cmake -DDYNAMIC_RUNTIME=ON -DDYNAMIC_BUILD=ON -DUSE_PREBUILD=ON -DWITH_TESTS=OFF -DCMAKE_BUILD_TYPE=Debug -S . -B build
 cmake --build build
 ```
+
+## macOS
+###### Create and change build directory:
+```shell
+mkdir -p xmedia && cd xmedia
+```
+###### Checkout sources:
+```shell
+git clone https://github.com/Medialooks-LLC/xmedia.git . --branch=<build_version>
+git submodule update --init
+```
+###### Download and extract binaries from [here](https://github.com/Medialooks-LLC/xmedia/releases/download/<build_version>/xmedia-<build_version>-macos.tar.gz) to `lib` folder.
+```shell script
+wget https://github.com/Medialooks-LLC/xmedia/releases/download/<build_version>/xmedia-<build_version>-macos.tar.gz
+tar xvfz xmedia-<build_version>-linux.tar.gz -C lib/
+```
+###### Build project:
+```shell
+cmake -DDYNAMIC_RUNTIME=ON -DDYNAMIC_BUILD=ON -DUSE_PREBUILD=ON -DWITH_TESTS=OFF -DCMAKE_BUILD_TYPE=Debug -S . -B build
+cmake --build build
+```
+
+# Check Samples
+
+## Windows
+
+Navigate to the `.\build\bin\Debug` folder and run:
+
+```shell
+xmedia_sample_put_data.exe
+```
+
+After execution, the sample will generate a file named `xmedia_gen_sample.mp4`.
+
+Next, you can run:
+
+```shell
+xmedia_sample_get_data.exe
+```
+
+This will extract a sequence of images (`captured_xxxx.png`) from the previously generated `xmedia_gen_sample.mp4` file.
+
+## Linux & macOS
+
+Navigate to the `./build/bin/Debug` folder and run:
+
+```shell
+./xmedia_sample_put_data
+```
+
+After execution, the sample will generate a file named `xmedia_gen_sample.mp4`.
+
+Next, you can run:
+
+```shell
+./xmedia_sample_get_data
+```
+
+This will extract a sequence of images (`captured_xxxx.png`) from the previously generated `xmedia_gen_sample.mp4` file.
+

@@ -26,10 +26,12 @@ public:
 public:
     virtual ~IFormatConversion() = default;
 
+    // TODO: Make helper class with format & props
     virtual std::pair<XFormat, INode::SPtrC> ConversionGet() const = 0;
 
-    virtual std::error_code ConversionSet(const XFormat&      _conversion_format,
-                                          const INode::SPtrC& _conversion_props = {}) = 0;
+    // Return true if conversion chnaged, false overwise, or error if error occured
+    virtual xbase::XResult<bool> ConversionSet(const XFormat&      _conversion_format,
+                                               const INode::SPtrC& _conversion_props = {}) = 0;
 };
 
 /**

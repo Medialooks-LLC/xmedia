@@ -37,4 +37,8 @@ xbase::XResult<size_t> ActiveContainerTargetsAdd(ICommandsExecutor*            _
                                                  const IActiveContainer::SPtr& _active_container,
                                                  XPath&&                       _target_path = {});
 
+xbase::XResult<ICommandsExecutor::GetTargetPF> PlaylistTargetAdd(ICommandsExecutor*         _executor_p,
+                                                                 const IMediaHandler::SPtr& _playlist_sp,
+                                                                 XPath&&                    _target_path = {});
+
 } // namespace xsdk::xcommands

@@ -5,6 +5,7 @@
 #include "interfaces/media_buffers_interfaces.h"
 #include "interfaces/media_commands_interfaces.h"
 #include "interfaces/media_converter_interfaces.h"
+#include "interfaces/media_device_interfaces.h"
 #include "interfaces/media_events_interfaces.h"
 #include "interfaces/media_handler_interfaces.h"
 #include "interfaces/media_links_interfaces.h"

@@ -748,6 +748,17 @@ typedef struct MFSink MFSink;
 
 #endif /* __MFSink_FWD_DEFINED__ */
 
+#ifndef __MFSinkEx_FWD_DEFINED__
+    #define __MFSinkEx_FWD_DEFINED__
+
+    #ifdef __cplusplus
+typedef class MFSinkEx MFSinkEx;
+    #else
+typedef struct MFSinkEx MFSinkEx;
+    #endif /* __cplusplus */
+
+#endif /* __MFSinkEx_FWD_DEFINED__ */
+
 #ifndef __MFSinkReader_FWD_DEFINED__
     #define __MFSinkReader_FWD_DEFINED__
 
@@ -758,6 +769,17 @@ typedef struct MFSinkReader MFSinkReader;
     #endif /* __cplusplus */
 
 #endif /* __MFSinkReader_FWD_DEFINED__ */
+
+#ifndef __MFSinkReaderEx_FWD_DEFINED__
+    #define __MFSinkReaderEx_FWD_DEFINED__
+
+    #ifdef __cplusplus
+typedef class MFSinkReaderEx MFSinkReaderEx;
+    #else
+typedef struct MFSinkReaderEx MFSinkReaderEx;
+    #endif /* __cplusplus */
+
+#endif /* __MFSinkReaderEx_FWD_DEFINED__ */
 
 #ifndef __MFLive_FWD_DEFINED__
     #define __MFLive_FWD_DEFINED__
@@ -18457,11 +18479,25 @@ EXTERN_C const CLSID CLSID_MFSink;
 class DECLSPEC_UUID("C08B164D-5CCF-4251-B22F-27AAA7ECABF3") MFSink;
     #endif
 
+EXTERN_C const CLSID CLSID_MFSinkEx;
+
+    #ifdef __cplusplus
+
+class DECLSPEC_UUID("C08A164D-5CCF-4251-B22F-27ABA7ECABF3") MFSinkEx;
+    #endif
+
 EXTERN_C const CLSID CLSID_MFSinkReader;
 
     #ifdef __cplusplus
 
 class DECLSPEC_UUID("C08B164E-7CCF-4251-B22F-27AAA7ECABF3") MFSinkReader;
+    #endif
+
+EXTERN_C const CLSID CLSID_MFSinkReaderEx;
+
+    #ifdef __cplusplus
+
+class DECLSPEC_UUID("C08A164E-7CCF-4251-B22F-27ABA7ECABF3") MFSinkReaderEx;
     #endif
 
 EXTERN_C const CLSID CLSID_MFLive;

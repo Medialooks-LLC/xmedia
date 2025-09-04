@@ -75,6 +75,8 @@ struct XSegment {
     std::optional<xbase::Time64> segment_start;
     /// @brief Optional media segment end time (in Time64 !!!)
     std::optional<xbase::Time64> segment_end;
+    /// @brief Segment unique identifier
+    xbase::Uid segment_uid = xbase::kInvalidUid;
 };
 
 /**
@@ -408,8 +410,8 @@ struct XPlaneV {
     int32_t width = 0;
     /// @brief Height of the video plane in pixels.
     int32_t height = 0;
-    /// @brief Number of bytes stored in the video plane.
-    int32_t row_bytes = 0; // raw_bytes?
+    /// @brief Number of bytes stored in the one video plane row.
+    int32_t row_bytes = 0;
 };
 
 /**

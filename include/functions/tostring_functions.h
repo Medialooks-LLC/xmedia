@@ -19,10 +19,10 @@ namespace xnode {
     /**
      * @brief Converts an INode pointer to a std::string.
      * @param _node The INode pointer to convert.
-     * @param _deep The depth parameter, default is 1. A depth of 0 will print the whole nodes structure.
+     * @param _deep The depth parameter, a depth of 0 will print the whole nodes structure.
      * @return A std::string representing the INode.
      */
-    std::string ToString(INode::SPtrC _node, size_t _deep = 1);
+    std::string ToString(INode::SPtrC _node, size_t _deep);
 } // namespace xnode
 
 namespace xrational {
@@ -280,8 +280,20 @@ namespace xmedia {
      * @param _input_streams_props The MediaUnitsVec convert.
      * @return A string representation of the MediaUnitsVec object.
      */
-    std::string ToString(const MediaUnitsVec& _input_streams_props);
+    std::string ToString(const MediaUnitsVec& _input_streams_props, const bool _short_info = false);
 
+    // TODO: Make support for custom ToString(..) ?
+    template <class TResult>
+    std::string ToString(const xbase::XResult<TResult>& _xr)
+    {
+        if (_xr.HasError())
+            return xerror::ToString(_xr.Error());
+
+        if (_xr.HasResult())
+            return "xres:" + std::to_string(_xr.Result());
+
+        return "xres:empty";
+    }
 } // namespace xmedia
 
 } // namespace xsdk

@@ -72,15 +72,23 @@ int GenerateStream(std::string_view _container_scheme_path, INode::SPtrC _cmd_li
         std::cout << "Create a simple scheduler to put frames every 40ms\n";
         std::mutex              mtx;
         std::condition_variable cv;
-        bool                    is_finished = false;
-        auto                    clock       = xclock::Create(xclock::SysSyncGen(true));
-        const auto              frame_time  = time64::FromMsec(40);
-        const auto              start_time  = clock->Time() + frame_time;
-        auto                    scheduler   = xscheduler::CreateScheduler(clock.get(), xworker::CreateWorker());
+        bool                    is_finished  = false;
+        auto                    clock        = xclock::Create(xclock::SysSyncGen(true));
+        auto                    call_counter = 0;
+        const auto              frame_time   = time64::FromMsec(40);
+        const auto              start_time   = clock->Time() + frame_time;
+        auto                    scheduler    = xscheduler::CreateScheduler(clock.get(), false, xworker::CreateWorker());
         auto                    task_function =
-            [_num_frames, start_time, frame_time, asamples_in_chunk, &container, &mtx, &cv, &is_finished](
-                const xsdk::xbase::IScheduler::TaskInfo* task_info) -> std::optional<xsdk::xbase::Time64> {
-            if (task_info->scheduling_counter >= _num_frames) {
+            [_num_frames,
+             start_time,
+             frame_time,
+             asamples_in_chunk,
+             &container,
+             &mtx,
+             &cv,
+             &is_finished,
+             &call_counter](const xsdk::xbase::IScheduler::TaskInfo* task_info) -> std::optional<xsdk::xbase::Time64> {
+            if (call_counter >= _num_frames) {
                 {
                     std::unique_lock<std::mutex> lock(mtx);
                     is_finished = true;
@@ -90,21 +98,22 @@ int GenerateStream(std::string_view _container_scheme_path, INode::SPtrC _cmd_li
             }
             auto call_time     = task_info->clock_p->Time();
             auto captured_time = time64::ToMsec(call_time - start_time);
-            auto v_frame       = helpers::GenerateBGRAVideoFrame(task_info->scheduling_counter, captured_time);
+            auto v_frame       = helpers::GenerateBGRAVideoFrame(call_counter, captured_time);
             auto err           = container->MediaPut(v_frame);
             if (err) {
                 std::cout << "Couldn't put frame to container with error: " << err << " - " << xerror::ToString(err)
                           << "\n ";
                 return std::nullopt;
             }
-            auto a_frame = helpers::GenerateAudioFrame(task_info->scheduling_counter * asamples_in_chunk);
+            auto a_frame = helpers::GenerateAudioFrame(call_counter * asamples_in_chunk);
             err          = container->MediaPut(a_frame);
             if (err) {
                 std::cout << "Couldn't put frame to container with error: " << err << " - " << xerror::ToString(err)
                           << "\n ";
                 return std::nullopt;
             }
-            return start_time + frame_time * (task_info->scheduling_counter + 1);
+            ++call_counter;
+            return task_info->scheduled_time + frame_time;
         };
 
         auto task_uid = scheduler->ScheduleTask(start_time, std::move(task_function));

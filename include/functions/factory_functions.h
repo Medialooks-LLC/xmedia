@@ -15,14 +15,10 @@
 
 namespace xsdk::xmedia {
 
-static constexpr size_t   kWorkersPoolMinSize         = 4;
-static constexpr size_t   kWorkersPoolMaxSize         = 128;
-static constexpr uint32_t kWorkersPoolIdleTimeoutMsec = 3000;
-
-/// @brief default xmedia scheduler.
-xbase::IWorker::SPtr WorkersPool();
+/// @brief default workers pool.
+xbase::IWorker* WorkersPool();
 /// @brief default xmedia scheduler (use default workers pool)
-xbase::IScheduler::SPtr Scheduler();
+xbase::IScheduler* Scheduler();
 
 /// @brief Get IMediaObjectsFactory instance.
 IMediaObjectsFactory* ObjectsFactory();

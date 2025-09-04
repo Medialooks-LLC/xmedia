@@ -32,7 +32,12 @@ public:
         return containter_server;
     }
 
-    ~ContainerServer() { SetTargetContainer_(nullptr); }
+    ~ContainerServer()
+    {
+        SetTargetContainer_(nullptr);
+        command_executor_.reset();
+        outer_interfaces_.reset();
+    }
 
     std::error_code LoadScheme(const INode::SPtr& _container_scheme)
     {
@@ -111,6 +116,8 @@ public:
 
         return all_commands;
     }
+
+    void Close() { SetTargetContainer_(nullptr); }
 
 private:
     std::error_code Init_(xevents::OnEventPF&& _on_media_event)
@@ -393,7 +400,6 @@ void ControlMessagesLoop(ContainerServer*      _server_p,
 
 int main(int argc, char** argv)
 {
-
     auto cmd_line = command_line::ParseCommandLine(argc, argv);
     assert(cmd_line);
     auto need_help = cmd_line->At("help").Bool(false);
@@ -459,6 +465,8 @@ int main(int argc, char** argv)
             }
         },
         std::cout);
+
+    container_server_xr->Close();
 
     return 0;
 }

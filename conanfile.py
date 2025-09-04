@@ -54,6 +54,7 @@ class xMedia(ConanFile):
         self.requires("rapidjson/cci.20230929")
         self.requires("xerces-c/3.2.5")
         self.requires("xlogger/stable@ml/release")
+        self.requires("boringssl/stable@ml/release")
         if self._get_opt("WITH_PYTHON_BINDINGS", "OFF"):
             self.requires("pybind11/2.11.1")
         if self._get_opt("WITH_OPENCV_LIBRARY", "ON"):
@@ -93,18 +94,13 @@ class xMedia(ConanFile):
                 xsdk_prebuild_folder = os.path.join(os.environ.get("XSDK_PREBUILD_FOLDER"), "windows", "3rd_party", str(self.settings.build_type))
                 self.output.info(f"prebuild folder was set: {xsdk_prebuild_folder}")
                 copy(self, pattern="*.dll", dst=xsdk_prebuild_folder, src=ffmpeg_bin_folder, keep_path=False)
-                copy(self, pattern="*.lib", excludes="ff*.lib", dst=xsdk_prebuild_folder, src=ffmpeg_lib_folder, keep_path=False)
                 copy(self, pattern="*.pdb", excludes="ff*.pdb", dst=xsdk_prebuild_folder, src=ffmpeg_lib_folder, keep_path=False)
                 copy(self, pattern="*.dll", dst=xsdk_prebuild_folder, src=ndi_bin_folder, keep_path=False)
                 ndi_lib_folder = os.path.join(self.dependencies["ndi"].package_folder, "lib")
                 self.output.info("ndi lib folder: {}".format(ndi_lib_folder))
-                copy(self, pattern="*.lib", dst=xsdk_prebuild_folder, src=ndi_lib_folder, keep_path=False)
                 copy(self, pattern="*.json", dst=xsdk_prebuild_folder, src=xlogger_bin_folder, keep_path=False)
                 copy(self, pattern="*.dll", dst=xsdk_prebuild_folder, src=xlogger_bin_folder, keep_path=False)
                 copy(self, pattern="*.pdb", dst=xsdk_prebuild_folder, src=xlogger_bin_folder, keep_path=False)
-                xerces_lib_folder = self.dependencies["xerces-c"].cpp_info.libdir
-                self.output.info("xerces-c lib folder: {}".format(xerces_lib_folder))
-                copy(self, pattern="*.lib", dst=xsdk_prebuild_folder, src=xerces_lib_folder, keep_path=False)
 
         elif self.settings.os in ("Linux", "Macos"):
             xsdk_build_folder = os.environ.get("XSDK_BUILD_FOLDER", ".")
@@ -131,9 +127,6 @@ class xMedia(ConanFile):
                 copy(self, pattern="lib*", dst=xsdk_prebuild_folder, src=ndi_lib_folder, keep_path=False)
                 copy(self, pattern="*.json", dst=xsdk_prebuild_folder, src=xlogger_bin_folder, keep_path=False)
                 copy(self, pattern="lib*", dst=xsdk_prebuild_folder, src=xlogger_bin_folder, keep_path=False)
-                xerces_lib_folder = self.dependencies["xerces-c"].cpp_info.libdir
-                self.output.info("xerces-c lib folder: {}".format(xerces_lib_folder))
-                copy(self, pattern="lib*", dst=xsdk_prebuild_folder, src=xerces_lib_folder, keep_path=False)
 
         else:
             raise ConanInvalidConfiguration("Unsupported OS")

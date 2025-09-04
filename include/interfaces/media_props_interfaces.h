@@ -27,26 +27,26 @@ public:
     virtual bool IsExclusive() const = 0;
 
     // Return supported props
-    virtual MediaUnitsVec CheckMediaUnit(MediaUnitsVec&& _media_props) const = 0;
+    virtual MediaUnitsVec CheckMediaUnits(MediaUnitsVec&& _media_props) const = 0;
 
     // Return: {added, removed}
     // WARN !!! _media_props after call contain non-taken/non-founded props (2Think)
-    virtual std::pair<MediaUnitsVec, MediaUnitsVec> SetMediaUnit(MediaUnitsVec&         _media_props,
-                                                                 const ModificationType _mod_type) = 0;
+    virtual std::pair<MediaUnitsVec, MediaUnitsVec> SetMediaUnits(MediaUnitsVec&         _media_props,
+                                                                  const ModificationType _mod_type) = 0;
 
     enum class PropsType { kTotal, kAvailable, kNotSubscribed, kSubscribed };
-    virtual MediaUnitsVec GetMediaUnit(const PropsType     _props_type,
-                                       MediaUnitsVec&&     _append_to       = {},
-                                       const SameUidAction _same_uid_action = SameUidAction::kReject) const = 0;
+    virtual MediaUnitsVec GetMediaUnits(const PropsType     _props_type,
+                                        MediaUnitsVec&&     _append_to       = {},
+                                        const SameUidAction _same_uid_action = SameUidAction::kReject) const = 0;
 
     // Return: {subscribed, unsubscribed}
     // WARN !!! _subscribe_to after call contain non-taken/non-founded props (2Think)
-    virtual std::pair<MediaUnitsVec, MediaUnitsVec> SubscribeToMediaUnit(
+    virtual std::pair<MediaUnitsVec, MediaUnitsVec> SubscribeToMediaUnits(
         MediaUnitsVec&                 _subscribe_to,
         const ModificationType         _mod_type,
         const std::optional<uint64_t>& _subscriber_uid = {}) = 0;
 
-    virtual MediaUnitsVec GetSubscribedProps(MediaUnitsVec&&                _append_to       = {},
+    virtual MediaUnitsVec GetSubscribedUnits(MediaUnitsVec&&                _append_to       = {},
                                              const SameUidAction            _same_uid_action = SameUidAction::kReject,
                                              const std::optional<uint64_t>& _subscriber_uid  = {}) const = 0;
 
@@ -91,7 +91,8 @@ namespace xmedia {
                                                           const IMediaUnit::SPtrC& _new_props)>;
 
     IMediaUnitAgent::UPtr CreateMediaUnitAgent(const xmedia::IsSuitableMediaPF& _is_suitable_pf,
-                                               const bool                       _is_exclusive);
+                                               const bool                       _is_exclusive,
+                                               const std::string_view           _name);
 
 } // namespace xmedia
 

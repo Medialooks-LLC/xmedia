@@ -1,6 +1,7 @@
 #pragma once
 
 #include "functions/commands_functions.h"
+#include "functions/common_helpers.h"
 #include "functions/container_functions.h"
 #include "functions/factory_functions.h"
 #include "functions/format_functions.h"
@@ -218,16 +219,24 @@ namespace xmedia {
      * @brief Check if it's the end of a stream mark for a given packet or frame.
      * @param _packet_or_frame Pointer to the packet or frame.
      * @return true if this packet or frame is the end of the stream. If the media object is neither a packet nor a
-     * frame, std::nullopt is returned.
+     * frame, false is returned.
      */
     bool IsEndOfStream(const IMediaObject* _packet_or_frame, const bool _value_for_null);
     /**
      * @brief Check if the given packet or frame is duplicated.
      * @param _packet_or_frame Pointer to the packet or frame.
      * @return true if this packet or frame is the end of the stream. If the media object is neither a packet nor a
-     * frame, std::nullopt is returned.
+     * frame, false is returned.
      */
     bool IsDuplicated(const IMediaObject* _packet_or_frame, const bool _value_for_null);
+
+    /**
+     * @brief Check if it's the stream information unit for a given object.
+     * @param _packet_or_frame Pointer to the packet or frame.
+     * @return true if this packet or frame is the stream information. If the media object is neither a packet nor a
+     * frame, false is returned.
+     */
+    bool IsStreamInfo(const IMediaObject* _packet_or_frame, const bool _value_for_null);
 
     /**
      * @brief Creating a new media object from a given packet or frame with the end-of-stream flag added.
@@ -253,14 +262,14 @@ namespace xmedia {
     }
 
     /**
-     * @brief Creating a new media object from a given packet with the end-of-stream flag added and next time or
+     * @brief Creating a new media object from a given packet with the duplicated flag added and next time or
      * specified eos time
      * @param _frame Pointer to the base (or eos) frame.
-     * @param _eos_index Optional index for eos frame (from base frame).
+     * @param _dup_index Optional index for eos frame (from base frame).
      * @return cloned frame with eos flag and correct times.
      */
-    std::pair<IMediaUnit::SPtrC, xtime::SegmentPos> MakeNextEosFrame(const IMediaUnit::SPtrC&    _frame,
-                                                                     const std::optional<size_t> _eos_index = {});
+    std::pair<IMediaUnit::SPtrC, xtime::SegmentPos> MakeNextDupFrame(const IMediaUnit::SPtrC&    _frame,
+                                                                     const std::optional<size_t> _dup_index = {});
 
     /**
      * @brief Compare two media formats of media objects by their properties.
@@ -287,22 +296,92 @@ namespace xmedia {
     MediaUnitsVec MediaUnitsVecMake(const MediaUnitsVec& _streams_props, MediaUnitsVec&& _append_to = {});
 
     /**
+     * @brief Finds the first media unit with the specified stream UID in the vector.
+     *
+     * @param _streams_props Vector of media units to search in.
+     * @param _stream_uid    UID of the stream to find.
+     *
+     * @return A pair containing a pointer to the found media unit and its index,
+     *         or {nullptr, xbase::npos} if not found.
+     */
+    std::pair<IMediaUnit::SPtrC, size_t> MediaUnitsVecFind(const MediaUnitsVec& _streams_props,
+                                                           const xbase::Uid     _stream_uid);
+
+    /**
+     * @brief Adds or replaces a media unit in the vector by its stream UID.
+     *
+     * @param _streams_props   Vector of media units to modify.
+     * @param _media_unit      Media unit to add or replace with.
+     * @param _replace_existed Whether to replace an existing unit if found.
+     *
+     * @return true if the operation succeeded, false otherwise.
+     */
+    bool MediaUnitsVecAdd(MediaUnitsVec&           _streams_props,
+                          const IMediaUnit::SPtrC& _media_unit,
+                          const bool               _replace_existed);
+
+    /**
+     * @brief Merge two media units vectors by its stream UID.
+     *
+     * @param _dest   Vector of media units to modify.
+     * @param _src    Vector of media units to add.
+     * @param _replace_existed Whether to replace an existing unit if found.
+     *
+     * @return number of added or modified units.
+     */
+    size_t MediaUnitsVecMerge(MediaUnitsVec& _dest, const MediaUnitsVec& _src, const bool _replace_existed);
+
+    /**
+     * @brief Filter media units vector by predicate
+     */
+    std::vector<IMediaUnit::SPtrC> MediaUnitsVecFilter(const MediaUnitsVec&                     _media_units,
+                                                       std::function<bool(const IMediaUnit*)>&& _predicate);
+
+    /**
+     * @brief Return master stream (first video or audio if no video) stream uid
+     */
+    std::optional<xbase::Uid> MasterStreamFind(const MediaUnitsVec& _streams);
+
+    /**
      * @brief Return codec props from media props or media packet object
      */
     const XCodec* CodecProps(const IMediaObject* _obj);
 
     /**
+     * @brief Return video frame rate from media frame or packet object
+     */
+    std::optional<XRational> FrameRate(const IMediaUnit* _unit_p);
+
+    /**
+     * @brief Return number of audio samples and frame rate from audio media frame, std::nullopt if not audio frame
+     */
+    std::optional<std::pair<size_t, uint32_t>> AudioSamplesAndRate(const IMediaUnit* _unit_p);
+
+    /**
+     * @brief Return frame or packet start time
+     */
+    std::optional<xbase::Time64> StartTime(const IMediaUnit* _unit_p);
+    /**
+     * @brief Return frame or packet end time (for frame aligned by frame rate or audio data size), for
+     * _number_of_frames is zero, only duration used, for 1 and more frame-rate/audio data size used
+     */
+    std::optional<xbase::Time64> EndTime(const IMediaUnit* _unit_p, const size_t _number_of_frames = 1);
+
+    /**
      * @brief Start output from handler to callback
      */
-    std::error_code OutputStart(IMediaHandler* const _handler_p, ILink::OnDataPF&& _on_data_pf);
+    std::error_code OutputStart(IMediaHandler* const           _handler_p,
+                                ILink::OnDataPF&&              _on_data_pf,
+                                const xbase::IScheduler::SPtr& _custom_scheduler = nullptr);
 
     /**
      * @brief Start output from handler for audio, video, sub(and aux) callback
      */
-    std::error_code OutputStartAV(IMediaHandler* const _handler_p,
-                                  ILink::OnDataPF&&    _on_video_pf,
-                                  ILink::OnDataPF&&    _on_audio_pf = {},
-                                  ILink::OnDataPF&&    _on_other_pf = {});
+    std::error_code OutputStartAV(IMediaHandler* const           _handler_p,
+                                  ILink::OnDataPF&&              _on_video_pf,
+                                  ILink::OnDataPF&&              _on_audio_pf      = {},
+                                  ILink::OnDataPF&&              _on_other_pf      = {},
+                                  const xbase::IScheduler::SPtr& _custom_scheduler = nullptr);
 
 } // namespace xmedia
 
@@ -341,6 +420,8 @@ namespace xrational {
     int32_t Compare(const std::optional<XRational>& _left,
                     const std::optional<XRational>& _right,
                     double                          _precision = 0.001);
+
+    XRational MakeWithReduce(const int64_t _num, const int64_t _den);
     // double  Value(const std::optional<XRational>& _val, double _default_val = 0.0);
 } // namespace xrational
 

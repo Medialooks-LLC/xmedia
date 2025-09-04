@@ -1,93 +1,190 @@
-# xmedia
+# XMedia Library by Medialooks LLC
 
+The **XMedia** library, developed by **Medialooks LLC**, is a professional multimedia toolkit designed for developers who need to integrate advanced audio and video processing, capturing, encoding, decoding, and streaming capabilities into their applications. It provides a powerful API for working with multimedia on various platforms.
 
+## Key Features of XMedia
 
-## Getting started
+### 1. Video and Audio Capture
+   - Supports capturing from various sources, such as webcams, microphones, and video capture devices (e.g., HDMI, SDI).
+   - Works with professional-grade equipment for high-quality video capture.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+### 2. Media Processing
+   - Encoding and decoding of video and audio in various formats.
+   - Supports high resolutions, including 4K and beyond.
+   - Allows overlaying graphics, text, watermarks, and other elements onto video streams.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+### 3. Streaming
+   - Real-time streaming support for protocols like RTMP, RTSP, HLS, SRT, and more.
+   - Enables the creation of custom media servers or integration with existing platforms.
 
-## Add your files
+### 4. Recording and Playback
+   - Records video and audio to various file formats (e.g., MP4, MKV, AVI).
+   - Playback of multimedia with synchronized audio and video. _(planned)_
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+### 5. Professional Standards Support
+   - Works with professional standards like NDI (Network Device Interface) for video-over-IP.
+   - Integrates with broadcasting and video production equipment and software.
 
+### 6. Cross-Platform Compatibility
+   - Supports multiple operating systems, including Windows and Linux.
+   - Can be integrated into applications written in C++. _(planned support more programming languages)_
+
+### 7. Flexibility and Performance
+   - Optimized for high-performance tasks, making it suitable for professional video production, broadcasting, and streaming applications.
+
+---
+
+## Build
+
+❗**Important**❗: To build the project correctly, you must select which version of **xmedia** you want to build.
+In the instructions below, we use the placeholder `<version>` wherever a version number should be specified.
+The version corresponds to a tag in the GitHub repository, e.g. `v1.0.1.10-beta`.
+
+---
+
+### Windows
+
+#### Create and enter the build directory:
+
+```shell
+md xmedia
+cd xmedia
 ```
-cd existing_repo
-git remote add origin https://gitlab.medialooks.net/xsdk/xmedia.git
-git branch -M main
-git push -uf origin main
+
+#### Clone the sources:
+
+```shell
+git clone https://github.com/Medialooks-LLC/xmedia.git . --branch=<version>
+git submodule update --init
 ```
 
-## Integrate with your tools
+#### Download and extract binaries:
 
-- [ ] [Set up project integrations](https://gitlab.medialooks.net/xsdk/xmedia/-/settings/integrations)
+You can find the required binaries on the [Releases](https://github.com/Medialooks-LLC/xmedia/releases) page.
 
-## Collaborate with your team
+Download them from:
+`https://github.com/Medialooks-LLC/xmedia/releases/download/<version>/xmedia-<version>-windows.zip`
+and extract them into the `lib` folder.
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+#### Build the project:
 
-## Test and Deploy
+```shell
+cmake -DDYNAMIC_RUNTIME=ON -DDYNAMIC_BUILD=ON -DUSE_PREBUILD=ON -DWITH_TESTS=OFF -S . -B build
+cmake --build build
+```
 
-Use the built-in continuous integration in GitLab.
+This will configure and build the project inside the `build` directory.
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+---
 
-***
+### Linux (Ubuntu 22.04 LTS, Jammy)
 
-# Editing this README
+#### Prerequisites
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+##### Set up the runtime environment:
 
-## Suggestions for a good README
+```shell script
+apt-get update
+apt-get install -y \
+        libavahi-client3 \
+        libavahi-common3 \
+        libgl1 \
+        libx11-6 \
+        libxext6 \
+        libxv1 \
+        libva2 \
+        libva-drm2 \
+        libva-x11-2 \
+        libvdpau1 \
+        libxcb1 \
+        libxcb-shape0 \
+        libxcb-shm0 \
+        libxcb-xfixes0
+```
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+##### Set up the build environment:
 
-## Name
-Choose a self-explaining name for your project.
+```shell script
+apt-get update
+apt-get install -y \
+        build-essential \
+        cmake \
+        wget
+```
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+#### Create and enter the build directory:
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+```shell
+mkdir -p xmedia && cd xmedia
+```
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+#### Clone the sources:
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+```shell
+git clone https://github.com/Medialooks-LLC/xmedia.git . --branch=<version>
+git submodule update --init
+```
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+#### Download and extract binaries:
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+You can find the required binaries on the [Releases](https://github.com/Medialooks-LLC/xmedia/releases) page.
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+Download them from:
+`https://github.com/Medialooks-LLC/xmedia/releases/download/<version>/xmedia-<version>-linux.tar.gz`
+and extract them into the `lib` folder.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+```shell script
+wget https://github.com/Medialooks-LLC/xmedia/releases/download/<version>/xmedia-<version>-linux.tar.gz
+tar xvfz xmedia-<version>-linux.tar.gz -C lib/
+```
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+#### Build the project:
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+```shell
+cmake -DDYNAMIC_RUNTIME=ON -DDYNAMIC_BUILD=ON -DUSE_PREBUILD=ON -DWITH_TESTS=OFF -DCMAKE_BUILD_TYPE=Debug -S . -B build
+cmake --build build
+```
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+This will configure and build the project inside the `build` directory.
 
-## License
-For open source projects, say how it is licensed.
+### macOS
+#### Create and enter the build directory:
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+```shell
+mkdir -p xmedia && cd xmedia
+```
+
+#### Clone the sources:
+
+```shell
+git clone https://github.com/Medialooks-LLC/xmedia.git . --branch=<version>
+git submodule update --init
+```
+
+#### Download and extract binaries:
+
+You can find the required binaries on the [Releases](https://github.com/Medialooks-LLC/xmedia/releases) page.
+
+Download them from:
+`https://github.com/Medialooks-LLC/xmedia/releases/download/<version>/xmedia-<version>-macos.tar.gz`
+and extract them into the `lib` folder.
+
+```shell script
+wget https://github.com/Medialooks-LLC/xmedia/releases/download/<version>/xmedia-<version>-macos.tar.gz
+tar xvfz xmedia-<version>-macos.tar.gz -C lib/
+```
+
+#### Build the project:
+
+```shell
+cmake -DDYNAMIC_RUNTIME=ON -DDYNAMIC_BUILD=ON -DUSE_PREBUILD=ON -DWITH_TESTS=OFF -DCMAKE_BUILD_TYPE=Debug -S . -B build
+cmake --build build
+```
+
+This will configure and build the project inside the `build` directory.
+
+---
+
+## Licensing
+
+**XMedia** is a commercial library. Using it in your projects may require purchasing a license from **Medialooks LLC**.

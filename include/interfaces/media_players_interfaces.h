@@ -21,14 +21,16 @@ class IMediaPlayerControl {
 public:
     // Move next structure members to PlayerMedia ?
     struct PlayProps {
-        std::optional<xbase::Time64> start_time;  // start_timestamp ?
-        INode::SPtrC                 play_params; // e.g. for transition
+        std::optional<xbase::Time64> start_time;    // start_timestamp ?
+        std::optional<double>        start_pos_sec; // Optional start positions (relative to in point)
+        INode::SPtrC                 play_params;   // e.g. for transition
     };
 
     struct PlayerMedia {
         Media                 media;
         PlayProps             play_props;
-        std::optional<double> pos_sec;       // Change to Time64 (?)
+        std::optional<double> pos_sec;       // Change to Time64 (?), (relative to in point)
+        std::optional<size_t> loop_counter;  // Has value only for files in loop
         IMediaOutput::SPtr    source_output; // TODO: Make const
         INode::SPtrC          source_stat;
 
@@ -36,31 +38,36 @@ public:
         using SPtrC = std::shared_ptr<const PlayerMedia>;
     };
 
-    using OnSwitchPf = std::function<std::error_code(const PlayerMedia* _from_media_p, const PlayerMedia* _to_media_p)>;
+    enum class SwitchType { kOnStart, kScheduled, kForced, kOnStop };
+    using OnSwitchPf = std::function<std::error_code(const PlayerMedia* _from_media_p,
+                                                     const PlayerMedia* _to_media_p,
+                                                     const SwitchType   _switch_type)>;
 
     // Return PlayerMedia and optionally handler (for take owning for handler e.g. Close)
     using OnCreateMediaPf = std::function<xbase::XResult<std::pair<PlayerMedia, IMediaHandler::SPtr>>(
         const Media&                  _media,
         const PlayProps&              _play_props,
         const std::optional<XFormat>& _play_format,
-        const INode::SPtrC&           _format_conversion_props)>;
+        const INode::SPtrC&           _format_conversion_props,
+        const std::optional<size_t>&  _loop_counter)>;
 
 public:
     virtual ~IMediaPlayerControl() = default;
 
     USING_PTRS(IMediaPlayerControl)
 
-    virtual const xbase::IClock* PlayerClock() const     = 0;
-    virtual xbase::Uid           PlayingMediaUid() const = 0;
-    virtual xbase::Uid           NextMediaUid() const    = 0;
-    // Note: Return copy of currently played media, thus PlayerMedia::pos_sec is pos at call
-    virtual PlayerMedia::SPtrC                                     PlayingMediaGet() const = 0;
-    virtual PlayerMedia::SPtrC                                     NextMediaGet() const    = 0;
-    virtual std::optional<std::pair<xbase::Time64, xbase::Time64>> PauseTimesGet() const   = 0;
+    virtual const xbase::IClock* PlayerClock() const = 0;
+    // Return current and next uids (if no media -> xbase::kInvalidUid)
+    virtual std::pair<xbase::Uid, xbase::Uid> PlayerMediaUids() const = 0;
+
+    // Return copy of currently playing and next media, PlayerMedia::pos_sec is pos in media at the moment of call
+    virtual std::pair<PlayerMedia::SPtrC, PlayerMedia::SPtrC> PlayerMediaGet() const = 0;
+
+    virtual std::optional<std::pair<xbase::Time64, xbase::Time64>> PauseTimesGet() const = 0;
 
     virtual void SetCallbacks(OnSwitchPf&& _on_switch_pf, OnCreateMediaPf&& _on_create_media_pf) = 0;
 
-    enum class PlayerFlags { kRejectIfHasNext, kReplaceNext = 0x01, kLoop = 0x02 };
+    enum class PlayerFlags { kRejectIfHasNext, kReplaceNext = 0x01, kLoop = 0x02, kSyncInitMedia = 0x10 };
     // Return replaced PlayerMedia and clock time of media start
     virtual xbase::XResult<PlayerMedia::UPtr> PlayMedia(const Media&      _media,
                                                         const PlayProps&  _play_props,
@@ -89,19 +96,28 @@ public:
 class IPlaylistPlayerControl {
 
 public:
-    // 2Think: change double to xbase::Time64 ?
+    // 2Think:
+    // - Rename props to:
+    //      playlist_***        for playlist props
+    //      current_item_***    for currently played item
+    //      next_item_***       for next item
+    // - change double to xbase::Time64 ?
     struct Status {
-        IPlaylist::SPtrC playlist;
-        double           pos_in_playlist_sec = 0.0;
-        xbase::Time64    clock_timestamp     = time64::kNoVal;
-
+        IPlaylist::SPtrC             playlist;
+        xbase::Time64                clock_timestamp     = time64::kNoVal;
+        double                       pos_in_playlist_sec = 0.0;
         std::optional<xbase::Time64> playlist_start_timestamp;
-        // Not set -> playlist stopped
-        std::optional<double> time_in_playlist_sec;
+        std::optional<double>        time_in_playlist_sec; // Not set -> playlist stopped
 
+        // For playlist loop
+        std::optional<size_t> playlist_loop_counter;
+
+        // Current item
         std::optional<IPlaylist::PlaylistItem> current_item;
         double                                 pos_in_item_sec = 0.0; // No sence if current_item is not set
+        std::optional<size_t>                  item_loop_counter;
 
+        // Next item
         std::optional<IPlaylist::PlaylistItem> next_item;
         std::optional<double>                  until_next_sec;
     };
@@ -130,8 +146,7 @@ public:
     // Set target playlist and begin output BG (if have)
     virtual xbase::XResult<Status> InitPlayer(const IPlaylist::SPtrC& _playlist) = 0;
     // Start or continue stopped playback
-    virtual xbase::XResult<Status> StartPlayback(const std::optional<double>&          _playlist_pos_sec = {},
-                                                 const IMediaPlayerControl::PlayProps& _play_props       = {}) = 0;
+    virtual xbase::XResult<Status> StartPlayback(const IMediaPlayerControl::PlayProps& _play_props = {}) = 0;
     // Stop playback and return recent actual status
     virtual xbase::XResult<Status> StopPlayback(const std::optional<xbase::Time64>& _continue_at_time = {}) = 0;
     // Pause playlist on recent frame, optionally swutch to background

@@ -66,10 +66,11 @@ public:
      * @brief Function signature for auto link creation.
      *
      * @tparam _media The media from handler.
-     * @return new link for this stream, if stream not required, return nullptr (for each packet),
-     * or one time return dummy (kDisabled) link
+     * @return new link for this stream, if stream not required:
+     * - return nullptr for repeats callback
+     * - return std::nullopt for not more callback for this stream
      */
-    using OnNewStreamPF = std::function<ILink::SPtr(const IMediaObject::SPtrC& _media)>;
+    using OnNewStreamPF = std::function<std::optional<ILink::SPtr>(const IMediaObject::SPtrC& _media)>;
 
     /**
      * @brief Start media data processing.
@@ -100,6 +101,11 @@ public:
      * manully added links is not removed
      */
     virtual void OutputStop(bool _flush_data, bool _wait_for_finish) = 0;
+
+    /**
+     * @brief Notify about media streams chnages
+     */
+    virtual std::error_code OutputUpdateStreams(const MediaUnitsVec& _output_streams) = 0;
 
     /**
      * @brief Return ILinks interface for enumerate links

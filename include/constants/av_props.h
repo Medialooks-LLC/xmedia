@@ -266,6 +266,10 @@ namespace stream {
      */
     static constexpr std::string_view kAvStreamPid = "av_stream_pid";
     /**
+     * @brief Frame rate of stream.
+     */
+    static constexpr std::string_view kFrameRate = "frame_rate";
+    /**
      * @brief Constant used for handling real base framerate of the stream.
      * @details This is the lowest framerate with which all timestamps can be
      * represented accurately (it is the least common multiple of all
@@ -273,7 +277,11 @@ namespace stream {
      * For example, if the time base is 1/90000 and all frames have either
      * approximately 3600 or 1800 timer ticks, then r_frame_rate will be 50/1.
      */
-    static constexpr std::string_view kFrameRate = "frame_rate";
+    static constexpr std::string_view kBaseFrameRate = "r_frame_rate";
+    /**
+     * @brief Average frame rate
+     */
+    static constexpr std::string_view kAvgFrameRate = "avg_frame_rate";
     ///@brief Constant used for handling number of frames in this stream.
     static constexpr std::string_view kNbFrames = "nb_frames";
     /**

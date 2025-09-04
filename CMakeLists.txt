@@ -1,11 +1,11 @@
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.22)
 set(MODULE_PATH ${CMAKE_MODULE_PATH})
 
 cmake_policy(SET CMP0091 NEW)
 cmake_policy(SET CMP0087 NEW)
 cmake_policy(SET CMP0148 NEW)
 
-option(WITH_FFMPEG_GPL "Link with GPL ffmpeg / LGPL otherwise" ON)
+option(WITH_FFMPEG_GPL "Link with GPL ffmpeg / LGPL otherwise" OFF)
 option(WITH_STATIC_ANALYSIS "Perform static analysis via clang-tidy" OFF)
 option(WITH_ADDRESS_SANITIZER "Add additional memory checks" OFF)
 option(WITH_THREAD_SANITIZER "Add additional thread checks" OFF)
@@ -19,6 +19,10 @@ option(PREPARE_PREBUILD "Preapare pre build version of xmedia dependency library
 option(WITH_CODE_COVERAGE "Set ON when do linux build on CI" OFF)
 option(DYNAMIC_RUNTIME "Set ON when want to use dynamic runtime" $ENV{DYNAMIC_RUNTIME})
 option(DYNAMIC_BUILD "Set ON when want to use dynamic build" $ENV{DYNAMIC_BUILD})
+
+if(WIN32 AND USE_PREBUILD)
+    set(CMAKE_BUILD_TYPE "") # Fix for wrong usage prebuild libs with CMAKE_BUILD_TYPE flag on Windows
+endif()
 
 if(WIN32 OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     if(DYNAMIC_RUNTIME)
@@ -222,30 +226,26 @@ else() # USE_PREBUILD
     if(WIN32)
         add_custom_target(copy_libs
             ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>
-            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/xbase.dll -t ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>
-            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/xnode.dll -t ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>
-            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/xutils.dll -t ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>
-            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/xmedia.dll -t ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>
-            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/xbase.pdb -t ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>
-            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/xnode.pdb -t ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>
-            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/xutils.pdb -t ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>
-            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/xmedia.pdb -t ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>
+            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/xbase.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>
+            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/xnode.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>
+            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/xutils.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>
+            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/xmedia.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>
         )
     elseif(APPLE)
         add_custom_target(copy_libs
             ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/libxbase.dylib -t ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/libxnode.dylib -t ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/libxutils.dylib -t ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/libxmedia.dylib -t ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/libxbase.dylib ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/libxnode.dylib ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/libxutils.dylib ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/libxmedia.dylib ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
         )
     else()
         add_custom_target(copy_libs
             ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/libxbase.so -t ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/libxnode.so -t ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/libxutils.so -t ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/libxmedia.so -t ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/libxbase.so ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/libxnode.so ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/libxutils.so ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+            COMMAND ${CMAKE_COMMAND} -E copy ${LIBS_PATH}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/libxmedia.so ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
         )
     endif()
 

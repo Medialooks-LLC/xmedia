@@ -80,7 +80,7 @@ public:
     };
 
     struct InsertRes {
-        IContainerScheme::SPtr item_container; // Optionally, only if item inserted item inside container
+        IContainerScheme::SPtr item_container; // Optionally, only if item inserted inside container
         std::string            item_name;
         size_t                 item_idx = xbase::npos;
         ILinksScheme::SPtr     links_scheme;

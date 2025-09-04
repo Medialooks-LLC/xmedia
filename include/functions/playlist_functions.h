@@ -40,6 +40,8 @@ IPlaylist::PlaylistItem ConvertItemRate(const IPlaylist::PlaylistItem&  _base_it
 std::vector<IPlaylist::PlaylistItem> ConvertItemsRate(const std::vector<IPlaylist::PlaylistItem>& _base_items,
                                                       const std::optional<XRational>&             _frame_rate);
 
+INode::SPtr StorePlayerStatus(const IPlaylistPlayerControl::Status& _status);
+
 // Playlist persistance methods
 
 INode::SPtr                     StorePlaylist(const IPlaylist*             _playlist_p,
@@ -56,5 +58,7 @@ xbase::XResult<std::vector<IPlaylist::PlaylistMedia>> LoadPlaylistItems(const IN
 
 INode::SPtr StorePlaylistItem(const IPlaylist::PlaylistMedia& _item, INode::SPtr&& _dest_node = {});
 xbase::XResult<IPlaylist::PlaylistMedia> LoadPlaylistItem(const INode::SPtrC& _item_node);
+
+INode::SPtr StorePlaylistMediaPos(const IPlaylist::PlaylistPos& _pos, INode::SPtr&& _dest_node = {});
 
 } // namespace xsdk::xplaylist

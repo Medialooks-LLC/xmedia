@@ -29,11 +29,11 @@ public:
     /// @brief Unique IDs for media objects.
     struct Uids {
         /// @brief Optional UID for the stream associated with the media object
-        std::optional<uint64_t> stream_uid;
+        std::optional<xbase::Uid> stream_uid;
         /// @brief Optional UID for the group (e.g. ts program) of the media object.
-        std::optional<uint64_t> group_uid;
+        std::optional<xbase::Uid> group_uid;
         /// @brief Optional UID for the source (e.g. one udp stream) of the media object.
-        std::optional<uint64_t> source_uid;
+        std::optional<xbase::Uid> source_uid;
     };
 
     /**
