@@ -78,7 +78,7 @@ git submodule update --init
 ###### Download and extract binaries from [here](https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.13-beta/xmedia-1.0.1.13-beta-macos.tar.gz) to `lib` folder.
 ```shell script
 wget https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.13-beta/xmedia-1.0.1.13-beta-macos.tar.gz
-tar xvfz xmedia-1.0.1.13-beta-linux.tar.gz -C lib/
+tar xvfz xmedia-1.0.1.13-beta-macos.tar.gz -C lib/
 ```
 ###### Build project:
 ```shell
