@@ -50,7 +50,14 @@ XENUM_CLASS(XObjectType,
             FrameAV       = Frame | AV)
 
 /// @brief Enum class representing different flags of media packet or frame
-XENUM_CLASS(XMediaFlags, kRegular, kEndOfStream = 0x01, kDuplicated = 0x02, kPaused = 0x04, kStreamInfo = 0x08)
+XENUM_CLASS(XMediaFlags,
+            kRegular,
+            kEndOfStream = 0x01,
+            kDuplicated  = 0x02,
+            kPaused      = 0x04,
+            kStreamInfo  = 0x08,
+            kKeyFrame    = 0x10,
+            kNonKeyFrame = 0x20)
 /**
  * @brief Enum class representing different rate control modes.
  * @details This enum class represents different rate control modes, namely:
@@ -814,8 +821,7 @@ XENUM_CLASS(ChromaLocation,
 
 // Indirect copy of AVFieldOrder. See at defs.h
 XENUM_CLASS(eXFieldsOrder, // TODO: Rename to FieldsOrder
-            Unknown,       // TODO: Remove
-            Progressive,
+            Progressive = 1,
             TopFirst,               ///< Top coded_first, top displayed first
             BottomFirst,            ///< Bottom coded first, bottom displayed first
             TopCoded_BottomDisplay, ///< Top coded first, bottom displayed first

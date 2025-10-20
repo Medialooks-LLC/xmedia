@@ -47,6 +47,8 @@ public:
         std::optional<xbase::Time64> repeat_at_time;
         // If set to true, the next repeat should be with same data
         bool repeat_last_data = false;
+        // For subscibe/unsubscribe to specified units (used only with kAutoDetectStreams links - 2Think)
+        std::optional<IMediaUnitAgent::ModificationType> subscribe_command;
     };
 
     /**
@@ -69,9 +71,9 @@ public:
      * @tparam _dest_id Optional destination identifier.
      * @return Active deq operation via OnDataRes, std::nullopt for stop receiving data for this stream (till Flush)
      */
-    using OnDataPF = std::function<std::optional<ILink::OnDataRes>(const ILink::Info*             _link_info_p,
-                                                                   const IMediaObject::SPtrC&     _obj,
-                                                                   const std::optional<uint64_t>& _dest_id)>;
+    using OnDataPF = std::function<std::optional<ILink::OnDataRes>(const ILink::Info*            _link_info_p,
+                                                                   const IMediaObject::SPtrC&    _obj,
+                                                                   const std::optional<uint64_t> _dest_id)>;
 
 public:
     virtual ~ILink() = default;
@@ -99,11 +101,11 @@ public:
 
     // Put data into link, with optional props overriden specified in constructor
     virtual xbase::XResult<size_t> Put(const IMediaObject::SPtrC&         _obj,
-                                       const std::optional<uint64_t>&     _dest_id          = {},
+                                       const std::optional<uint64_t>      _dest_id          = {},
                                        const std::optional<ILink::Props>& _overriding_props = {}) = 0;
 
     // Flush link data, after all deque data flushed, the cb with specified dest_id & nullptr called
-    virtual size_t Flush(const std::optional<uint64_t>& _dest_id = {}) = 0;
+    virtual size_t Flush(const std::optional<uint64_t> _dest_id = {}) = 0;
 
     // Stop raise callback, optionally flush all data and/or wait till all data to be handled and all callbacks
     // finished
@@ -136,28 +138,28 @@ public:
 
     // Add new link to specified stream uid or unspecified/pendning (detecting via IsSuitable(...))
     // Return added link uid or error if adding failed
-    virtual xbase::XResult<uint64_t> LinkAdd(const uint64_t               _dest_uid,
-                                             const ILink::SPtr&           _new_link,
-                                             const std::optional<size_t>& _max_links_for_dest = {}) = 0;
+    virtual xbase::XResult<uint64_t> LinkAdd(const uint64_t              _dest_uid,
+                                             const ILink::SPtr&          _new_link,
+                                             const std::optional<size_t> _max_links_for_dest = {}) = 0;
 
     // Return number of link for specified dest (return LinksMaxPerDest() via pair ?)
-    virtual size_t LinksCounts(const std::optional<uint64_t>& _dest_uid = {}) const = 0;
+    virtual size_t LinksCounts(const std::optional<uint64_t> _dest_uid = {}) const = 0;
 
     // Get all/specified links
-    virtual std::vector<ILink::SPtr> LinksGet(const std::optional<uint64_t>& _dest_uid = {}) = 0;
+    virtual std::vector<ILink::SPtr> LinksGet(const std::optional<uint64_t> _dest_uid = {}) = 0;
 
-    virtual std::vector<ILink::SPtrC> LinksGet(const std::optional<uint64_t>& _dest_uid = {}) const = 0;
+    virtual std::vector<ILink::SPtrC> LinksGet(const std::optional<uint64_t> _dest_uid = {}) const = 0;
 
     // Get streams uid for link
     virtual std::pair<ILink::SPtr, std::vector<uint64_t>> LinkFind(
-        const uint64_t                 _link_uid,
-        const std::optional<uint64_t>& _dest_uid = {}) const = 0;
+        const uint64_t                _link_uid,
+        const std::optional<uint64_t> _dest_uid = {}) const = 0;
 
-    virtual std::vector<ILink::SPtr> LinksRemove(const std::optional<uint64_t>& _dest_uid,
-                                                 bool                           _all_except_dest_uid) = 0;
+    virtual std::vector<ILink::SPtr> LinksRemove(const std::optional<uint64_t> _dest_uid,
+                                                 bool                          _all_except_dest_uid) = 0;
 
-    virtual std::pair<ILink::SPtr, std::vector<uint64_t>> LinkRemove(const uint64_t                 _link_uid,
-                                                                     const std::optional<uint64_t>& _dest_uid = {}) = 0;
+    virtual std::pair<ILink::SPtr, std::vector<uint64_t>> LinkRemove(const uint64_t                _link_uid,
+                                                                     const std::optional<uint64_t> _dest_uid = {}) = 0;
 };
 
 // Temp place - move strcutures to link_functions.h, CreateLinkMedia to internal ?

@@ -98,10 +98,10 @@ public:
 
     virtual const std::string& ContainerName() const = 0;
 
-    virtual xbase::XResult<InsertRes> ItemInsert(ItemDesc&&                                  _item_desc,
-                                                 const std::optional<xconfig::DataFlowMode>& _target_container = {},
-                                                 const std::vector<INode::SPtrC>&            _links            = {},
-                                                 const XKey&                                 _insert_at = {}) = 0;
+    virtual xbase::XResult<InsertRes> ItemInsert(ItemDesc&&                                 _item_desc,
+                                                 const std::optional<xconfig::DataFlowMode> _target_container = {},
+                                                 const std::vector<INode::SPtrC>&           _links            = {},
+                                                 const XKey&                                _insert_at        = {}) = 0;
 
     virtual xbase::XResult<InsertRes> ItemReplace(const XKey& _replaced_name_or_idx, ItemDesc&& _new_item_desc) = 0;
 

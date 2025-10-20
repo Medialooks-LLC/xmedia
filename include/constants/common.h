@@ -98,4 +98,13 @@ static constexpr std::string_view kPacketsRead  = "packets_read";
 static constexpr std::string_view kBytesRead    = "bytes_read";
 static constexpr std::string_view kPacketsWrite = "packets_write";
 static constexpr std::string_view kBytesWrite   = "bytes_write";
+static constexpr std::string_view kThreads      = "threads";
+
+// Stream types
+static constexpr std::string_view kVideo    = "video";
+static constexpr std::string_view kSubtitle = "subtitle";
+static constexpr std::string_view kAudio    = "audio";
+static constexpr std::string_view kAVMuxed  = "av_muxed";
+static constexpr std::string_view kAVSMuxed = "avs_muxed";
+
 } // namespace xsdk

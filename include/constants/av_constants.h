@@ -52,13 +52,17 @@ static constexpr std::string_view kAvFilterGraphDescOut      = "av_filter_graph_
 
 // 2Think: move to namespace
 static constexpr std::string_view kAvScalerName         = "av_scaler_name";
-static constexpr std::string_view kAvScalerDefault      = "scale";
+static constexpr std::string_view kAvScalerSwsDirect    = "sws_direct";
+static constexpr std::string_view kAvScalerSwScale      = "scale";
+static constexpr std::string_view kAvScalerZScale       = "zscale";
+static constexpr std::string_view kAvScalerCuda         = "scale_cuda";
 static constexpr std::string_view kAvScalerOptions      = "av_scaler_options";
 static constexpr std::string_view kAvFrameRateName      = "av_frame_rate_name";
 static constexpr std::string_view kAvFrameRateDefault   = "fps";
 static constexpr std::string_view kAvFrameRateOptions   = "av_frame_rate_options";
 static constexpr std::string_view kAvDeinterlaceName    = "av_deinterlace_name";
 static constexpr std::string_view kAvDeinterlaceDefault = "yadif";
+static constexpr std::string_view kAvDeinterlaceCuda    = "yadif_cuda";
 static constexpr std::string_view kAvDeinterlaceOptions = "av_deinterlace_options";
 static constexpr std::string_view kAvInterlaceName      = "av_interlace_name";
 static constexpr std::string_view kAvInterlaceDefault   = "tinterlace";
@@ -114,6 +118,8 @@ static constexpr std::string_view kAvBypassNotSuitable = "av_bypass_not_suitable
 static constexpr std::string_view kAvStreamThreads = "av_stream_threads";
 
 // For decode streams in AV Context
+static constexpr std::string_view kAvDecode = "av_decode";
+// OBSOLETE -> use  "video::av_decode" : {kVideo, kAvDecode} etc.
 static constexpr std::string_view kAvSrcDecodeVid = "av_src_decode_vid";
 static constexpr std::string_view kAvSrcDecodeAud = "av_src_decode_aud";
 static constexpr std::string_view kAvSrcDecodeSub = "av_src_decode_sub";
@@ -163,14 +169,15 @@ static constexpr std::string_view kAvCodecParameters = "av_codec_parameters";
 static constexpr std::string_view kAvMuxrate         = "muxrate";
 
 // Common names
-static constexpr std::string_view kVideo = "video";
 
-static constexpr std::string_view kAudio        = "audio";
 static constexpr std::string_view kBitPerSample = "bits_per_sample";
 
 static constexpr std::string_view kDevices        = "devices";
 static constexpr std::string_view kSelectedDevice = "selected_device";
 static constexpr std::string_view kEnabled        = "enabled";
+static constexpr std::string_view kDisabled       = "disabled";
+
+static constexpr std::string_view kData = "data";
 // HW Accell
 static constexpr std::string_view kHwDevice = "hw_device";
 

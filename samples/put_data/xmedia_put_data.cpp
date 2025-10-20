@@ -19,9 +19,9 @@ int GenerateStream(std::string_view _container_scheme_path, INode::SPtrC _cmd_li
     std::string scheme_path = _container_scheme_path.data();
 
     std::cout << "Load scheme from file: " << scheme_path << "\n";
-    auto container_scheme = helpers::JsonFromFile(scheme_path);
-    if (!container_scheme) {
-        std::cout << "Couldn't load scheme file from " << scheme_path << "path\n";
+    auto [container_scheme, error] = helpers::JsonFromFile(scheme_path);
+    if (!container_scheme || !error.empty()) {
+        std::cout << "Couldn't load scheme file from " << scheme_path << "path. Error:" << error << std::endl;
         return -1;
     }
 

@@ -7,6 +7,9 @@
 #include "functions/format_functions.h"
 #include "functions/frame_functions.h"
 #include "functions/links_functions.h"
+#include "functions/mixing_functions.h"
+#include "functions/overlay_functions.h"
+#include "functions/player_functions.h"
 #include "functions/playlist_functions.h"
 #include "functions/scheme_functions.h"
 #include "functions/time_functions.h"
@@ -92,22 +95,22 @@ namespace xmedia {
     /**
      * @brief  Retrieves the specified media data from an IMediaHandler instance.
      * @tparam TInterface The type of the media data to be cast to.
-     * @param _handler_p The IMediaHandler instance to retrieve the media data from.
-     * @param _output_idx An optional output index of the IMediaHandler specifying which one will be used to get media
-     * data.
+     * @param _media_output_p The IMediaOutput instance to retrieve the media data from.
+     * @param _stream_uid An optional output stream uid of the IMediaHandler specifying which one will be used to get
+     * media data.
      * @param _hints The optional hints/properties to be used for the retrieval process.
      * @return Returns an XResult with a shared pointer to the retrieved media data if successful,
      *         or an error if getting fails.
      */
     template <typename TInterface>
-    xbase::XResult<std::shared_ptr<const TInterface>> MediaGet(IMediaHandler*               _handler_p,
-                                                               const std::optional<size_t>& _output_idx = std::nullopt,
-                                                               const INode::SPtrC&          _hints      = nullptr)
+    xbase::XResult<std::shared_ptr<const TInterface>> MediaGet(IMediaOutput*                   _media_output_p,
+                                                               const std::optional<xbase::Uid> _stream_uid = {},
+                                                               const INode::SPtrC&             _hints      = {})
     {
-        if (!_handler_p)
+        if (!_media_output_p)
             return XError::NullPointer;
 
-        auto get_xr = _handler_p->MediaGet(_output_idx, _hints);
+        auto get_xr = _media_output_p->MediaGet(_stream_uid, _hints);
         if (get_xr.HasError())
             return get_xr.Error();
 
@@ -124,9 +127,9 @@ namespace xmedia {
     /**
      * @brief Template function to get a vector of media data from a given IMediaHandler object.
      * @tparam TInterface The type of the media data to be cast to.
-     * @param _handler_p The IMediaHandler instance to retrieve the media data from.
-     * @param _output_idx An optional output index of the IMediaHandler specifying which one will be used to get media
-     * data.
+     * @param _media_output_p The IMediaOutput instance to retrieve the media data from.
+     * @param _stream_uid An optional output stream uid of the IMediaHandler specifying which one will be used to get
+     * media data.
      * @param _hints  The optional hints/properties to be used for the retrieval process.
      * @param _max_size The maximum number of media data to be stored in the returned vector.
      * @return A XResult<std::vector<std::shared_ptr<TInterface>>> representing the outcome of the MediaGetVec() call.
@@ -137,19 +140,19 @@ namespace xmedia {
      */
     template <typename TInterface>
     xbase::XResult<std::vector<std::shared_ptr<const TInterface>>> MediaGetVec(
-        IMediaHandler*                 _handler_p,
-        const std::optional<uint64_t>& _output_idx  = std::nullopt,
-        const INode::SPtrC&            _first_hints = nullptr,
-        size_t                         _max_size    = 128)
+        IMediaOutput*                   _media_output_p,
+        const std::optional<xbase::Uid> _stream_uid  = {},
+        const INode::SPtrC&             _first_hints = {},
+        size_t                          _max_size    = 128)
     {
-        if (!_handler_p)
+        if (!_media_output_p)
             return XError::NullPointer;
 
         auto first_hints = _first_hints;
 
         std::vector<std::shared_ptr<const TInterface>> media_vec;
         while (media_vec.size() < _max_size) {
-            auto get_xr = _handler_p->MediaGet(_output_idx, first_hints);
+            auto get_xr = _media_output_p->MediaGet(_stream_uid, first_hints);
             if (get_xr.Result()) {
                 auto interface_sp = xobject::PtrQuery<const TInterface>(get_xr.GetPtr());
                 if (!interface_sp)
@@ -173,10 +176,10 @@ namespace xmedia {
      * @brief Reuest media from each stream, request and wait if no stream media
      */
     std::vector<xbase::XResult<IMediaUnit::SPtrC>> MediaGetForAllStreams(
-        IMediaOutput* const            _output_p,
-        const bool                     _remove_from_buffer,
-        const std::optional<uint32_t>& _timeout_for_each_msec = {},
-        std::optional<XObjectType>&&   _obj_type              = {});
+        IMediaOutput* const              _output_p,
+        const bool                       _remove_from_buffer,
+        const std::optional<uint32_t>    _timeout_for_each_msec = {},
+        const std::optional<XObjectType> _obj_type              = {});
 
     // 2Think: replace bt ToString?
     /**
@@ -214,6 +217,14 @@ namespace xmedia {
      * @return The name of the stream if it exists.
      */
     std::string StreamNameGen(const IMediaObject* _object_p);
+    /**
+     * @brief Return string representation of stream type (e.g. kVideo, kAudio, kSubtitles)
+     * @param _object_type The object type.
+     * @param _value_for_unknown_type - value for return if type is unknown.
+     * @return The name of the object type if it exists.
+     */
+    std::string_view StreamMediaName(const XObjectType      _object_type,
+                                     const std::string_view _value_for_unknown_type = {});
 
     /**
      * @brief Check if it's the end of a stream mark for a given packet or frame.

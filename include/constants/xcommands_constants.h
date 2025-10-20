@@ -61,6 +61,8 @@ namespace playlist {
     static const std::string kPlaylistItemAdd    = "playlist_item_add";
     static const std::string kPlaylistItemGet    = "playlist_item_get";
     static const std::string kPlaylistItemRemove = "playlist_item_remove";
+    static const std::string kBackgroundSet      = "background_set";
+    static const std::string kBackgroundGet      = "background_get";
 
     static const std::string kPlaylistItemsGet = "playlist_items_get";
 
@@ -140,6 +142,11 @@ namespace media_player {
     static const std::string kAsyncPreload     = "async_preload";
 
 } // namespace media_player
+
+namespace media_mixer {
+    static const std::string kBufferVideoFrames = "buffer_video_frames";
+
+} // namespace media_mixer
 
 namespace active_output {
     static const std::string kOutputStart    = "output_start";

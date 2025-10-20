@@ -66,7 +66,7 @@ public:
     virtual std::vector<xbase::Uid> InterfacesList() const = 0;
 
     // Return list of commands names
-    virtual std::vector<CommandDesc> CommandsList(const std::optional<xbase::Uid>& _interface_uid = {}) const = 0;
+    virtual std::vector<CommandDesc> CommandsList(const std::optional<xbase::Uid> _interface_uid = {}) const = 0;
 
     // Return {command interface uid (xbase::kInvalidUid if command not found), command targets paths}
     virtual std::pair<xbase::Uid, std::vector<XPath>> CommandTargets(const std::string& _command_name) const = 0;

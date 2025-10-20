@@ -36,10 +36,10 @@ public:
      */
     virtual xbase::XResult<IMediaChunk::SPtr> ChunkCreate(size_t      _data_bytes,
                                                           const void* _data_p,
-                                                          std::any&&  _holder                 = {},
-                                                          std::optional<IMediaObject::Uids>   = std::nullopt,
-                                                          std::optional<uint64_t> _timestamp  = std::nullopt,
-                                                          const IData*            _extra_data = nullptr) = 0;
+                                                          std::any&&  _holder                       = {},
+                                                          const std::optional<IMediaObject::Uids>&  = {},
+                                                          const std::optional<uint64_t> _timestamp  = {},
+                                                          const IData*                  _extra_data = nullptr) = 0;
     /**
      * @brief Creates a new media properties object.
      *
@@ -53,12 +53,12 @@ public:
      * @return Returns an XResult with a shared pointer to the newly created media properties object if successful,
      *         or an error if creation fails.
      */
-    virtual xbase::XResult<IMediaUnit::SPtr> PropsCreate(const IMediaObject::Uids&  _media_uids,
-                                                         const XFormat&             _format,
-                                                         std::optional<XStreamInfo> _stream_info     = std::nullopt,
-                                                         const INode::SPtrC&        _shared_metadata = nullptr,
-                                                         std::vector<XProgram>&&    _programs        = {},
-                                                         const IData*               _extra_data      = nullptr) = 0;
+    virtual xbase::XResult<IMediaUnit::SPtr> PropsCreate(const IMediaObject::Uids&         _media_uids,
+                                                         const XFormat&                    _format,
+                                                         const std::optional<XStreamInfo>& _stream_info     = {},
+                                                         const INode::SPtrC&               _shared_metadata = {},
+                                                         std::vector<XProgram>&&           _programs        = {},
+                                                         const IData*                      _extra_data = nullptr) = 0;
     // TODO: Replace in favor of IMediaUnit::Clone()
     /**
      * @brief Clones an existing media properties object
@@ -75,14 +75,14 @@ public:
      * @return Returns an XResult with a shared pointer to the cloned media properties object if successful,
      *         or an error if cloning fails.
      */
-    virtual xbase::XResult<IMediaUnit::SPtr> PropsClone(const IMediaUnit*            _base_props,
-                                                        const IMediaObject::Uids&    _media_uids        = {},
-                                                        std::optional<XFormat>       _format            = std::nullopt,
-                                                        std::optional<XStreamInfo>   _stream_info       = std::nullopt,
-                                                        std::optional<INode::SPtrC>  _shared_metadata   = std::nullopt,
-                                                        const std::vector<XProgram>* _programs_update   = nullptr,
-                                                        const IData*                 _data_update       = nullptr,
-                                                        const std::vector<uint64_t>& _data_types_remove = {}) = 0;
+    virtual xbase::XResult<IMediaUnit::SPtr> PropsClone(const IMediaUnit*                  _base_props,
+                                                        const IMediaObject::Uids&          _media_uids        = {},
+                                                        const std::optional<XFormat>&      _format            = {},
+                                                        const std::optional<XStreamInfo>&  _stream_info       = {},
+                                                        const std::optional<INode::SPtrC>& _shared_metadata   = {},
+                                                        const std::vector<XProgram>*       _programs_update   = nullptr,
+                                                        const IData*                       _data_update       = nullptr,
+                                                        const std::vector<uint64_t>&       _data_types_remove = {}) = 0;
     /**
      * @brief Creates a new media packet object.
      *

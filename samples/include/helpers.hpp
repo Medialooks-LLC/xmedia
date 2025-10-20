@@ -95,20 +95,21 @@ inline std::string LoadFromFile(const std::string&            _filename,
     return str;
 }
 
-inline INode::SPtr JsonFromFile(const std::string&            _filename,
-                                std::string*                  _error_p = nullptr,
-                                const std::ios_base::openmode _mode    = std::ios_base::in | std::ios::binary)
+inline std::pair<INode::SPtr, std::string> JsonFromFile(const std::string&            _filename,
+                                                        const std::ios_base::openmode _mode = std::ios_base::in |
+                                                                                              std::ios::binary)
 {
-    auto json_string = LoadFromFile(_filename, _error_p, _mode);
+    std::string error;
+    auto        json_string = LoadFromFile(_filename, &error, _mode);
     if (json_string.empty())
-        return nullptr;
+        return {nullptr, error};
 
     auto [loaded_node, error_pos] = xnode::FromJson(json_string, _filename);
-    if (!loaded_node && _error_p)
-        *_error_p = "Error json parsing at pos:" + std::to_string(error_pos);
+    if (!loaded_node || error_pos)
+        error = "Error json parsing at pos:" + std::to_string(error_pos);
 
-    return loaded_node;
-}
+    return {loaded_node, error};
+};
 
 inline void DrawCharacterBGRA(char                  _c,
                               size_t                _x,

@@ -19,6 +19,7 @@ option(PREPARE_PREBUILD "Preapare pre build version of xmedia dependency library
 option(WITH_CODE_COVERAGE "Set ON when do linux build on CI" OFF)
 option(DYNAMIC_RUNTIME "Set ON when want to use dynamic runtime" $ENV{DYNAMIC_RUNTIME})
 option(DYNAMIC_BUILD "Set ON when want to use dynamic build" $ENV{DYNAMIC_BUILD})
+option(WITH_TOOLS "Build tools projects" ON)
 
 if(WIN32 AND USE_PREBUILD)
     set(CMAKE_BUILD_TYPE "") # Fix for wrong usage prebuild libs with CMAKE_BUILD_TYPE flag on Windows
@@ -156,6 +157,7 @@ if(NOT USE_PREBUILD)
     endif()
 
     find_package(GTest REQUIRED)
+    find_package(SDL3 REQUIRED)
     find_package(srt REQUIRED)
     find_package(ffmpeg REQUIRED)
     # find_package(google-webrtc REQUIRED)
@@ -251,12 +253,14 @@ else() # USE_PREBUILD
 
     if(CONAN_MINIMUM_VERSION)
         find_package(srt REQUIRED)
+
         find_package(ffmpeg REQUIRED)
         # find_package(google-webrtc REQUIRED)
         find_package(ndi_newtek REQUIRED)
         find_package(RapidJSON REQUIRED)
         find_package(xlogger REQUIRED)
         find_package(XercesC REQUIRED)
+        find_package(boringssl REQUIRED)
 
         set(AVCODEC ffmpeg::avcodec)
         set(AVDEVICE ffmpeg::avdevice)
@@ -307,6 +311,23 @@ else() # USE_PREBUILD
             IMPORTED_LOCATION_DEBUG ${AVUTIL_D}
         )
 
+        find_library(SWSCALE_D swscale "${3RD_PARTY_LIBS_PATH}/Debug")
+        find_library(SWSCALE_R swscale "${3RD_PARTY_LIBS_PATH}/RelWithDebInfo")
+        add_library(SWSCALE IMPORTED STATIC)
+        set_target_properties(SWSCALE PROPERTIES
+            IMPORTED_LOCATION_RELWITHDEBINFO ${SWSCALE_R}
+            IMPORTED_LOCATION_DEBUG ${SWSCALE_D}
+        )
+
+        find_library(SWRESAMPLE_D swresample "${3RD_PARTY_LIBS_PATH}/Debug")
+        find_library(SWRESAMPLE_R swresample "${3RD_PARTY_LIBS_PATH}/RelWithDebInfo")
+        add_library(SWRESAMPLE IMPORTED STATIC)
+        set_target_properties(SWRESAMPLE PROPERTIES
+            IMPORTED_LOCATION_RELWITHDEBINFO ${SWRESAMPLE_R}
+            IMPORTED_LOCATION_DEBUG ${SWRESAMPLE_D}
+        )
+
+
         if(WIN32)
             find_library(NDI_D Processing.NDI.Lib.x64 "${3RD_PARTY_LIBS_PATH}/Debug")
             find_library(NDI_R Processing.NDI.Lib.x64 "${3RD_PARTY_LIBS_PATH}/RelWithDebInfo")
@@ -338,6 +359,8 @@ else() # USE_PREBUILD
         set(AVFORMAT AVFORMAT)
         set(AVFILTER AVFILTER)
         set(AVUTIL AVUTIL)
+        set(SWSCALE SWSCALE)
+        set(SWRESAMPLE SWRESAMPLE)
         set(NDI NDI)
         set(XERCES XERCES)
 
@@ -386,8 +409,11 @@ add_subdirectory(samples)
 
 if(WITH_TESTS)
     find_package(GTest REQUIRED)
-
     add_subdirectory(tests)
+endif()
+
+if(WITH_TOOLS)
+    add_subdirectory(tools)
 endif()
 
 #post processing info

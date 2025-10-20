@@ -122,8 +122,8 @@ public:
      * @param _hints Optional hints/properties for the operation.
      * @return An XResult containing the result or error code.
      */
-    virtual xbase::XResult<IMediaUnit::SPtrC> MediaGet(const std::optional<uint64_t>& _stream_uid = {},
-                                                       const INode::SPtrC&            _hints      = {}) = 0;
+    virtual xbase::XResult<IMediaUnit::SPtrC> MediaGet(const std::optional<uint64_t> _stream_uid = {},
+                                                       const INode::SPtrC&           _hints      = {}) = 0;
 };
 
 /// @brief The Type enum defines the different types of media handlers.

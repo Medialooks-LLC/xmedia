@@ -27,13 +27,15 @@ target_link_libraries(${PROJECT_NAME}
         xbase
 )
 
-if(USE_PREBUILD AND (NOT DYNAMIC_BUILD AND WIN32) OR NOT WIN32)
+if(USE_PREBUILD AND ((NOT DYNAMIC_BUILD AND WIN32) OR NOT WIN32))
     target_link_libraries(${PROJECT_NAME}
                             ${AVCODEC}
                             ${AVDEVICE}
                             ${AVFORMAT}
                             ${AVFILTER}
                             ${AVUTIL}
+                            ${SWSCALE}
+                            ${SWRESAMPLE}
                             ${NDI}
     )
 endif()

@@ -23,10 +23,16 @@ struct XRational {
     int32_t den = 0;
 };
 
+/// @brief Struct representing a point with integer x and y pos.
+struct XPoint {
+    int32_t x = 0;
+    int32_t y = 0;
+};
+
 /// @brief Struct representing a size with integer width and height.
 struct XSize {
-    int32_t cx = 0;
-    int32_t cy = 0;
+    int32_t width  = 0;
+    int32_t height = 0;
 };
 
 /// @brief Struct representing a rectangle with integer coordinates for left, top, right and bottom.
@@ -115,7 +121,8 @@ struct XTime {
     struct Frame {
         /// @brief Picture type
         PictureType picture_type = PictureType::None; // AV_PICTURE_TYPE_xxx map
-        /// @brief Extra counter used for duplicated eos and paused frames (started from 1)
+        /// @brief Extra counter used for duplicated eos and paused frames (started from 1), negative indicate times
+        /// gaps
         int64_t dup_counter = 0;
     };
 
@@ -256,6 +263,9 @@ struct XFormatV {
     /// @brief Optional chroma location for the video stream.
     std::optional<ChromaLocation> chroma_location;
     ///@}
+
+    /// @brief (TODO) Information about image cropping.
+    std::optional<XRect> image_crop;
 
     /// @brief Codec for the stream for encoded streams.
     std::optional<XCodec> codec;

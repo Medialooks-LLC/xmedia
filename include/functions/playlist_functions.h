@@ -7,22 +7,7 @@
 #include "xbase.h"
 #include "xnode.h"
 
-// Use xplayer instead ?
 namespace xsdk::xplaylist {
-
-// Media Player
-IMediaPlayer::SPtr CreateMediaPlayer(const IMediaNotification::SPtr& _notification = {},
-                                     const INode::SPtrC&             _player_props = {},
-                                     const xbase::IClock*            _clock_p      = nullptr);
-
-// Playlist Player
-IPlaylistPlayer::SPtr CreatePlaylistPlayer(const IMediaNotification::SPtr& _notification,
-                                           const INode::SPtrC&             _player_props,
-                                           IMediaPlayer::SPtr&&            _media_player);
-
-IPlaylistPlayer::SPtr CreatePlaylistPlayer(const IMediaNotification::SPtr& _notification = {},
-                                           const INode::SPtrC&             _player_props = {},
-                                           const xbase::IClock*            _clock_p      = nullptr);
 
 // [Start:12:35:00.000 Pos:12:50:30.000 (650.000)] audi.mp4 (12.000) -> (9.050) ori.mp4
 std::string ToString(const IPlaylistPlayerControl::Status& _status);

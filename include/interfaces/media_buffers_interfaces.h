@@ -34,7 +34,7 @@ public:
         size_t      count        = 0;
     };
 
-    using RequestUnitPf = std::function<bool(const std::optional<uint64_t>& _stream_uid, const INode::SPtrC& _hints)>;
+    using RequestUnitPf = std::function<bool(const std::optional<uint64_t> _stream_uid, const INode::SPtrC& _hints)>;
 
     enum class OrderType { kByIndex, kByTime };
 
@@ -58,10 +58,10 @@ public:
                                                      const uint64_t            _after_common_idx,
                                                      const std::set<uint64_t>& _streams_subset = {}) const = 0;
 
-    // virtual xbase::XResult<UnitWithPos> ReadUnit(const std::optional<uint64_t>& _common_idx = {}) const = 0;
+    // virtual xbase::XResult<UnitWithPos> ReadUnit(const std::optional<uint64_t> _common_idx = {}) const = 0;
     virtual xbase::XResult<UnitWithPos> ReadUnitFromStream(
-        const uint64_t                 _stream_uid,
-        const std::optional<uint64_t>& _idx_for_stream = {}) const = 0;
+        const uint64_t                _stream_uid,
+        const std::optional<uint64_t> _idx_for_stream = {}) const = 0;
 
     virtual std::vector<UnitWithPos> StreamsUnitsForTime(const xbase::Time64 _timestamp,
                                                          const FindFlags     _find_flags = FindFlags::kNearestKeyFrame,
@@ -76,11 +76,11 @@ public:
         kKeepCorrectEOS    = kKeepInQueue | kCorrectEOS,
         kExtractCorrectEOS = kExtractFromQueue | kCorrectEOS
     };
-    virtual xbase::XResult<UnitWithPos> TakeUnit(const OrderType                _order_type, // Merge with TakeFlags ?
-                                                 const TakeFlags                _take_flags,
-                                                 const std::optional<uint64_t>& _stream_uid    = {},
-                                                 const std::optional<uint32_t>& _wait_msec     = {},
-                                                 const INode::SPtrC&            _request_hints = {}) = 0;
+    virtual xbase::XResult<UnitWithPos> TakeUnit(const OrderType               _order_type, // Merge with TakeFlags ?
+                                                 const TakeFlags               _take_flags,
+                                                 const std::optional<uint64_t> _stream_uid    = {},
+                                                 const std::optional<uint32_t> _wait_msec     = {},
+                                                 const INode::SPtrC&           _request_hints = {}) = 0;
 
     enum class PutFlags {
         kFlush,
@@ -92,19 +92,19 @@ public:
     };
 
     // Return new created unit and size of destination stream
-    // 2Think: callbacks for formar etc chnages ?
+    // 2Think: callbacks for format etc changes ?
     virtual xbase::XResult<std::pair<UnitWithPos, size_t>> PutUnit(
-        const IMediaUnit::SPtrC&       _media,
-        const PutFlags                 _put_flags,
-        const std::optional<uint32_t>& _wait_msec           = {},
-        const std::optional<size_t>    _max_total_buffers   = {},
-        const std::optional<size_t>    _max_streams_buffers = {}) = 0;
+        const IMediaUnit::SPtrC&      _media,
+        const PutFlags                _put_flags,
+        const std::optional<uint32_t> _wait_msec           = {},
+        const std::optional<size_t>   _max_total_buffers   = {},
+        const std::optional<size_t>   _max_streams_buffers = {}) = 0;
 
     virtual std::optional<UnitsStream> RemoveStream(const uint64_t _stream_uid, const bool _remove_non_empty) = 0;
 
     // Keep uniits required for get media from specified timestamp
-    virtual size_t ClearBuffers(const std::optional<xbase::Time64>& _keep_for_timestamp = {}) = 0;
-    virtual void   Reset()                                                                    = 0;
+    virtual size_t ClearBuffers(const std::optional<xbase::Time64> _keep_for_timestamp = {}) = 0;
+    virtual void   Reset()                                                                   = 0;
 };
 
 XENUM_OPS32(IUnitsStreamsBuffers::TakeFlags)

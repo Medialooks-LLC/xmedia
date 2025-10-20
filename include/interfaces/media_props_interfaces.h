@@ -42,17 +42,17 @@ public:
     // Return: {subscribed, unsubscribed}
     // WARN !!! _subscribe_to after call contain non-taken/non-founded props (2Think)
     virtual std::pair<MediaUnitsVec, MediaUnitsVec> SubscribeToMediaUnits(
-        MediaUnitsVec&                 _subscribe_to,
-        const ModificationType         _mod_type,
-        const std::optional<uint64_t>& _subscriber_uid = {}) = 0;
+        MediaUnitsVec&                _subscribe_to,
+        const ModificationType        _mod_type,
+        const std::optional<uint64_t> _subscriber_uid = {}) = 0;
 
-    virtual MediaUnitsVec GetSubscribedUnits(MediaUnitsVec&&                _append_to       = {},
-                                             const SameUidAction            _same_uid_action = SameUidAction::kReject,
-                                             const std::optional<uint64_t>& _subscriber_uid  = {}) const = 0;
+    virtual MediaUnitsVec GetSubscribedUnits(MediaUnitsVec&&               _append_to       = {},
+                                             const SameUidAction           _same_uid_action = SameUidAction::kReject,
+                                             const std::optional<uint64_t> _subscriber_uid  = {}) const = 0;
 
     virtual std::pair<bool, IMediaUnit::SPtrC> IsSubscribed(
-        const uint64_t                 _stream_uid,
-        const std::optional<uint64_t>& _subscriber_uid = {}) const = 0;
+        const uint64_t                _stream_uid,
+        const std::optional<uint64_t> _subscriber_uid = {}) const = 0;
 };
 
 class IMediaUnitClient {

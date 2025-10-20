@@ -15,6 +15,11 @@ namespace xsdk::xtime {
 const XTime* TimeGet(const IMediaObject* _obj_p);
 
 /**
+ * @brief Helper function for get XTime with check of null pointer
+ **/
+inline const XTime* Time(const IMediaUnit* _unit_p) { return _unit_p ? _unit_p->Time() : nullptr; }
+
+/**
  * @brief Helper function to check is _time_p non null and _time_p->timestamp != kNoVal.
  **/
 bool IsValid(const XTime* _time_p);
@@ -145,6 +150,9 @@ XENUM_CLASS(SegmentPos,
             kInsideLast  = 0x04 | kInside,
             kOpenSegment = 0x08 | kInside,
             kAfterEnd    = 0x20);
+
+inline const XSegment* Segment(const XTime* _time_p) { return _time_p ? &_time_p->segment : nullptr; }
+const XSegment*        Segment(const IMediaUnit* _unit_p);
 
 SegmentPos CheckSegment(const XTime* _time_p, const std::optional<XRational>& _frame_rate = {});
 

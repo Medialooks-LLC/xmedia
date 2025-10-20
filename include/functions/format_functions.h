@@ -122,12 +122,40 @@ namespace xformat {
     size_t BytesToSamples(const size_t _bytes, const XFormatA* _format_a_p, const bool _one_plane_bytes);
     /**
      * @brief Converts the number of samples to the number of bytes, based on the given sample format and channel count.
-     * @param _samples The number of samples to convert.
+     * @param _samples_count The number of samples to convert.
      * @param _format_a_p A pointer to the given audio format.
      * @param _one_plane_bytes The flag for calculate sample count based on one audio plane size.
+     * @return The number of bytes.
+     */
+    size_t SamplesToBytes(const size_t _samples_count, const XFormatA* _format_a_p, const bool _one_plane_bytes);
+    /**
+     * @brief Converts the time in 100 nsec units to the number of samples, based on the given sample rate.
+     * @param _time The time in 100 nsec units.
+     * @param _sample_rate Given sample rate.
      * @return The number of samples.
      */
-    size_t SamplesToBytes(const size_t _samples, const XFormatA* _format_a_p, const bool _one_plane_bytes);
+    int64_t TimeToSamples(const xbase::Time64 _time, const int32_t _sample_rate);
+    /**
+     * @brief Converts the number of samples to the 100 nsec uinit, based on the given sample rate.
+     * @param _samples_count The number of samples to convert.
+     * @param _sample_rate Given sample rate.
+     * @return The time in 100 nsec units.
+     */
+    xbase::Time64 SamplesToTime(const size_t _samples_count, const int32_t _sample_rate);
+    /**
+     * @brief Converts the time in 100 nsec units to the number of samples, based on the given sample rate.
+     * @param _time The time in 100 nsec units.
+     * @param _format_a_p A pointer to the given audio format.
+     * @return The number of samples.
+     */
+    int64_t TimeToSamples(const xbase::Time64 _time, const XFormatA* _format_a_p);
+    /**
+     * @brief Converts the number of samples to the 100 nsec uinit, based on the given sample rate.
+     * @param _samples_count The number of samples to convert.
+     * @param _format_a_p A pointer to the given audio format.
+     * @return The time in 100 nsec units.
+     */
+    xbase::Time64 SamplesToTime(const size_t _samples_count, const XFormatA* _format_a_p);
 
     /**
      * @brief Compare two media formats by their properties.
@@ -227,6 +255,10 @@ namespace xformat {
                                                 const XFormat*      _base_format_p,
                                                 const bool          _override_base);
 
+    XFormat MakeFormat(const IMediaOutput* _media_output, const bool _only_valid_formats);
+
+    XFormatV Combine(const XFormatV& _base, const XFormatV* _override_p);
+
     /**
      * @brief Checks if an XFormatV object is empty.
      *
@@ -282,5 +314,18 @@ namespace xformat {
      */
     size_t FillOptionalFields(XFormatV* _dest_p, const XFormatV* _default_p);
 } // namespace xformat
+
+/**
+ * @brief The xrect namespace provides the functionalities for working with XRect objects.
+ */
+namespace xrect {
+    bool           IsEmpty(const XRect* _rect_p);
+    bool           IsZero(const XRect* _rect_p, const bool _negative_as_zero);
+    XSize          Size(const XRect* _rect_p);
+    int32_t        Compare(const XRect* _rect1_p, const XRect* _rect2_p);
+    XRect          ToCrop(const XRect* _rect_p, const XSize _image_size, const bool _no_negative_values);
+    inline int32_t Width(const XRect* _rect_p) { return _rect_p ? _rect_p->right - _rect_p->left : 0; }
+    inline int32_t Height(const XRect* _rect_p) { return _rect_p ? _rect_p->bottom - _rect_p->top : 0; }
+} // namespace xrect
 
 } // namespace xsdk

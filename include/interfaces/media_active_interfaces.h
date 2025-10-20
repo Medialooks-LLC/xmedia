@@ -82,9 +82,9 @@ public:
      * @param _media_get_worker - worker for get media (if not set, xmedia::WorkersPool() used)
      * @return An error code indicating the result of the Start() function call.
      */
-    virtual std::error_code OutputStart(OnNewStreamPF&&              _on_new_stream    = {},
-                                        const xbase::IWorker::SPtr&  _media_get_worker = nullptr,
-                                        const std::optional<size_t>& _index_for_get    = {}) = 0;
+    virtual std::error_code OutputStart(OnNewStreamPF&&             _on_new_stream    = {},
+                                        const xbase::IWorker::SPtr& _media_get_worker = nullptr,
+                                        const std::optional<size_t> _index_for_get    = {}) = 0;
 
     // Set hints (e.g. pos_msec:5000) for next MediaGet() call
     /**
@@ -103,7 +103,7 @@ public:
     virtual void OutputStop(bool _flush_data, bool _wait_for_finish) = 0;
 
     /**
-     * @brief Notify about media streams chnages
+     * @brief Notify about media streams changes
      */
     virtual std::error_code OutputUpdateStreams(const MediaUnitsVec& _output_streams) = 0;
 

@@ -60,9 +60,9 @@ public:
 
     xbase::XResult<INode::SPtr> LoadScheme(const std::string& _json_file_path)
     {
-        auto container_scheme = helpers::JsonFromFile(_json_file_path);
-        if (!container_scheme)
-            return std::make_error_code(std::errc::invalid_argument);
+        auto [container_scheme, error] = helpers::JsonFromFile(_json_file_path);
+        if (!container_scheme || !error.empty())
+            return std::make_pair((std::error_code)XError::JsonParseFailed, (std::string_view)error);
 
         auto err = LoadScheme(container_scheme);
         if (err)
@@ -182,7 +182,7 @@ private:
                 assert(server_p);
                 auto load_xr = server_p->LoadScheme(xnode::At(command.body, kPath).String());
                 return xcommands::CommandResult(load_xr.Error(),
-                                                "server_p->LoadScheme",
+                                                "server_p->LoadScheme " + (std::string)load_xr.Description(),
                                                 {{"scheme", load_xr.Result()}});
             });
         assert(add_xr.HasResult());
@@ -423,19 +423,22 @@ int main(int argc, char** argv)
 
     assert(container_server_xr.Result());
 
-    INode::SPtr factory_config = helpers::JsonFromFile(factory_config_path);
+    auto [factory_config, error] = helpers::JsonFromFile(factory_config_path);
     if (factory_config && !factory_config->Empty()) {
 
         // TODO: Better config support
         auto copied = xnode::CopyTo(factory_config, xmedia::FactoryConfig(), true, true);
         std::cout << "Applied factory config (props:" << copied << ") from:" << factory_config_path << std::endl;
     }
+    else if (!error.empty()) {
+        std::cout << "Error load factory config from:" << factory_config_path << " Error:" << error << std::endl;
+    }
 
     if (!load_scheme_path.empty()) {
         auto load_xr = container_server_xr->LoadScheme(load_scheme_path);
         if (!load_xr.Result()) {
             std::cerr << "(scheme) Error load container scheme from '" << load_scheme_path
-                      << "' Error:" << ErrorDump(load_xr.Error()) << std::endl;
+                      << "' Error:" << ErrorDump(load_xr.Error()) << " Desc:" << load_xr.Description() << std::endl;
         }
         else {
             std::cout << "(scheme) Load container scheme from '" << load_scheme_path

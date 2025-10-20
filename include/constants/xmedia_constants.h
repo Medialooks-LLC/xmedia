@@ -26,6 +26,7 @@ namespace xmedia::handlers {
     // specicial handlers
     static const std::string kNdiSource    = "ndi_source";
     static const std::string kNdiRenderer  = "ndi_renderer";
+    static const std::string kSdlRenderer  = "sdl_renderer";
     static const std::string kVsdkSource   = "vsdk_source";
     static const std::string kVsdkRenderer = "vsdk_renderer";
     // Containers
@@ -110,12 +111,22 @@ namespace xmedia::config {
     static const std::string kContainerItems = "container_items";
 } // namespace xmedia::config
 
+namespace xmedia::device_family {
+
+    static const std::string kSdl = "sdl";
+    namespace sdl {
+        static const std::string kDefaultPlayback  = "default_playback";
+        static const std::string kDefaultRecording = "default_recording";
+    } // namespace sdl
+} // namespace xmedia::device_family
+
 namespace xmedia::conversion {
     static const std::string kNoFormatChanges         = "no_format_changes";
     static const std::string kDiscardForFormatChanges = "discard_for_format_changes";
     static const std::string kBypassOtherTypes        = "bypass_other_types";
     static const std::string kAudioSamplesPerFrame    = "audio_samples_per_frame"; // Better name ?
     static const std::string kDuplicateMetadata       = "duplicate_metadata";
+    static const std::string kContinuousPts           = "continuous_pts";
 
     static const std::string kAudioFormat     = "audio_format";
     static const std::string kVideoFormat     = "video_format";
@@ -150,5 +161,15 @@ namespace xmedia::streams_buffer {
     static const std::string kTotalBufferMax   = "total_buffers_max";
     static const std::string kAudioPrerollMsec = "audio_preroll_msec";
 } // namespace xmedia::streams_buffer
+
+namespace xmedia::v_sdk_handlers {
+    static const std::string kSideDataToVideo = "side_data_to_video";
+    static const std::string kSideDataToAudio = "side_data_to_audio";
+} // namespace xmedia::v_sdk_handlers
+
+namespace xmedia::handlers_options {
+    static const std::string kMaxBuffers    = "max_buffers";
+    static const size_t      kMaxBuffersDef = 3;
+} // namespace xmedia::handlers_options
 
 } // namespace xsdk

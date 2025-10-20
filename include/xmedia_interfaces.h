@@ -1,5 +1,6 @@
 #pragma once
 
+#include "interfaces/audio_processing_interfaces.h"
 #include "interfaces/handlers_factory_interfaces.h"
 #include "interfaces/media_active_interfaces.h"
 #include "interfaces/media_buffers_interfaces.h"
@@ -9,7 +10,9 @@
 #include "interfaces/media_events_interfaces.h"
 #include "interfaces/media_handler_interfaces.h"
 #include "interfaces/media_links_interfaces.h"
+#include "interfaces/media_mixer_interfaces.h"
 #include "interfaces/media_objects_interfaces.h"
+#include "interfaces/media_overlay_interfaces.h"
 #include "interfaces/media_players_interfaces.h"
 #include "interfaces/media_playlist_interfaces.h"
 #include "interfaces/media_props_interfaces.h"

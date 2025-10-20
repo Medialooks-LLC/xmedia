@@ -24,9 +24,9 @@ int GetStream(std::string_view      _container_scheme_path,
     std::string scheme_path = _container_scheme_path.data();
 
     std::cout << "Load scheme from file: " << scheme_path << "\n";
-    auto container_scheme = helpers::JsonFromFile(scheme_path);
-    if (!container_scheme) {
-        std::cout << "Couldn't load scheme file from " << scheme_path << "path\n";
+    auto [container_scheme, error] = helpers::JsonFromFile(scheme_path);
+    if (!container_scheme || !error.empty()) {
+        std::cout << "Couldn't load scheme file from " << scheme_path << "path. Error:" << error << std::endl;
         return -1;
     }
 
@@ -74,9 +74,9 @@ int GetStream(std::string_view      _container_scheme_path,
     size_t                        saved_frames   = 0;
 
     std::atomic_bool stopped    = {false};
-    auto             pf_on_data = [&](const ILink::Info*            _link_info_p,
-                          const IMediaObject::SPtrC&    _obj,
-                          const std::optional<int64_t>& _dest_id) -> std::optional<ILink::OnDataRes> {
+    auto             pf_on_data = [&](const ILink::Info*           _link_info_p,
+                          const IMediaObject::SPtrC&   _obj,
+                          const std::optional<int64_t> _dest_id) -> std::optional<ILink::OnDataRes> {
         std::unique_lock lck(mtx);
 
         if (!_obj) {

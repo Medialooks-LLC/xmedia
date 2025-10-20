@@ -33,7 +33,10 @@ namespace audio {
 } // namespace audio
 
 namespace time {
-    XTime  Convert(const M_TIME& _mtime, const XSegment& _segment = {});
+    XTime  Convert(const M_TIME&   _mtime,
+                   const XTime*    _prev_time_p,
+                   const XSegment* _forced_segment_p,
+                   const bool      _continuous_pts);
     M_TIME Convert(const XTime& _mtime);
 } // namespace time
 
@@ -49,17 +52,23 @@ namespace mframe {
                                            IMFFrame* const    _dest_p,
                                            const bool         _set_integer_as_data = false);
 
+    enum class ExtractFlags { kNone, kCopySideData, kContinuousPts };
+    XENUM_OPS32(ExtractFlags)
+
     xbase::XResult<IMediaFrame::SPtr> ExtractVideo(IMFFrame* const          _mf_frame_p,
-                                                   const IMediaUnit::SPtrC& _base_props,
-                                                   const bool               _copy_side_data);
+                                                   const IMediaUnit::SPtrC& _previous_frame,
+                                                   const ExtractFlags       _flags,
+                                                   const XSegment*          _forced_segment_p);
 
     xbase::XResult<IMediaFrame::SPtr> ExtractAudio(IMFFrame* const          _mf_frame_p,
-                                                   const IMediaUnit::SPtrC& _base_props,
-                                                   const bool               _copy_side_data);
+                                                   const IMediaUnit::SPtrC& _previous_frame,
+                                                   const ExtractFlags       _flags,
+                                                   const XSegment*          _forced_segment_p);
 
     xbase::XResult<CComPtr<IMFFrame>> MakeFrame(const IMediaFrame::SPtrC& _media_frame,
                                                 const bool                _use_reference  = false,
                                                 IMFFactory* const         _mf_factory_p   = nullptr,
                                                 const bool                _copy_side_data = false);
 } // namespace mframe
+
 } // namespace xsdk::v_sdk

@@ -6,15 +6,31 @@
 #include "media_handler_interfaces.h"
 #include "media_playlist_interfaces.h"
 
-#include <any>
-#include <cassert>
 #include <optional>
-#include <string>
-#include <string_view>
-#include <variant>
 #include <vector>
 
 namespace xsdk {
+
+// Temp, expect to be moved into xbase
+class ISyncExecution {
+public:
+    enum class Result { kOk, kDuplicated, kNotFound, kFixedCountExceeded, kResetCalled, kTimeout };
+    struct Status {
+        size_t fixed_count = 0;
+        size_t added_count = 0;
+        size_t ready_count = 0;
+    };
+    USING_PTRS(ISyncExecution)
+public:
+    virtual ~ISyncExecution() = default;
+
+    virtual Status                    SyncStatus() const                                             = 0;
+    virtual Result                    SyncAdd(const xbase::Uid _sync_uid, const bool _is_ready)      = 0;
+    virtual Result                    SyncRemove(const xbase::Uid _sync_uid)                         = 0;
+    virtual Result                    SyncSetReady(const xbase::Uid _sync_uid, const bool _is_ready) = 0;
+    virtual std::pair<Result, size_t> SyncWait(const uint32_t _timeout_msec = 0) const               = 0;
+    virtual void                      SyncReset()                                                    = 0;
+};
 
 class IMediaPlayerControl {
 
@@ -49,12 +65,12 @@ public:
         const PlayProps&              _play_props,
         const std::optional<XFormat>& _play_format,
         const INode::SPtrC&           _format_conversion_props,
-        const std::optional<size_t>&  _loop_counter)>;
+        const std::optional<size_t>   _loop_counter)>;
+
+    USING_PTRS(IMediaPlayerControl)
 
 public:
     virtual ~IMediaPlayerControl() = default;
-
-    USING_PTRS(IMediaPlayerControl)
 
     virtual const xbase::IClock* PlayerClock() const = 0;
     // Return current and next uids (if no media -> xbase::kInvalidUid)
@@ -70,16 +86,22 @@ public:
     enum class PlayerFlags { kRejectIfHasNext, kReplaceNext = 0x01, kLoop = 0x02, kSyncInitMedia = 0x10 };
     // Return replaced PlayerMedia and clock time of media start
     virtual xbase::XResult<PlayerMedia::UPtr> PlayMedia(const Media&      _media,
-                                                        const PlayProps&  _play_props,
-                                                        const PlayerFlags _player_flags) = 0;
+                                                        const PlayProps&  _play_props   = {},
+                                                        const PlayerFlags _player_flags = {}) = 0;
     // Switch to next media, optionally at specified time, for immediate switch return replaced PlayerMedia
-    virtual xbase::XResult<PlayerMedia::UPtr> SwitchToNext(
-        const std::optional<xbase::Time64>& _switch_at_time = {}) = 0;
+    virtual xbase::XResult<PlayerMedia::UPtr> SwitchToNext(const std::optional<xbase::Time64> _switch_at_time = {}) = 0;
     // Return the clock time of first paused frame or error code
-    virtual xbase::XResult<xbase::Time64> PausePlayback(const bool                          _keep_next_start_time,
-                                                        const std::optional<xbase::Time64>& _continue_at_time = {}) = 0;
+    virtual xbase::XResult<xbase::Time64> PausePlayback(const bool                         _keep_next_start_time,
+                                                        const std::optional<xbase::Time64> _continue_at_time = {}) = 0;
     // Return the clock time of first un-paused frame or error code
     virtual xbase::XResult<xbase::Time64> ContinuePlayback() = 0;
+
+    // Set position for played media, optionally with seamless switch to new position at specified time
+    // Note: Position inside playing segement, returned position from start (?)
+    virtual xbase::XResult<double> SetPosition(const double                       _position_from_in_sec,
+                                               const std::optional<xbase::Time64> _switch_at_time = {},
+                                               const ISyncExecution::SPtr&        _sync_execution = {}) = 0;
+
     // Return detached current and next PlayerMedia
     virtual std::pair<PlayerMedia::UPtr, PlayerMedia::UPtr> StopPlayback(const bool _reset_callack) = 0;
 };
@@ -148,10 +170,10 @@ public:
     // Start or continue stopped playback
     virtual xbase::XResult<Status> StartPlayback(const IMediaPlayerControl::PlayProps& _play_props = {}) = 0;
     // Stop playback and return recent actual status
-    virtual xbase::XResult<Status> StopPlayback(const std::optional<xbase::Time64>& _continue_at_time = {}) = 0;
+    virtual xbase::XResult<Status> StopPlayback(const std::optional<xbase::Time64> _continue_at_time = {}) = 0;
     // Pause playlist on recent frame, optionally swutch to background
     // during pausing PlaylistHeadTimestamp changed after each frame for have correct items times
-    virtual xbase::XResult<Status> PausePlayback(const std::optional<xbase::Time64>& _continue_at_time = {}) = 0;
+    virtual xbase::XResult<Status> PausePlayback(const std::optional<xbase::Time64> _continue_at_time = {}) = 0;
     // Return the clock time of first un-paused frame or error code, during pausing PlaylistHeadTimestamp changed after
     // each frame
     virtual xbase::XResult<Status> ContinuePlayback() = 0;
@@ -164,6 +186,8 @@ public:
     virtual xbase::XResult<Status> ClosePlayer() = 0;
 };
 
+// 2Think: Add inheritance from IMediaPlayer (really need IMediaPlayerControl interface support) for unified playback
+// control and usage in mixer
 class IPlaylistPlayer: public IPlaylistPlayerControl,
                        public IMediaOutput,
                        public IFormatConversion /*, public IMediaStatAndProps*/ {

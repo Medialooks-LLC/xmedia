@@ -18,7 +18,7 @@ namespace xsdk {
 /**
  * @brief The IFormatConversion interface provide audio/video conversions configuring
  */
-class IFormatConversion {
+class IFormatConversion { // 2Think: Rename to someting like IFormatConfig, IFormatSetter (?)
 
 public:
     USING_PTRS(IFormatConversion)

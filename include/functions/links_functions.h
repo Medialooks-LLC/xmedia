@@ -48,13 +48,13 @@ MediaUnitsVec GetMediaUnits(IObject*                         _media_link_p,
                             const IMediaUnitAgent::PropsType _props_type,
                             MediaUnitsVec&&                  _append_to = {});
 
-size_t FindMediaUnit(const MediaUnitsVec&           _props_info_vec,
-                     const std::optional<uint64_t>& _stream_uid,
-                     const size_t                   _from_idx = 0);
+size_t FindMediaUnit(const MediaUnitsVec&          _props_info_vec,
+                     const std::optional<uint64_t> _stream_uid,
+                     const size_t                  _from_idx = 0);
 
-IMediaUnit::SPtrC ExtractMediaUnit(MediaUnitsVec&                 _props_info_vec,
-                                   const std::optional<uint64_t>& _stream_uid,
-                                   const size_t                   _from_idx = 0);
+IMediaUnit::SPtrC ExtractMediaUnit(MediaUnitsVec&                _props_info_vec,
+                                   const std::optional<uint64_t> _stream_uid,
+                                   const size_t                  _from_idx = 0);
 
 xbase::XResult<IMediaLink::SPtr> CreateMedialinkEx(const ILink::OnDataPF&           _on_data_pf,
                                                    const xmedia::IsSuitableMediaPF& _is_suitable_pf   = {},
@@ -72,5 +72,7 @@ xbase::XResult<IMediaLink::SPtr> CreateMultiMedialinkEx(const INode::SPtrC&     
                                                         const xmedia::IsSuitableMediaPF& _is_suitable_pf = {},
                                                         const IMediaUnitAgent::SPtr&     _upstream_agent = {},
                                                         const ILink::Props&              _default_props  = {});
+
+std::string ToString(const IMediaUnitAgent::ModificationType _type);
 
 } // namespace xsdk::xlink
