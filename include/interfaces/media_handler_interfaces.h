@@ -127,7 +127,7 @@ public:
 };
 
 /// @brief The Type enum defines the different types of media handlers.
-XENUM_CLASS(HandlerType,
+XENUM_CLASS(HandlerCategory,
             kUnknown,
             kInputDevice,
             kDemultiplexer,
@@ -181,14 +181,26 @@ public:
      */
     using InitParamsVariant = std::variant<std::monostate, std::string, ReadFunction, WriteFunction>;
 
+    /**
+     * @brief Handler specification data (category, type, protocols, input/output, description)
+     */
+    struct Specs {
+        HandlerCategory category = HandlerCategory::kUnknown;
+        std::string     handler_type;
+        std::string     protocol;
+        XObjectType     input_types  = XObjectType::None;
+        XObjectType     output_types = XObjectType::None;
+        std::string     description;
+    };
+
     virtual ~IMediaHandler() = default;
 
 public:
     /**
-     * @brief Get the handler's type & name.
-     * @return The type of the handler.
+     * @brief Get the handler's secification (category, type, etc.)
+     * @return The the handler specs.
      */
-    virtual std::pair<HandlerType, std::string> GetTypeSubtype() const = 0;
+    virtual const IMediaHandler::Specs& HandlerSpecs() const = 0;
 
     /**
      * @brief Get the handler's state.
@@ -246,6 +258,7 @@ public:
      * @return The number of properties changed.
      */
     virtual size_t ChangeProps(std::vector<std::pair<XKey, XValue>>&& _values, XPath&& _base_path = {}) = 0;
+
     /*
      * @brief Get error code when handler in Error state.
      * @return The error code of the problem.

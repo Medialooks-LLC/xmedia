@@ -38,6 +38,7 @@ MaxEmptyLinesToKeep: '1'
 NamespaceIndentation: Inner
 PenaltyBreakAssignment: '200'
 PointerAlignment: Left
+SeparateDefinitionBlocks: Always
 SortIncludes: 'true'
 SortUsingDeclarations: 'true'
 SpaceBeforeAssignmentOperators: 'true'

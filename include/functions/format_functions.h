@@ -236,10 +236,14 @@ namespace xformat {
     INode::SPtr ToNode(const XFormatV* _format_p, bool _with_codec_props, const INode::SPtr& _dst_node = {});
     INode::SPtr ToNode(const XFormatA* _format_p, bool _with_codec_props, const INode::SPtr& _dst_node = {});
     INode::SPtr ToNode(const XFormat* _format_p, bool _with_codec_props, const INode::SPtr& _dst_node = {});
-    INode::SPtr ToConversionProps(const XFormat& _format, const INode::SPtr& _dst_node = {});
+    INode::SPtr ToConversionProps(const XFormat&      _format,
+                                  const INode::SPtrC& _conversion_props = {},
+                                  INode::SPtr&&       _dst_node         = {});
 
     inline const XFormatA* Audio(const XFormat* _format_p) { return _format_p ? _format_p->Audio() : nullptr; }
+
     inline const XFormatV* Video(const XFormat* _format_p) { return _format_p ? _format_p->Video() : nullptr; }
+
     inline const XFormatS* Subtitle(const XFormat* _format_p) { return _format_p ? _format_p->Subtitle() : nullptr; }
 
     std::optional<XFormatV> VideoFromNode(const INode::SPtrC& _format_desc,
@@ -319,12 +323,14 @@ namespace xformat {
  * @brief The xrect namespace provides the functionalities for working with XRect objects.
  */
 namespace xrect {
-    bool           IsEmpty(const XRect* _rect_p);
-    bool           IsZero(const XRect* _rect_p, const bool _negative_as_zero);
-    XSize          Size(const XRect* _rect_p);
-    int32_t        Compare(const XRect* _rect1_p, const XRect* _rect2_p);
-    XRect          ToCrop(const XRect* _rect_p, const XSize _image_size, const bool _no_negative_values);
+    bool    IsEmpty(const XRect* _rect_p);
+    bool    IsZero(const XRect* _rect_p, const bool _negative_as_zero);
+    XSize   Size(const XRect* _rect_p);
+    int32_t Compare(const XRect* _rect1_p, const XRect* _rect2_p);
+    XRect   ToCrop(const XRect* _rect_p, const XSize _image_size, const bool _no_negative_values);
+
     inline int32_t Width(const XRect* _rect_p) { return _rect_p ? _rect_p->right - _rect_p->left : 0; }
+
     inline int32_t Height(const XRect* _rect_p) { return _rect_p ? _rect_p->bottom - _rect_p->top : 0; }
 } // namespace xrect
 

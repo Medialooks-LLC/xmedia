@@ -37,6 +37,7 @@ namespace xmedia::handlers {
     // Complex handlers
     static const std::string kMediaPlayer    = "media_player";
     static const std::string kPlaylistPlayer = "playlist_player";
+    static const std::string kMediaMixer     = "media_mixer";
 } // namespace xmedia::handlers
 
 namespace xmedia::wrappers {
@@ -96,11 +97,15 @@ namespace statistics {
 namespace xmedia::config {
 
     // For config store/load
-    static const std::string kType      = "type";
-    static const std::string kSubtype   = "subtype";
+    static const std::string kHandlerCategory_Obsolete = "type";
+    static const std::string kHandlerType_Obsolete     = "subtype";
+    static const std::string kHandlerCategory          = "handler_category";
+    static const std::string kHandlerType              = "handler_type";
+
     static const std::string kName      = "name";
     static const std::string kInitProps = "init_props";
     static const std::string kOpenUrl   = "open_url";
+    static const std::string kAliases   = "aliases";
 
     static const std::string kWrappers       = "wrappers";
     static const std::string kWrapperType    = "wrapper_type";
@@ -114,6 +119,7 @@ namespace xmedia::config {
 namespace xmedia::device_family {
 
     static const std::string kSdl = "sdl";
+
     namespace sdl {
         static const std::string kDefaultPlayback  = "default_playback";
         static const std::string kDefaultRecording = "default_recording";

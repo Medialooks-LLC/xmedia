@@ -29,12 +29,12 @@ namespace xsdk {
 /// @brief The IMediaHandlersFactory class represents the factory for creating different media handlers.
 class IMediaHandlersFactory {
 public:
-    using HandlerCreatePF = std::function<xbase::XResult<IMediaHandler::SPtr>(const HandlerType      _handler_type,
-                                                                              const std::string_view _handler_name,
-                                                                              const INode::SPtrC&    _handler_props,
-                                                                              const std::string_view _instance_name,
-                                                                              IData::SPtrC&&         _outer_interfaces,
-                                                                              INode::SPtr&&          _stat_dest)>;
+    using HandlerCreatePF =
+        std::function<xbase::XResult<IMediaHandler::SPtr>(const IMediaHandler::Specs& _handler_specs,
+                                                          const INode::SPtrC&         _initial_props,
+                                                          const std::string_view      _instance_name,
+                                                          IData::SPtrC&&              _outer_interfaces,
+                                                          INode::SPtr&&               _stat_dest)>;
 
     using IsSupportedPF = std::function<bool(const IMediaHandler::InitParamsVariant& _init_url_or_func,
                                              const INode::SPtrC&                     _init_props,
@@ -42,14 +42,12 @@ public:
 
     struct RegistrationData {
         // Mandatory fields
-        HandlerType     type;
-        std::string     subtype;
-        HandlerCreatePF create_pf;
+        IMediaHandler::Specs specs;
+        HandlerCreatePF      create_pf;
 
         // Optional fields
         IsSupportedPF is_supported_pf;
-        INode::SPtrC  handler_props;
-        std::string   description;
+        INode::SPtrC  initial_props;
     };
 
     using WrapperCreatePF = std::function<IMediaHandler::SPtr(
@@ -60,7 +58,7 @@ public:
 
     struct WrapperRegistrationData {
         // Mandatory fields
-        std::string     wrapper_name;
+        std::string     wrapper_name; // Change to wrapper_type ?
         WrapperCreatePF create_pf;
 
         // Optional fields
@@ -71,8 +69,9 @@ public:
 public:
     virtual ~IMediaHandlersFactory() = default;
 
-    virtual std::error_code               HandlerRegister(RegistrationData&& _registration) = 0;
-    virtual std::vector<RegistrationData> HandlersList() const                              = 0;
+    virtual std::error_code                   HandlerRegister(RegistrationData&& _registration)                = 0;
+    virtual std::vector<RegistrationData>     HandlersList() const                                             = 0;
+    virtual std::vector<IMediaHandler::Specs> HandlersFind(const IContainerScheme::ItemDesc& _item_desc) const = 0;
 
     virtual std::error_code                      WrapperRegister(WrapperRegistrationData&& _registration) = 0;
     virtual std::vector<WrapperRegistrationData> WrappersList() const                                     = 0;
@@ -84,7 +83,7 @@ public:
      *
      * @param _handler_type The type of the media handler to create.
      * @param _wrapping_props Properties for creating the media handler.
-     * @param _handler_props Base properties of the created media handler.
+     * @param _initial_props Base properties of the created media handler.
      * @param _handler_stat Statistics node of the created media handler.
      * @return Returns an XResult with a shared pointer to the newly created media handler object if successful,
      *         or an error if creation fails.

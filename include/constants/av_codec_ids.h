@@ -40,6 +40,7 @@ static constexpr std::string_view kCyuv = "cyuv";
 static constexpr std::string_view kLibx264     = "libx264";
 static constexpr std::string_view kH264        = "h264";
 static constexpr std::string_view kLibopenh264 = "libopenh264";
+static constexpr std::string_view kH264_nvenc  = "h264_nvenc";
 // WARNING: ONLY Decoder for:indeo3
 static constexpr std::string_view kIndeo3 = "indeo3";
 // WARNING: ONLY Decoder for:vp3
@@ -296,8 +297,9 @@ static constexpr std::string_view kWebp         = "webp";
 // WARNING: ONLY Decoder for:hnm4video
 static constexpr std::string_view kHnm4video = "hnm4video";
 // WARNING: Encoder name is:libx265
-static constexpr std::string_view kLibx265 = "libx265";
-static constexpr std::string_view kHevc    = "hevc";
+static constexpr std::string_view kLibx265    = "libx265";
+static constexpr std::string_view kHevc       = "hevc";
+static constexpr std::string_view kHevc_nvenc = "hevc_nvenc";
 // WARNING: ONLY Decoder for:fic
 static constexpr std::string_view kFic       = "fic";
 static constexpr std::string_view kAlias_pix = "alias_pix";

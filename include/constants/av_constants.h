@@ -139,6 +139,7 @@ static constexpr std::string_view kAvMuxLive             = "av_mux_live";
 static constexpr std::string_view kAvMuxCorrectPts       = "av_mux_correct_pts";
 static constexpr std::string_view kAvMuxCorrectMaxGapSec = "av_mux_correct_max_gap_sec";
 static constexpr std::string_view kAvMuxCorrectStartPts  = "av_mux_correct_start_pts";
+static constexpr std::string_view kAvMuxUseSegmentTimes  = "av_mux_use_segment_times";
 static constexpr std::string_view kAvMuxCloseOnEof       = "av_mux_close_on_eof";
 
 static constexpr std::string_view kAvCodec_UseStreamTimebase = "av_codec_use_stream_timebase";

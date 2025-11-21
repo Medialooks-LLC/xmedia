@@ -85,6 +85,12 @@ namespace xtime {
      * @return A string representation of the XTime data structure.
      */
     std::string ToString(const XTime* _time);
+    /**
+     * @brief Converts an XTimecode data structure into a string.
+     * @param _timecode An XTimecode data structure.
+     * @return A string representation of the XTimecode data structure.
+     */
+    std::string ToString(const XTimecode& _timecode);
 } // namespace xtime
 
 namespace xstream_info {
@@ -245,11 +251,11 @@ namespace xmedia::frame {
 
 namespace xmedia::handler {
     /**
-     * @brief Converts an HandlerType to a string.
-     * @param _type The HandlerType to convert.
-     * @return A string representation of the HandlerType value.
+     * @brief Converts an HandlerCategory to a string.
+     * @param _type The HandlerCategory to convert.
+     * @return A string representation of the HandlerCategory value.
      */
-    std::string ToString(const HandlerType _type);
+    std::string ToString(const HandlerCategory _category);
     /**
      * @brief Converts an IMediaHandler object to a string.
      * @param _handler The IMediaHandler object to convert.

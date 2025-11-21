@@ -136,7 +136,20 @@ XENUM_CLASS(XError,
             DeviceOpenFailed,
             DeviceStreamOpenFailed,
             DeviceCouldNotGetFormat,
-            JsonParseFailed)
+            JsonParseFailed,
+            ItemsNotReady,
+            MultipleReadersNotSupported,
+            ReadStreamRequired,
+            WrongAccessType,
+            StreamEncoderNotSpecified,
+            StreamIgnored,
+            EndOfSegment,
+            TimeBeforePreviousOne,
+            SegmentStartAfterBack,
+            SegmentEndBeforeStart,
+            SegmentEndBeforeFront,
+            UncompatibleFlags,
+            PathIsEmpty)
 
 /**
  * @brief Creates an std::error_code object from an XError
@@ -171,6 +184,7 @@ public:
      * @param _err An std::error_code object to create a new ErrorDump object from
      */
     ErrorDump(std::error_code&& _err) noexcept : std::error_code(std::move(_err)) {}
+
     /**
      * @brief Constructs an ErrorDump object from a const std::error_code object
      * @param _err A const std::error_code object to create a new ErrorDump object from
@@ -189,6 +203,7 @@ public:
             << ")";
         return std::move(out).str();
     }
+
     /**
      * @brief Implicit conversion operator from ErrorDump to std::string
      * @return A std::string containing the error message associated with the current ErrorDump object

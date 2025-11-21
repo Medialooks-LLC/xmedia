@@ -33,6 +33,12 @@ using OnCreateSubcontainerPF =
 
 // TODO: Move non public functions to internal helpers
 
+ISchemeAliases::UPtr CreateAliases(const INode::SPtrC& _aliases_node);
+
+xbase::XResult<size_t> LoadAliases(ISchemeAliases* const _scheme_aliases_p, const INode::SPtrC& _aliases_node);
+
+xbase::XResult<INode::SPtr> StoreAliases(const ISchemeAliases* _scheme_aliases_p, INode::SPtr&& _dest_node = {});
+
 // Create link node (Map): node name is link_source, node body (Map) is link details (could be empty)
 INode::SPtr CreateLinkNode(const std::string_view _link_source, const INode::SPtrC& _details = {});
 // Input is vector of nodes with name is link_source, body is details (use method above for such nodes creation)
@@ -40,10 +46,10 @@ ILinksScheme::SPtr CreateLinksScheme(const std::vector<INode::SPtrC>& _links_det
                                      xconfig::OnLinkChangedPF&&       _on_changes_pf = {},
                                      const std::string&               _dest_name     = {});
 
-std::optional<std::string>           ContainerTypeByFlow(const xconfig::DataFlowMode _flow_mode);
-std::optional<xconfig::DataFlowMode> ContainerFlowByType(const std::string_view _container_type);
-IContainerScheme::SPtrC              ContainerScheme(const IContainerScheme::ItemDesc& _item_desc);
-std::pair<HandlerType, std::string>  GetTypeSubtype(const IContainerScheme::ItemDesc& _item_desc);
+std::optional<std::string>              ContainerTypeByFlow(const xconfig::DataFlowMode _flow_mode);
+std::optional<xconfig::DataFlowMode>    ContainerFlowByType(const std::string_view _container_type);
+IContainerScheme::SPtrC                 ContainerScheme(const IContainerScheme::ItemDesc& _item_desc);
+std::pair<HandlerCategory, std::string> GetCategoryAndType(const IContainerScheme::ItemDesc& _item_desc);
 
 // Return {name, is_specified}
 std::pair<std::string, bool> BaseNameGet(const IContainerScheme::ItemDesc& _item_desc);
@@ -69,7 +75,7 @@ xbase::XResult<IContainerScheme::ItemDesc> LoadItemDesc(const INode::SPtrC&     
 
 xbase::XResult<INode::SPtr> StoreContainerScheme(const IContainerScheme::SPtrC& _scheme, INode::SPtr&& _dest_node = {});
 
-xbase::XResult<IContainerScheme::SPtr> LoadContainerScheme(const INode::SPtrC&               _item_node,
+xbase::XResult<IContainerScheme::SPtr> LoadContainerScheme(const INode::SPtrC&               _scheme_node,
                                                            const std::optional<std::string>& _instance_name = {});
 
 xbase::XResult<INode::SPtr> StoreLinks(const std::vector<INode::SPtrC>& _links, INode::SPtr&& _dest_node = {});

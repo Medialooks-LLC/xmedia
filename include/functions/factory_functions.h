@@ -142,13 +142,13 @@ xbase::XResult<std::shared_ptr<TInterface>> HandlerCreateByProps(const IContaine
  */
 template <typename TInterface>
 xbase::XResult<std::shared_ptr<TInterface>> HandlerCreateAndInit(
-    const std::variant<HandlerType, std::string, IContainerScheme::SPtrC>& _type_name_or_scheme,
-    IMediaHandler::InitParamsVariant&&                                     _init_url_or_func,
-    const INode::SPtrC&                                                    _init_props          = {},
-    MediaUnitsVec&&                                                        _input_streams_props = {},
-    const INode::SPtrC&                                                    _wrapping_props      = nullptr,
-    IData::SPtrC&&                                                         _outer_interfaces    = {},
-    INode::SPtr&&                                                          _handler_stat        = {})
+    const std::variant<HandlerCategory, std::string, IContainerScheme::SPtrC>& _type_name_or_scheme,
+    IMediaHandler::InitParamsVariant&&                                         _init_url_or_func,
+    const INode::SPtrC&                                                        _init_props          = {},
+    MediaUnitsVec&&                                                            _input_streams_props = {},
+    const INode::SPtrC&                                                        _wrapping_props      = nullptr,
+    IData::SPtrC&&                                                             _outer_interfaces    = {},
+    INode::SPtr&&                                                              _handler_stat        = {})
 {
     return xmedia::HandlerCreateAndInit<TInterface>(
         IContainerScheme::ItemDesc {_type_name_or_scheme, _init_url_or_func, _init_props, _wrapping_props},

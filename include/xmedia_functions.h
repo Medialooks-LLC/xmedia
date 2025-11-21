@@ -7,7 +7,7 @@
 #include "functions/format_functions.h"
 #include "functions/frame_functions.h"
 #include "functions/links_functions.h"
-#include "functions/mixing_functions.h"
+#include "functions/mixer_functions.h"
 #include "functions/overlay_functions.h"
 #include "functions/player_functions.h"
 #include "functions/playlist_functions.h"
@@ -349,6 +349,12 @@ namespace xmedia {
                                                        std::function<bool(const IMediaUnit*)>&& _predicate);
 
     /**
+     * @brief Return set of stream uid of media units vector
+     */
+    std::set<xbase::Uid> MediaUnitsVecUids(const MediaUnitsVec&             _media_units,
+                                           const std::optional<XObjectType> _unit_type = {});
+
+    /**
      * @brief Return master stream (first video or audio if no video) stream uid
      */
     std::optional<xbase::Uid> MasterStreamFind(const MediaUnitsVec& _streams);
@@ -356,7 +362,7 @@ namespace xmedia {
     /**
      * @brief Return codec props from media props or media packet object
      */
-    const XCodec* CodecProps(const IMediaObject* _obj);
+    const XCodec* CodecProps(const IMediaObject* _obj, const bool _null_for_not_packet = false);
 
     /**
      * @brief Return video frame rate from media frame or packet object
@@ -443,5 +449,19 @@ namespace xoptions {
                                                      const INode::SPtrC&                     _options);
     std::pair<std::string, std::string> DeviceClassAndName(std::string_view _open_url, const INode::SPtrC& _options);
 } // namespace xoptions
+
+namespace xside_data {
+
+    template <typename TSideData, typename TType>
+    std::vector<TSideData> Filtering(const std::vector<TSideData>& _side_data, const TType _sd_type)
+    {
+        std::vector<TSideData> filtered;
+        for (const auto& sd : _side_data)
+            if (sd.type == _sd_type)
+                filtered.push_back(sd);
+
+        return filtered;
+    }
+} // namespace xside_data
 
 } // namespace xsdk

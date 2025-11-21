@@ -89,16 +89,50 @@ xbase::XResult<size_t> OverlayPut(IOverlayRenderer* const _overlay_renderer_p,
                                   const XRect&            _dest_region = {});
 
 // TODO:
-inline INode::SPtr StoreProps(const IOverlayBlock::OverlayProps& _overlay_props, INode::SPtr&& _dest = {})
-{
-    return std::move(_dest);
-}
-inline xbase::XResult<IOverlayBlock::OverlayProps> LoadProps(const INode::SPtrC& _from) { return {}; }
+/**
+ * @brief - Convert overlay props to node structure (inverse of LoadOverlayProps)
+ */
+INode::SPtr StoreOverlayProps(const IOverlayBlock::OverlayProps& _overlay_props, INode::SPtr&& _dest = {});
+/**
+ * @brief - Load overlay props from specific node structure
+ * Node structure:
+ * {
+ *     "src_rect": {
+ *         "x": 0.0, "y": 0.0,
+ *         "width": 0.5, "height": 0.5,
+ *         "anchor": "topleft",
+ *         "units": "ratio"
+ *     },
+ *     "dst_rect": {
+ *         "x": 0.0, "y": 0.0,
+ *         "width": 100.0, "height": 100.0,
+ *         "anchor": "topleft",
+ *         "units": "pixels"
+ *     },
+ *     "blending": {
+ *         "alpha_value": 1.0,
+ *         "flags": "default"
+ *     }
+ * }
+ */
+xbase::XResult<IOverlayBlock::OverlayProps> LoadOverlayProps(const INode::SPtrC& _from);
 
-inline INode::SPtr StoreBlock(const IOverlayBlock* _block_p, INode::SPtr&& _dest = {}) { return std::move(_dest); }
-inline xbase::XResult<IOverlayBlock::SPtr> LoadBlock(const INode::SPtrC& _from) { return {}; }
+/**
+ * @brief - Store overlay block configuration to node
+ */
+INode::SPtr StoreOverlayBlock(const IOverlayBlock* _block_p, INode::SPtr&& _dest = {});
+/**
+ * @brief - Load overlay block configuration from node
+ */
+xbase::XResult<IOverlayBlock::SPtr> LoadOverlayBlock(const INode::SPtrC& _from);
 
-inline INode::SPtr StoreGroup(const IOverlayGroup* _block_p, INode::SPtr&& _dest = {}) { return std::move(_dest); }
-inline xbase::XResult<IOverlayGroup::SPtr> LoadGroup(const INode::SPtrC& _from) { return {}; }
+/**
+ * @brief - Store overlay group configuration to node
+ */
+INode::SPtr StoreOverlayGroup(const IOverlayGroup* _block_p, INode::SPtr&& _dest = {});
+/**
+ * @brief - Load overlay group configuration from node
+ */
+xbase::XResult<IOverlayGroup::SPtr> LoadOverlayGroup(const INode::SPtrC& _from);
 
 } // namespace xsdk::xoverlay

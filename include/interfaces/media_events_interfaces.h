@@ -28,7 +28,7 @@ public:
 
     virtual ~IMediaNotification() = default;
 
-    // 2Think: Make const ?
+    // 2Think: Make const ? Rename to OnMediaEvent(...) ?
     virtual void EventNotify(const IMediaHandler::SPtrC& _event_source,
                              const MediaEvent            _event_type,
                              const INode::SPtrC&         _event_details) = 0;

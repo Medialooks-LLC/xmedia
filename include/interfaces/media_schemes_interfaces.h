@@ -17,12 +17,42 @@
 
 namespace xsdk {
 
-// TODO: Rename to ILinksScheme (?)
+// Usage:
+// * AliasAdd( "open_url", {"my_demux", "open_url"}); // The "open_url" Could be passed via _init_url_or_func params
+// * AliasAdd( "dest_url", {"my_muxer", "open_url"});
+// * AliasAdd( "video_encoder", {"v_encoder", "av_codec_name"});
+// * AliasAdd( "video_bitrate", {"v_encoder", "av_options::b"});
+// - store scheme
+//
+// After container created, desired props could be passed via init_props or _init_url_or_func (for "open_url" alias
+// only)
+
+class ISchemeAliases {
+public:
+    struct Alias {
+        XPath       path; // 2Think: allow multiple destination paths ?
+        std::string description;
+    };
+
+    USING_PTRS(ISchemeAliases)
+
+public:
+    virtual ~ISchemeAliases() = default;
+
+    virtual std::map<std::string, Alias> AliasesGet() const                              = 0;
+    virtual std::error_code              AliasAdd(const std::string& _public_name,
+                                                  const XPath&       _dest_path,
+                                                  const std::string& _description = {})  = 0;
+    virtual xbase::XResult<Alias>        AliasRemove(const std::string& _public_name)    = 0;
+    virtual xbase::XResult<Alias>        AliasGet(const std::string& _public_name) const = 0;
+};
+
 class ILinksScheme {
 public:
-    virtual ~ILinksScheme() = default;
-
     USING_PTRS(ILinksScheme)
+
+public:
+    virtual ~ILinksScheme() = default;
 
     virtual size_t LinksCount(const std::optional<std::string_view>& _link_source = {}) const = 0;
 
@@ -56,15 +86,15 @@ namespace xconfig {
                 kSelector)
 } // namespace xconfig
 
-class IContainerScheme {
+class IContainerScheme: public ISchemeAliases {
 public:
     USING_PTRS(IContainerScheme)
 
     // Structure used for describe handler or container
     struct ItemDesc {
-        std::variant<HandlerType, std::string, IContainerScheme::SPtrC> type_name_or_scheme;
-        IMediaHandler::InitParamsVariant                                init_url_or_func;
-        INode::SPtrC                                                    init_props;
+        std::variant<HandlerCategory, std::string, IContainerScheme::SPtrC> category_type_or_scheme;
+        IMediaHandler::InitParamsVariant                                    init_url_or_func;
+        INode::SPtrC                                                        init_props;
         // 2Think: use special class for wrapping props ?
         INode::SPtrC               wrapping_props;
         std::optional<std::string> instance_name;
@@ -94,6 +124,8 @@ public:
     static constexpr std::string_view kContainerSink = "container_sink";
 
 public:
+    virtual ~IContainerScheme() = default;
+
     virtual xconfig::DataFlowMode ContainerMode() const = 0;
 
     virtual const std::string& ContainerName() const = 0;

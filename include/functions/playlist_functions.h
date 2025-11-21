@@ -46,4 +46,21 @@ xbase::XResult<IPlaylist::PlaylistMedia> LoadPlaylistItem(const INode::SPtrC& _i
 
 INode::SPtr StorePlaylistMediaPos(const IPlaylist::PlaylistPos& _pos, INode::SPtr&& _dest_node = {});
 
+/**
+ * @brief - Store Media structure to INode
+ *
+ * @param _media - Media to store
+ * @param _dest - Optional destination node
+ * @return INode containing the media data
+ */
+INode::SPtr StoreMedia(const Media& _media, INode::SPtr&& _dest = {});
+
+/**
+ * @brief - Load Media structure from INode
+ *
+ * @param _media_node - Node containing media data
+ * @return Media structure loaded from the node
+ */
+xbase::XResult<Media> LoadMedia(const INode::SPtrC& _media_node);
+
 } // namespace xsdk::xplaylist

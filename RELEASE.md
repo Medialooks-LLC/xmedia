@@ -7,10 +7,10 @@ cd xmedia
 ```
 ###### Checkout sources:
 ```shell
-git clone https://github.com/Medialooks-LLC/xmedia.git . --branch=v1.0.1.15-beta
+git clone https://github.com/Medialooks-LLC/xmedia.git . --branch=v1.0.1.17-beta
 git submodule update --init
 ```
-###### Extract binaries from [here](https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.15-beta/xmedia-1.0.1.15-beta-windows.zip) to `lib` folder.
+###### Extract binaries from [here](https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.17-beta/xmedia-1.0.1.17-beta-windows.zip) to `lib` folder.
 ###### Build project:
 ```shell
 cmake -DDYNAMIC_RUNTIME=ON -DDYNAMIC_BUILD=ON -DUSE_PREBUILD=ON -DWITH_TESTS=OFF -DWITH_TOOLS=OFF -S . -B build
@@ -51,13 +51,13 @@ mkdir -p xmedia && cd xmedia
 ```
 ###### Checkout sources:
 ```shell
-git clone https://github.com/Medialooks-LLC/xmedia.git . --branch=v1.0.1.15-beta
+git clone https://github.com/Medialooks-LLC/xmedia.git . --branch=v1.0.1.17-beta
 git submodule update --init
 ```
-###### Download and extract binaries from [here](https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.15-beta/xmedia-1.0.1.15-beta-linux.tar.gz) to `lib` folder.
+###### Download and extract binaries from [here](https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.17-beta/xmedia-1.0.1.17-beta-linux.tar.gz) to `lib` folder.
 ```shell script
-wget https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.15-beta/xmedia-1.0.1.15-beta-linux.tar.gz
-tar xvfz xmedia-1.0.1.15-beta-linux.tar.gz -C lib/
+wget https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.17-beta/xmedia-1.0.1.17-beta-linux.tar.gz
+tar xvfz xmedia-1.0.1.17-beta-linux.tar.gz -C lib/
 ```
 ###### Build project:
 ```shell
@@ -72,13 +72,13 @@ mkdir -p xmedia && cd xmedia
 ```
 ###### Checkout sources:
 ```shell
-git clone https://github.com/Medialooks-LLC/xmedia.git . --branch=v1.0.1.15-beta
+git clone https://github.com/Medialooks-LLC/xmedia.git . --branch=v1.0.1.17-beta
 git submodule update --init
 ```
-###### Download and extract binaries from [here](https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.15-beta/xmedia-1.0.1.15-beta-macos.tar.gz) to `lib` folder.
+###### Download and extract binaries from [here](https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.17-beta/xmedia-1.0.1.17-beta-macos.tar.gz) to `lib` folder.
 ```shell script
-wget https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.15-beta/xmedia-1.0.1.15-beta-macos.tar.gz
-tar xvfz xmedia-1.0.1.15-beta-macos.tar.gz -C lib/
+wget https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.17-beta/xmedia-1.0.1.17-beta-macos.tar.gz
+tar xvfz xmedia-1.0.1.17-beta-macos.tar.gz -C lib/
 ```
 ###### Build project:
 ```shell

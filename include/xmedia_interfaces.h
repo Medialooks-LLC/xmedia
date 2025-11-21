@@ -17,4 +17,6 @@
 #include "interfaces/media_playlist_interfaces.h"
 #include "interfaces/media_props_interfaces.h"
 #include "interfaces/media_schemes_interfaces.h"
+#include "interfaces/media_streams_interfaces.h"
+#include "interfaces/media_writer_interfaces.h"
 #include "interfaces/objects_factory_interfaces.h"

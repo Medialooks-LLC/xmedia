@@ -24,14 +24,21 @@ public:
      */
     struct Source {
         /**
-         * @brief - media source flags, use kAutoRemove fro remove media source when all blcoks with such media source
-         * removed, Note: kAutoRemove & kMixMinusEnabled logic not implented yet
+         * @brief - media source flags, use kAutoRemove for remove media source when all blocks with such media source
+         * removed, Note: kAutoRemove & kMixMinusEnabled logic not implemented yet
          */
-        enum class Flags { kManualRemove = 0, kAutoRemove = 1, kBackground = 2, kMixMinusEnabled = 0x10 };
+        enum class Flags {
+            kDefault         = 0, // Regular source with manual remove and hide source on eof
+            kAutoRemove      = 1,
+            kBackground      = 2,
+            kLoop            = 4,
+            kShowLastFrame   = 8,
+            kMixMinusEnabled = 0x10,
+        };
 
         xbase::Uid                uid = xbase::kInvalidUid;
         IMediaPlayerControl::SPtr player_control;
-        Flags                     flags = Flags::kManualRemove;
+        Flags                     flags = Flags::kDefault;
         XFormat                   actual_format;
     };
 
@@ -56,11 +63,10 @@ public:
     /**
      * @brief - add mixer media source, optionally with custom media player and initial media, return new media Source
      */
-    virtual xbase::XResult<Source> MediaSourceAdd(
-        const std::optional<xbase::Uid>& _media_source_uid,
-        const Source::Flags              _media_source_flags  = Source::Flags::kManualRemove,
-        IMediaPlayer::SPtr&&             _custom_media_player = {},
-        const std::optional<Media>&      _initial_media       = {}) = 0;
+    virtual xbase::XResult<Source> MediaSourceAdd(const std::optional<xbase::Uid>& _media_source_uid,
+                                                  const Source::Flags  _media_source_flags   = Source::Flags::kDefault,
+                                                  IMediaPlayer::SPtr&& _custom_media_player  = {},
+                                                  const std::optional<Media>& _initial_media = {}) = 0;
     /**
      * @brief - return mixer media sources list
      */

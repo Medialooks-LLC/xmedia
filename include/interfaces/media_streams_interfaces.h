@@ -5,80 +5,82 @@
 
 #include "media_objects_interfaces.h"
 
-#include <any>
-#include <cassert>
+#include <functional>
 #include <optional>
-#include <string>
-#include <string_view>
-#include <variant>
 #include <vector>
 
 namespace xsdk {
 
 class IMediaStream: public IObject {
 public:
-    enum class Access { kPeek = 0, kRead = 1, kWrite = 2, kWriteAndRead = kWrite | kRead };
+    enum class Access { kPeek, kRead, kWrite }; // AccessRight ? AccessType ?
 
     struct Props {
         xbase::Uid                   stream_uid  = xbase::kInvalidUid;
         XObjectType                  stream_type = XObjectType::None;
         std::optional<size_t>        max_count;
         std::optional<xbase::Time64> max_duration;
-        Access                       stream_access = Access::kPeek;
+        Access                       stream_access = Access::kWrite;
+        // TODO(?): xbase::Time64                read_sync_offset = 0;
     };
 
     struct Item {
         USING_PTRS(Item)
 
-        IMediaObject::SPtrC media_object;
-        xbase::Time64       put_utc_time          = time64::kNoVal; // 2Think: Clock time ?
-        xbase::Time64       timestamp             = time64::kNoVal;
-        uint64_t            index_common          = 0; // Starting from 1
-        uint64_t            index_stream          = 0; // Starting from 1
-        uint64_t            prev_key_index_stream = 0;
+        IMediaObject::SPtrC   media_object; // IMediaUnit ?
+        xbase::Time64         stream_time  = time64::kNoVal;
+        xbase::Time64         put_utc_time = time64::kNoVal; // 2Think: Clock time ?
+        uint64_t              index        = 0;              // Starting from 1
+        std::optional<size_t> key_distance;                  // std::nullopt for NOT Video streams
     };
 
-    using ItemsVec = std::vector<IMediaStream::Item>;
+    using ItemsVec = std::vector<IMediaStream::Item::SPtrC>;
 
     struct Status {
-        IMediaStream::Item::SPtrC head_item; // If units_count is zero -> recent or initialized unit
-        IMediaStream::Item::SPtrC tail_item; // If units_count is zero -> recent or initialized unit
-        size_t                    items_count    = 0;
-        xbase::Time64             items_duration = 0;
+        IMediaStream::Item::SPtrC front_item; // If empty -> null
+        IMediaStream::Item::SPtrC next_item;  // If empty -> null
+        IMediaStream::Item::SPtrC back_item;  // If empty -> recent or initialization unit
+        bool                      is_closed = false;
+    };
+
+    // Rename to Positions ?
+    struct Indexes {
+        uint64_t front_index      = 0;
+        uint64_t next_read_index  = 0;
+        uint64_t next_write_index = 0;
     };
 
     enum class ReadFlags {
-        kFromAnyPoint,
-        kFromKeyPoint,
-        kTillNextKey,
-        kTakeDecodeSegment,
-        kTakeNextKey,
-        kTakeNewOnly, // Take only new items received after peek/read call, _wait_msec should be used in that case
-        kGenEOSFrames
+        // For compressed streams
+        kFromAnyPoint      = 0,
+        kFromKeyPoint      = 1,
+        kTillNextKey       = 2,
+        kSyncAVStreams     = 4, // Read at least one item from all A/V streams
+        kTakeDecodeSegment = kFromKeyPoint | kTillNextKey | kSyncAVStreams, // From key frame to next key
+
+        kKeyFramesOnly = 8,
+
+        // Common (move to separate enum / params ???)
+        kRemoveReadItems = 0x100, // Rename to kMoveFront ?
+        kUseUtcTime      = 0x1000
+
+        // 2Think
+        // kMakeRequest = 0x100,
+        // kNoRequest   = 0x200,
     };
 
-    enum class PutFlag {
-        kAuto, // For live streams pop oldest, for file streams reject
-        kRejectIfFull = 1,
-        kPopOldest,
-        kFlush,
-        kFlushForNewSegment,
-        kInitNewStream,
-        kFlushAndInit,
-        kMakeMonotonicTime = 0x100
-    };
-
-    // 2Think: Use lambda instead
+    // DRAFT
+    //
+    // Note: For use lambdas - add helpers and IObserver impl with lambda
     class IObserver {
     public:
         USING_PTRS(IObserver)
 
-        enum class ReturnType { kNormal, kUnsubscribe };
-
-        virtual ReturnType OnItemRequested(const IMediaStream::Item*          _recent_item_p,
-                                           const std::optional<xbase::Time64> _from_timestamp = {})           = 0;
-        virtual ReturnType OnItemAdded(const IMediaStream::Item* _item_p, const size_t _stream_items_count)   = 0;
-        virtual ReturnType OnItemRemoved(const IMediaStream::Item* _item_p, const size_t _stream_items_count) = 0;
+        virtual void OnItemAdded(const IMediaStream*       _stream_p,
+                                 const IMediaStream::Item* _item_p,
+                                 const size_t              _stream_items_count)
+        {
+        }
     };
 
 public:
@@ -86,129 +88,169 @@ public:
 
     virtual ~IMediaStream() = default;
 
-    virtual const IMediaStream::Props&          StreamProps() const  = 0;
-    virtual IMediaStream::Status                StreamStatus() const = 0;
-    virtual std::optional<IMediaStream::Status> ParentStatus() const = 0;
+    virtual const IMediaStream::Props& StreamProps() const                                                     = 0;
+    virtual IMediaStream::Status       StreamStatus(const std::optional<uint64_t> _min_front_index = {}) const = 0;
+    virtual Indexes                    StreamIndexes() const                                                   = 0;
+    // virtual size_t                     StreamReaders() const                                                   = 0;
 
-    virtual xbase::XResult<IMediaStream::Item::SPtrC> PeekItem(const xbase::Time64           _from_timestamp,
-                                                               const ReadFlags               _flags,
-                                                               const std::optional<uint32_t> _wait_msec = {}) const = 0;
+    virtual xbase::XResult<IMediaStream::Item::SPtrC> PeekItemForTime(
+        const xbase::Time64           _time,
+        const ReadFlags               _flags,
+        const std::optional<uint64_t> _min_front_index = {}) const = 0;
 
-    virtual xbase::XResult<IMediaStream::ItemsVec> PeekItems(const xbase::Time64           _from_timestamp,
-                                                             const size_t                  _count,
-                                                             const ReadFlags               _flags,
-                                                             const std::optional<uint32_t> _wait_msec = {},
-                                                             IMediaStream::ItemsVec&&      _add_to    = {}) const = 0;
+    virtual xbase::XResult<IMediaStream::ItemsVec> PeekItemsForTime(
+        const xbase::Time64           _time,
+        const size_t                  _max_count,
+        const ReadFlags               _flags,
+        const std::optional<uint32_t> _wait_msec       = {},
+        IMediaStream::ItemsVec&&      _add_to          = {},
+        const std::optional<uint64_t> _min_front_index = {}) const = 0;
 
-    virtual xbase::XResult<IMediaStream::ItemsVec> PeekNextItems(const uint64_t                _after_index,
-                                                                 const size_t                  _count,
-                                                                 const ReadFlags               _flags,
-                                                                 const std::optional<uint32_t> _wait_msec = {},
-                                                                 IMediaStream::ItemsVec&&      _add_to = {}) const = 0;
+    virtual xbase::XResult<IMediaStream::Item::SPtrC> PeekItem(
+        const uint64_t                _item_index,
+        const ReadFlags               _flags,
+        const std::optional<uint64_t> _min_front_index = {}) const = 0;
 
-    // For remove -> release pointer or return IMediaStream::IObserver::ReturnType::kUnsubscribe
-    virtual size_t AddObserver(IMediaStream::IObserver::WPtr&& _observer_p) const = 0;
+    virtual xbase::XResult<IMediaStream::ItemsVec> PeekItems(
+        const uint64_t                _start_index,
+        const size_t                  _max_count,
+        const ReadFlags               _flags,
+        const std::optional<uint32_t> _wait_msec       = {},
+        IMediaStream::ItemsVec&&      _add_to          = {},
+        const std::optional<uint64_t> _min_front_index = {}) const = 0;
 
-    // Non-Const methods
-
-    // Read access
-
-    // Does need ?
-    // - Could be replaced via Peek + Remove
-    // - On other side - could be used for seeking
-    virtual xbase::XResult<IMediaStream::ItemsVec> ReadItems(const std::optional<xbase::Time64> _from_timestamp,
-                                                             const size_t                       _count,
-                                                             const ReadFlags                    _flags,
-                                                             const std::optional<uint32_t>      _wait_msec = {},
-                                                             IMediaStream::ItemsVec&&           _add_to    = {}) = 0;
-
-    virtual size_t RemoveItems(const std::optional<xbase::Time64> _keep_after_timestamp = {}) = 0;
-
-    // For notify parent and free buffers, after this call all methods would be failed
+    // Close stream
     virtual void StreamClose() = 0;
+
+    // 2Think: Move to separate interface, add async observers ?
+    virtual bool StreamObserverAdd(IMediaStream::IObserver::WPtr&& _observer_wp, const bool _keep_reference) const = 0;
+    virtual bool StreamObserverRemove(const IMediaStream::IObserver::SPtrC& _observer_p) const                     = 0;
+};
+
+XENUM_OPS32(IMediaStream::ReadFlags)
+
+class IMediaStreamRead: public IMediaStream {
+
+public:
+    USING_PTRS(IMediaStreamRead)
+
+    virtual xbase::XResult<IMediaStream::ItemsVec> ReadItems(const std::optional<xbase::Time64> _from_timestamp,
+                                                             const size_t                       _max_count,
+                                                             const ReadFlags                    _flags,
+                                                             const std::optional<xbase::Time64> _till_timestamp = {},
+                                                             const std::optional<uint32_t>      _wait_msec      = {},
+                                                             IMediaStream::ItemsVec&&           _add_to         = {},
+                                                             const std::optional<uint64_t> _min_front_index = {}) = 0;
+
+    //  Set read position, return new read, option for move front index ?
+    virtual Indexes SetReadPosition(const uint64_t _next_read_index, const bool _remove_before_read) = 0;
+
+    virtual Indexes RemoveItems(const uint64_t _before_index, const bool _keep_key_frame) = 0;
 };
 
 class IMediaStreamWrite: public IMediaStream {
 public:
     USING_PTRS(IMediaStreamWrite)
 
+    enum class PutMode {
+        kRejectIfFull = 0,
+        kPopOldest,
+        kFlush,
+        kFlushForNewSegment,
+        kInitNewStream,
+        kFlushAndInit,
+
+        // Separate param ?
+        kMakeMonotonicTime = 0x100
+    };
+
 public:
-    // Write Access
     virtual xbase::XResult<std::pair<IMediaStream::Item::SPtrC, size_t>> PutMediaObject(
         const IMediaObject::SPtrC&         _object,
-        const PutFlag                      _put_flags      = PutFlag::kAuto,
-        const std::optional<uint32_t>      _wait_msec      = {},
-        const std::optional<xbase::Time64> _item_timestamp = {}) = 0;
+        const PutMode                      _put_mode    = PutMode::kRejectIfFull,
+        const std::optional<uint32_t>      _wait_msec   = {},
+        const std::optional<xbase::Time64> _stream_time = {}) = 0;
 
-    virtual xbase::XResult<IMediaStream::SPtr> CreateReadOrPeekStream(const IMediaStream::Access _access_type) = 0;
+    //  Remove items before index, NOT INCLUDING index (?)
+    virtual Indexes RemoveItems(const uint64_t _before_index, const bool _keep_key_frame) = 0;
 };
 
-class IMediaStreams: public IObject {
+class IMediaStreamsBunch: public IObject {
+
 public:
     class IObserver: public IMediaStream::IObserver {
     public:
         USING_PTRS(IObserver)
 
-        // Return true for subscribe to stream events, false for do not subscribe and std::nullopt for unsubscribe from
-        // all events (e.g. callback expired)
-        virtual std::optional<bool> OnStreamAdded(const IMediaStream* _stream_p, const size_t _streams_count)   = 0;
-        virtual ReturnType          OnStreamRemoved(const IMediaStream* _stream_p, const size_t _streams_count) = 0;
+        // Return true for subscribe to stream events, false for do not subscribe
+        virtual bool OnStreamAdded(const IMediaStreamsBunch* _media_streams_p, const IMediaStream* _added_stream_p)
+        {
+            return false;
+        }
+
+        virtual void OnStreamRemoved(const IMediaStreamsBunch* _media_streams_p, const IMediaStream* _removed_stream_p)
+        {
+        }
     };
 
-public:
-    USING_PTRS(IMediaStreams)
+    using Indexes = std::map<xbase::Uid, IMediaStreamWrite::Indexes>;
 
-    virtual ~IMediaStreams() = default;
+public:
+    USING_PTRS(IMediaStreamsBunch)
+
+    virtual ~IMediaStreamsBunch() = default;
+
+    virtual size_t StreamsCount() const = 0;
 
     virtual std::vector<std::pair<IMediaStream::Props, IMediaStream::Status>> StreamsPropsAndStatus(
         const std::optional<XObjectType> _streams_types = {}) const = 0;
 
+    virtual IMediaStreamsBunch::Indexes StreamsIndexes() const = 0;
+
     virtual std::vector<IMediaStream::SPtrC> StreamsGet(const std::optional<XObjectType> _streams_types = {}) const = 0;
 
-    // For remove -> release pointer or return IMediaStream::IObserver::ReturnType::kUnsubscriben (?)
-    virtual size_t StreamsObserverAdd(IMediaStreams::IObserver::WPtr&& _observer_p,
-                                      const std::set<xbase::Uid>&      _subscribe_to_streams = {}) const = 0;
+    virtual IMediaStream::SPtrC StreamGet(const xbase::Uid _stream_uid) const = 0;
 
-    // Not const methods
-
-    // Read access below
+    virtual IMediaStream::SPtr StreamGet(const xbase::Uid _stream_uid) = 0;
 
     virtual std::vector<IMediaStream::SPtr> StreamsGet(const std::optional<XObjectType> _streams_types = {}) = 0;
 
-    // Write access below
+    // TODO: Sync type (not implemented yet)
+    enum class SyncType { kAlreadySync, kMinHeadTime, kMaxHeadTime, kMinTailTime, kMaxTailTime, kSpecifiedOffset };
+    virtual xbase::XResult<xbase::Time64> StreamAdd(IMediaStream::SPtr&&               _added_stream,
+                                                    const SyncType                     _sync_type,
+                                                    const std::optional<xbase::Time64> _sync_offset = {}) = 0;
 
-    // virtual std::vector<IMediaStreamWrite::SPtr> StreamsWriteGet(const std::optional<XObjectType> _streams_types =
-    // {}) = 0;
+    // Note: Empty _streams_uids_for_remove -> remove all (2Think)
+    virtual std::vector<IMediaStream::SPtr> StreamsRemove(
+        const std::set<xbase::Uid>& _streams_uids_for_remove = {}) = 0;
 
-    //// Create stream with specified head/tail and stream_uid
-    // virtual xbase::XResult<IMediaStreamWrite::SPtr> StreamCreate(
-    //     const IMediaUnit::SPtrC&           _init_unit,
-    //     const std::optional<size_t>        _max_count    = {},
-    //     const std::optional<xbase::Time64> _max_duration = {}) = 0;
+    virtual xbase::XResult<IMediaStream::ItemsVec> PeekStreamItems(
+        const std::optional<xbase::Time64>         _peek_from_timestamp,
+        const IMediaStream::ReadFlags              _flags,
+        const std::map<xbase::Uid, xbase::Time64>& _streams_with_prerolls = {}) const = 0;
 
-    //// Create 'blank' streams what will be specified at first new stream unit
-    // virtual xbase::XResult<IMediaStreamWrite::SPtr> StreamCreateBlank(
-    //     const std::optional<XObjectType>   _stream_type  = {},
-    //     const std::optional<size_t>        _max_count    = {},
-    //     const std::optional<xbase::Time64> _max_duration = {}) = 0;
+    virtual void BunchClose() = 0;
 
-    // virtual std::error_code StreamAdd(IMediaStream::SPtr&& _added_stream) = 0;
+    virtual bool IsClosed() const = 0;
 
-    // virtual std::vector<IMediaStream::SPtr> StreamsRemove(const std::vector<xbase::Uid> _removed_streams_uids = {}) =
-    // 0;
+    // Observers
+    virtual bool BunchObserverAdd(IMediaStreamsBunch::IObserver::WPtr&& _observer_p,
+                                  const bool                            _keep_reference,
+                                  const std::set<xbase::Uid>&           _subscribe_to_streams = {}) const = 0;
 
-    // virtual std::vector<IMediaStream::SPtr> StreamsClear() = 0;
+    virtual bool BunchObserverRemove(const IMediaStreamsBunch::IObserver::SPtr& _observer_p) const = 0;
+
+    // virtual size_t StreamsClear() = 0;
 };
 
-class IMediaStreamsWrite: public IMediaStreams {
+class IMediaStreamsBunchWrite: public IMediaStreamsBunch {
 
 public:
-    USING_PTRS(IMediaStreamsWrite)
+    USING_PTRS(IMediaStreamsBunchWrite)
 
-    // Write access below
-
-    virtual std::vector<IMediaStreamWrite::SPtr> StreamsWriteGet(
-        const std::optional<XObjectType> _streams_types = {}) = 0;
+public:
+    virtual const IMediaStream::Props& DefaultStreamProps() const = 0;
 
     // Create stream with specified head/tail and stream_uid
     virtual xbase::XResult<IMediaStreamWrite::SPtr> StreamCreate(
@@ -217,92 +259,239 @@ public:
         const std::optional<xbase::Time64> _max_duration = {}) = 0;
 
     // Create 'blank' streams what should be specified at first new stream unit
-    virtual xbase::XResult<IMediaStreamWrite::SPtr> StreamCreateBlank(
-        const std::optional<XObjectType>   _stream_type  = {},
-        const std::optional<size_t>        _max_count    = {},
-        const std::optional<xbase::Time64> _max_duration = {}) = 0;
+    // virtual xbase::XResult<IMediaStreamWrite::SPtr> StreamCreateBlank(
+    //    const std::optional<XObjectType>   _stream_type  = {},
+    //    const std::optional<size_t>        _max_count    = {},
+    //    const std::optional<xbase::Time64> _max_duration = {}) = 0;
 
-    virtual std::error_code StreamAdd(IMediaStream::SPtr&& _added_stream) = 0;
+    virtual xbase::XResult<std::pair<IMediaStream::Item::SPtrC, size_t>> PutMediaObject(
+        const IMediaObject::SPtrC&         _object,
+        const bool                         _create_new_stream,
+        const IMediaStreamWrite::PutMode   _put_mode    = IMediaStreamWrite::PutMode::kRejectIfFull,
+        const std::optional<uint32_t>      _wait_msec   = {},
+        const std::optional<xbase::Time64> _stream_time = {}) = 0;
 
-    virtual std::vector<IMediaStream::SPtr> StreamsRemove(const std::vector<xbase::Uid> _removed_streams_uids = {}) = 0;
+    virtual IMediaStreamsBunch::Indexes RemoveItems(const std::map<xbase::Uid, uint64_t>& _before_indexes,
+                                                    const bool                            _keep_key_frame) = 0;
 
-    virtual std::vector<IMediaStream::SPtr> StreamsClear() = 0;
+    // Use helpers ?
+    // virtual xbase::XResult<std::vector<IMediaObject::SPtrC>> PutMediaObjects(
+    //    const std::vector<IMediaObject::SPtrC>& _objects,
+    //    const bool                              _create_new_streams,
+    //    const IMediaStreamWrite::PutMode             _put_mode    = IMediaStreamWrite::PutMode::kRejectIfFull,
+    //    const std::optional<uint32_t>           _wait_msec   = {},
+    //    const std::optional<xbase::Time64>      _stream_time = {}) = 0;
 };
 
-// 2Think: Do not make inheritance, but something like virtual IMediaStreams* Streams() method ?
-class IMediaStreamsBunch: public IMediaStreams {
-
+class IMediaStreamsBunchRead: public IMediaStreamsBunch {
 public:
-    USING_PTRS(IMediaStreamsBunch)
+    USING_PTRS(IMediaStreamsBunchRead)
 
-    virtual ~IMediaStreamsBunch() = default;
+    virtual ~IMediaStreamsBunchRead() = default;
 
-    virtual const IMediaStream::Props& BunchProps() const = 0;
-
-    enum class ItemsCountType {
-        kTotalItemsCount,
-        kCountForOneStream, // One stream has at least _items_count items
-        kCountForAllStream, // All streams should contains at least _items_count items
-    };
+    virtual xbase::XResult<IMediaStream::ItemsVec> NextReadItems(
+        const bool                  _eos_for_not_ready,
+        const std::set<xbase::Uid>& _stream_uids = {}) const = 0;
 
     virtual xbase::XResult<IMediaStream::ItemsVec> PeekItems(
         const xbase::Time64                        _peek_from_timestamp,
-        const size_t                               _items_count,
-        const IMediaStreamsBunch::ItemsCountType   _count_type,
+        const size_t                               _max_items_count,
         const IMediaStream::ReadFlags              _flags,
-        const std::optional<uint32_t>              _wait_msec                 = {},
-        const std::map<xbase::Uid, xbase::Time64>& _streams_with_time_offsets = {}) const = 0;
+        const std::optional<uint32_t>              _wait_msec             = {},
+        const std::map<xbase::Uid, xbase::Time64>& _streams_with_prerolls = {}) const = 0;
 
     virtual xbase::XResult<IMediaStream::ItemsVec> PeekNextItems(
         const IMediaStream::Item*                  _after_item_p,
-        const size_t                               _items_count,
-        const IMediaStreamsBunch::ItemsCountType   _count_type,
+        const size_t                               _max_items_count,
         const IMediaStream::ReadFlags              _flags,
-        const std::optional<uint32_t>              _wait_msec                 = {},
-        const std::map<xbase::Uid, xbase::Time64>& _streams_with_time_offsets = {}) const = 0;
+        const std::optional<uint32_t>              _wait_msec             = {},
+        const std::map<xbase::Uid, xbase::Time64>& _streams_with_prerolls = {}) const = 0;
+
+    // 2Think:
+    // virtual IMediaStreamsBunch::Positions GetPositionsForTime(
+    //     const xbase::Time64                        _read_timestamp,
+    //     const IMediaStream::ReadFlags          _flags,
+    //     const std::map<xbase::Uid, xbase::Time64>& _streams_with_prerolls = {}) const = 0;
 
     // Not const methods
 
     // Read access below
     virtual xbase::XResult<IMediaStream::ItemsVec> ReadItems(
-        const std::optional<xbase::Time64>         _read_from_timestamp,
-        const size_t                               _items_count,
-        const IMediaStreamsBunch::ItemsCountType   _count_type,
+        const std::optional<xbase::Time64>         _from_timestamp,
+        const size_t                               _max_items_count,
         const IMediaStream::ReadFlags              _flags,
-        const std::optional<uint32_t>              _wait_msec                 = {},
-        const std::map<xbase::Uid, xbase::Time64>& _streams_with_time_offsets = {}) = 0;
+        const std::optional<xbase::Time64>         _till_timestamp        = {},
+        const std::optional<uint32_t>              _wait_msec             = {},
+        const std::map<xbase::Uid, xbase::Time64>& _streams_with_prerolls = {}) = 0;
 
-    virtual std::map<xbase::Uid, size_t> RemoveItems(
-        const std::map<xbase::Uid, xbase::Time64>& _streams_with_keep_times = {}) = 0;
+    virtual IMediaStreamsBunch::Indexes SetReadPositions(const std::map<xbase::Uid, uint64_t>& _next_read_indexes,
+                                                         const bool                            _remove_before_read) = 0;
 
-    // For notify parent and free buffers, after this call all methods would be failed
-    virtual void BunchClose() = 0;
+    virtual IMediaStreamsBunch::Indexes RemoveItems(const std::map<xbase::Uid, uint64_t>& _before_indexes,
+                                                    const bool                            _keep_key_frame) = 0;
 };
 
-class IMediaStreamsBunchWrite: public IMediaStreamsWrite {
+class IMediaStreamsBunchReader {
+public:
+    struct ReadRes {
+        // If set to true, the next repeat should be with same data (do not move read pointers)
+        // bool repeat_last_data = false;
+        // If repeat_at_time is not set -> the repeat occurs immediate if have data, or right after new data arrived.
+        // If requested to repeat after specified time, the repeat occurs at specified time, even if no data in deqs
+        // (with _item_p == nullptr)
+        std::optional<xbase::Time64> repeat_at_time;
+        // For seeking
+        std::optional<xbase::Time64> next_read_pos;
+    };
+
+    // Return std::nullopt for stop read
+    using OnItemsReadPf = std::function<std::optional<ReadRes>(const IMediaStreamsBunchReader*    _bunch_reader_p,
+                                                               const xbase::IScheduler::TaskInfo* _task_info,
+                                                               const std::error_code              _error,
+                                                               const IMediaStreamWrite::ItemsVec& _read_items)>;
 
 public:
-    USING_PTRS(IMediaStreamsBunchWrite)
+    USING_PTRS(IMediaStreamsBunchReader)
 
-public:
-    virtual const IMediaStreamWrite::Props& WriteBunchProps() const = 0;
+    virtual ~IMediaStreamsBunchReader() = default;
 
-    // Write access below
-    virtual xbase::XResult<std::pair<IMediaStream::Item::SPtrC, size_t>> PutMediaObject(
-        const IMediaObject::SPtrC&         _object,
-        const bool                         _create_new_stream,
-        const IMediaStream::PutFlag        _put_flags      = IMediaStream::PutFlag::kRejectIfFull,
-        const std::optional<uint32_t>      _wait_msec      = {},
-        const std::optional<xbase::Time64> _item_timestamp = {}) = 0;
-
-    // Called for select streams from bunch and for new bunch streams
-    using IsStreamSuitablePf =
-        std::function<std::optional<bool>(const IMediaStreamsBunch* _new_bunch_p, const IMediaStream* _stream_p)>;
-
-    virtual xbase::XResult<IMediaStreamsBunch::SPtr> CreateReadOrPeekBunch(
-        const IMediaStream::Access  _access_type,
-        const std::set<xbase::Uid>& _selected_streams = {},
-        IsStreamSuitablePf&&        _on_new_stream    = {}) = 0;
+    virtual IMediaStream::ReadFlags                    ReadFlags() const               = 0;
+    virtual const std::map<xbase::Uid, xbase::Time64>& ReadStreamsWithPrerolls() const = 0;
+    virtual XSegment                                   ReadSegment() const             = 0;
+    virtual const IMediaStreamsBunchRead*              ReadBunch() const               = 0;
+    // After creation have to call ReadForceNext() once for start reading
+    virtual std::error_code              ReadForceNext(const std::optional<xbase::Time64> _next_read_pos = {}) = 0;
+    virtual XSegment                     ReadSegmentSetEnd(const std::optional<xbase::Time64> _segment_end)    = 0;
+    virtual IMediaStreamsBunchRead::SPtr ReadClose(const bool _send_eos)                                       = 0;
 };
+
+namespace xmedia_stream {
+
+    enum class ItemTrace {
+        kPos,        // 23.550(570:3)
+        kStreamInfo, // PacketVideo(uid:1017 g:217) 23.550(570:3)
+        kFull        // 23.550(570:3) ... media object trace ...
+    };
+
+    // PacketVideo(uid:1017 g:217)
+    std::string ToString(const IMediaObject* _object_p);
+
+    std::string ToString(const IMediaStream::Item* _item_p, const ItemTrace _trace_type = ItemTrace::kStreamInfo);
+
+    std::string ToString(const IMediaStream::ItemsVec::const_iterator _begin,
+                         const IMediaStream::ItemsVec::const_iterator _end,
+                         const ItemTrace                              _trace_type = ItemTrace::kStreamInfo);
+
+    std::string ToString(const IMediaStream::ItemsVec& _items_vec,
+                         const ItemTrace               _trace_type = ItemTrace::kStreamInfo);
+
+    // [EMPTY W:23.550(570:3) EOS]
+    // [10.550(340) F:12.000(230:0) .. R:12.520(420:2) .. W:23.550(570:3) EOS]
+    std::string ToString(const IMediaStream::Status& _sts, const bool _trace_items = false);
+
+    // [0/1]  PacketVideo(uid:1017) PEEK Max:10.000(500) [10.550(340) F:12.000(230:0) .. R:12.520(420:2) ..
+    // W:23.550(570:3) EOS]
+    std::string ToString(const IMediaStreamsBunch* _bunch_p, const std::set<xbase::Uid>& _streams_uids = {});
+
+    IMediaStream::Item::SPtr UpdateItem(const IMediaStream::Item*          _base_item,
+                                        IMediaObject::SPtrC&&              _update_object,
+                                        const std::optional<xbase::Time64> _update_stream_time = {},
+                                        const std::optional<xbase::Time64> _update_utc_time    = {});
+
+    IMediaStream::Item::SPtrC UpdateToEOS(const IMediaStream::Item::SPtrC& _base_item);
+    IMediaStream::Item::SPtrC UpdateToNotReady(const IMediaStream::Item::SPtrC& _base_item);
+
+    xbase::Time64 ItemTime(const IMediaStream::Item* _item_p,
+                           const bool                _utc_time,
+                           const xbase::Time64       _time_for_null = time64::kNoVal);
+
+    std::optional<XTime> ItemTime(const IMediaStream::Item*      _item_p,
+                                  const bool                     _utc_time,
+                                  const XSegment&                _segment,
+                                  const std::optional<XRational> _dest_timebase = {});
+
+    // Return time of MIN/MAX video stream or MIN/MAX audio stream time
+    enum class SyncType { kMinTime, kMaxTime };
+    xbase::Time64 ItemsSyncTime(const IMediaStream::ItemsVec& _items_vec,
+                                const bool                    _utc_time,
+                                const SyncType                _sync_type,
+                                const xbase::Time64           _time_for_empty = time64::kNoVal);
+
+    xbase::Uid StreamUid(const IMediaStream::Item* _item_p);
+
+    using OnItemRequested = std::function<bool(const IMediaStreamWrite*           _stream_p,
+                                               const IMediaStream::ReadFlags      _flags,
+                                               const std::optional<xbase::Time64> _from_timestamp,
+                                               const std::optional<uint32_t>      _wait_msec)>;
+
+    xbase::XResult<IMediaStreamWrite::SPtr> CreateMediaStream(const IMediaStream::Props& _stream_props,
+                                                              const OnItemRequested&     _item_requested_pf);
+
+    xbase::XResult<IMediaStream::SPtr> CreateReadStream(const IMediaStreamWrite::SPtr&  _write_stream,
+                                                        const IMediaStreamWrite::Access _access_type,
+                                                        const std::optional<uint64_t>   _next_read_index = {});
+
+    xbase::XResult<IMediaStream::SPtr> CreatePeekStream(const IMediaStream::SPtrC&    _read_stream,
+                                                        const std::optional<uint64_t> _next_read_index = {});
+
+    IMediaStreamsBunchWrite::SPtr CreateStreamsBunch(const std::optional<xbase::Time64> _max_duration,
+                                                     const std::optional<size_t>        _max_count);
+
+    IMediaStreamsBunchRead::SPtr CreateReadBunch(std::vector<IMediaStream::SPtr>&& _read_streams,
+                                                 const IMediaStreamsBunch*         _observe_parent_bunch = nullptr);
+
+    xbase::XResult<IMediaStreamsBunchRead::SPtr> CreateReadBunch(
+        IMediaStreamsBunch* const             _write_bunch_p,
+        const IMediaStreamWrite::Access       _access_type,
+        const std::map<xbase::Uid, uint64_t>& _streams_front_indexes = {});
+
+    xbase::XResult<IMediaStreamsBunchRead::SPtr> CreateReadBunch(
+        IMediaStreamsBunch* const                  _write_bunch_p,
+        const IMediaStreamWrite::Access            _access_type,
+        const xbase::Time64                        _read_from_time,
+        const std::map<xbase::Uid, xbase::Time64>& _streams_with_prerolls = {});
+
+    xbase::XResult<IMediaStreamsBunchRead::SPtr> CreatePeekBunch(
+        const IMediaStreamsBunch*             _read_bunch_p,
+        const std::map<xbase::Uid, uint64_t>& _streams_front_indexes = {});
+
+    xbase::XResult<IMediaStreamsBunchRead::SPtr> CreatePeekBunch(
+        const IMediaStreamsBunch*                  _read_bunch_p,
+        const xbase::Time64                        _read_from_time,
+        const std::map<xbase::Uid, xbase::Time64>& _streams_with_prerolls = {});
+
+    // Return items for specified position
+    // Note: For empty streams null items returned for front & read (subj for change ?)
+    enum class PosType { kFront, kRead, kBack };
+    xbase::XResult<IMediaStream::ItemsVec> BunchStreamsItems(const IMediaStreamsBunch* _read_bunch_p,
+                                                             const PosType             _pos_type);
+
+    xbase::XResult<std::pair<xbase::Time64, xbase::Time64>> BunchAvailableTimes(
+        const IMediaStreamsBunch*   _read_bunch_p,
+        const bool                  _use_utc_time,
+        const std::set<xbase::Uid>& _streams_uids = {});
+
+    xbase::XResult<IMediaStreamsBunchReader::SPtr> CreateBunchReader(
+        IMediaStreamsBunchRead::SPtr&&                 _read_bunch,
+        const IMediaStreamsBunchReader::OnItemsReadPf& _on_items_read,
+        const XSegment&                                _read_segment,
+        const std::optional<double>                    _remove_after_sec,
+        const IMediaStream::ReadFlags                  _read_flags            = IMediaStream::ReadFlags::kSyncAVStreams,
+        const std::map<xbase::Uid, xbase::Time64>&     _streams_with_prerolls = {},
+        const xbase::IWorker::SPtr&                    _private_worker        = {});
+
+    using IsStreamSuitable =
+        std::function<bool(const IMediaStreamsBunch* _existed_streams_p, const IMediaStream* _new_stream_p)>;
+
+    // TODO:
+    // - Observers support for dynamic streams selection
+    // - 2Think: Support for const IMediaStreamsBunchWrite ?
+    // IMediaStreamsBunchRead::SPtr CreateStreamsBunchPeek(const IMediaStreamsBunchWrite::SPtrC& _write_bunch,
+    //                                                    IsStreamSuitable&&               _on_new_stream = {});
+
+    // IMediaStreamsBunchRead::SPtr CreateReadBunch(const IMediaStreamsBunchWrite::SPtr& _write_bunch,
+    //                                                     IsStreamSuitable&&              _on_new_stream = {});
+
+} // namespace xmedia_stream
 
 } // namespace xsdk

@@ -8,5 +8,6 @@
 #include "av_sample_formats.h"
 #include "common.h"
 #include "ndi_constants.h"
+#include "overlay_constants.h"
 #include "xcommands_constants.h"
 #include "xmedia_constants.h"

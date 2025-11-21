@@ -20,6 +20,11 @@ const XTime* TimeGet(const IMediaObject* _obj_p);
 inline const XTime* Time(const IMediaUnit* _unit_p) { return _unit_p ? _unit_p->Time() : nullptr; }
 
 /**
+ * @brief Helper function for check of live rate control
+ **/
+bool IsLiveRateControl(const XTime* _time_p, const bool _default_value);
+
+/**
  * @brief Helper function to check is _time_p non null and _time_p->timestamp != kNoVal.
  **/
 bool IsValid(const XTime* _time_p);
@@ -91,12 +96,12 @@ XTime::Packet PacketExtra(const XTime* _time_p);
  */
 XTime::Packet* PacketExtra(XTime& _time, bool _create_new);
 /**
- * @brief Helper function to extract Packet extra data from an XTime object.
+ * @brief Helper function to check if XTime for key frame packet
  * @param _time_p Pointer to an XTime object.
- * @return The packet extra data or an empty packet if the input time object is invalid or its extra data
- * is not set.
+ * @param _value_for_frame returned value for frames
+ * @return true for key-frame packet, _value_for_frame if it's frame and false for null
  */
-bool IsKeyPacket(const XTime* _time_p, const bool _value_for_frames);
+bool IsKeyPacket(const XTime* _time_p, const bool _value_for_frame);
 /**
  * @brief Helper function to extract Frame extra data from an XTime object.
  * @param _time_p Pointer to an XTime object.
@@ -152,7 +157,10 @@ XENUM_CLASS(SegmentPos,
             kAfterEnd    = 0x20);
 
 inline const XSegment* Segment(const XTime* _time_p) { return _time_p ? &_time_p->segment : nullptr; }
-const XSegment*        Segment(const IMediaUnit* _unit_p);
+
+const XSegment* Segment(const IMediaUnit* _unit_p);
+
+XSegment UpdateSegmentUid(const XSegment& _segment, const std::optional<xbase::Uid> _new_uid = {});
 
 SegmentPos CheckSegment(const XTime* _time_p, const std::optional<XRational>& _frame_rate = {});
 
@@ -161,11 +169,15 @@ std::optional<xbase::Time64> TimeInSegment(const XTime* _time_p, const XSegment&
  * @brief Function for store XSegment into INode
  * @return The node with XSegment 'in', 'out'
  */
-INode::SPtr SegmentStore(const XSegment& _segment, const INode::SPtr& _dest_node = nullptr);
+INode::SPtr SegmentStore(const XSegment& _segment, const INode::SPtr& _dest_node = {});
 /**
  * @brief Function for load XSegment from INode
  * @return The loaded XSegment (from 'in', 'out' node attibutes)
  */
 XSegment SegmentLoad(const INode::SPtrC& _src_node, const bool _gen_segment_uid);
+/**
+ * @brief Function for store XTime into INode
+ */
+INode::SPtr ToNode(const xsdk::XTime* _time, const INode::SPtr& _dst_node = {});
 
 } // namespace xsdk::xtime

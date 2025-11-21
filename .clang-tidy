@@ -8,6 +8,7 @@ Checks: >
   performance-*,
   portability-*,
   readability-*,
+  -google-readability-avoid-underscore-in-googletest-name,
   -google-readability-braces-around-statements,
   -google-readability-casting,
   -modernize-use-using,
@@ -45,4 +46,3 @@ Checks: >
 
 
 WarningsAsErrors: '*'
-

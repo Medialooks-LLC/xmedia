@@ -116,7 +116,7 @@ public:
      */
     struct Processing {
         std::optional<double> audio_gain_db;
-        INode::SPtrC          extra_filters;
+        std::string           extra_filters;
     };
 
     /**

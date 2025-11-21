@@ -7,6 +7,7 @@ namespace xsdk::xcommands {
 namespace params {
     static const std::string kStopAtError = "stop_at_error";
 }
+
 namespace container_scheme {
     static const std::string kItemInsert          = "item_insert";
     static const std::string kTargetContainerMode = "target_container_mode";
@@ -145,6 +146,10 @@ namespace media_player {
 
 namespace media_mixer {
     static const std::string kBufferVideoFrames = "buffer_video_frames";
+    static const std::string kMixerConfig       = "mixer_config";
+    static const std::string kBackgroundUrl     = "background_url";
+    static const std::string kOutputFormat      = "output_format";
+    static const std::string kOverlays          = "overlays";
 
 } // namespace media_mixer
 

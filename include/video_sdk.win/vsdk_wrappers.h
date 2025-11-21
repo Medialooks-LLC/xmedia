@@ -10,16 +10,46 @@ namespace xsdk::v_sdk {
 
 static constexpr std::string_view kSeiUser = "sei_user";
 
+static constexpr std::string_view kColorRange     = "v_color_range";
+static constexpr std::string_view kColorPrimaries = "v_colors";
+static constexpr std::string_view kColorTrc       = "v_transfer";
+static constexpr std::string_view kColorSpace     = "v_matrix";
+
+static constexpr std::string_view kColorRangeMpeg        = "mpeg";
+static constexpr std::string_view kColorRangeJpeg        = "jpeg";
+static constexpr std::string_view kColorRangeUnspecified = "unspecified";
+
+static constexpr std::string_view kColorPrimariesBT601  = "BT601";
+static constexpr std::string_view kColorPrimariesBT709  = "BT709";
+static constexpr std::string_view kColorPrimariesBT2020 = "BT2020";
+
+static constexpr std::string_view kColorTrcBT601  = "BT601";
+static constexpr std::string_view kColorTrcBT709  = "BT709";
+static constexpr std::string_view kColorTrcBT2020 = "BT2020";
+static constexpr std::string_view kColorTrcHLG    = "HLG";
+static constexpr std::string_view kColorTrcPQ     = "PQ";
+
+static constexpr std::string_view kColorSpaceBT601  = "BT601";
+static constexpr std::string_view kColorSpaceBT709  = "BT709";
+static constexpr std::string_view kColorSpaceBT2020 = "BT2020";
+static constexpr std::string_view kColorSpaceBT2100 = "BT2100";
+
 namespace video {
     // {fcc, planes}
     std::pair<eMFCC, size_t> FromPixelFormat(std::string_view _pixel_format);
     // {name, planes, swap_uv}
     std::tuple<std::string_view, size_t, bool> ToPixelFormat(eMFCC _fcc);
 
+    struct VsdkVideoFormatDescription {
+        M_VID_PROPS vid_props = {};
+        std::string color_range;
+        std::string color_primaries;
+        std::string color_trc;
+        std::string color_space;
+    };
     // {video format, planes, swap_uv}
-    std::tuple<XFormatV, size_t, bool> ToFormat(const M_VID_PROPS& _vid_props);
-    // {video props, planes, swap_uv}
-    std::tuple<M_VID_PROPS, size_t, bool> FromFormat(const XFormatV* _format_v_p);
+    std::tuple<XFormatV, size_t, bool> ToFormat(const VsdkVideoFormatDescription& _vsdk_vf_description);
+    std::tuple<VsdkVideoFormatDescription, size_t, bool> FromFormat(const XFormatV* _format_v_p);
 } // namespace video
 
 namespace audio {
