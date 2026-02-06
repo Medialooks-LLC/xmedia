@@ -13,7 +13,9 @@
 #include "functions/playlist_functions.h"
 #include "functions/scheme_functions.h"
 #include "functions/time_functions.h"
+#include "functions/tonode_functions.h"
 #include "functions/tostring_functions.h"
+#include "functions/writer_functions.h"
 
 #include "xmedia_errors.h"
 #include "xmedia_interfaces.h"
@@ -173,13 +175,41 @@ namespace xmedia {
     }
 
     /**
-     * @brief Reuest media from each stream, request and wait if no stream media
+     * @brief Reuest media from each stream, request and wait if no stream media - for work with stream buffer, nit
+     * suitable for durect demux
      */
+    [[deprecated("Use MediaGetForAllStreamsEx instead")]]
     std::vector<xbase::XResult<IMediaUnit::SPtrC>> MediaGetForAllStreams(
         IMediaOutput* const              _output_p,
         const bool                       _remove_from_buffer,
         const std::optional<uint32_t>    _timeout_for_each_msec = {},
         const std::optional<XObjectType> _obj_type              = {});
+
+    /**
+     * @brief Get media from handler while not taken for all A/V streams, or for specified object type (e.g. for audio
+     * only use _obj_types_mask XObjectType::Audio)
+     *
+     * Return: updated output units vec and non-taken av streams count
+     */
+    [[deprecated("Use MediaGetForAllStreamsEx instead")]]
+    xbase::XResult<std::pair<MediaUnitsVec, size_t>> MediaGetForAllStreamsVec(
+        const bool                       _take_till_eos,
+        IMediaOutput* const              _output_p,
+        const std::optional<XObjectType> _obj_types_mask = {});
+
+    /**
+     * @brief Get media from handler while not taken for all A/V streams (or specified streams types), optionally for
+     * desired pos or EOS (e.g. for audio only use _obj_types_mask XObjectType::Audio)
+     *
+     * Return: map of streams uids to stream units vector, if unints not taken for one of A/V streams -> added empty
+     * MediaUnitsVec for this stream uid
+     */
+    xbase::XResult<std::map<xbase::Uid, MediaUnitsVec>> MediaGetForAllStreamsEx(
+        IMediaOutput* const                   _output_p,
+        const std::optional<double>           _pos_sec                 = {},
+        const std::optional<XObjectType>      _obj_types_mask          = {},
+        const size_t                          _min_units_per_av_stream = 1,
+        std::map<xbase::Uid, MediaUnitsVec>&& _add_to                  = {});
 
     // 2Think: replace bt ToString?
     /**
@@ -383,6 +413,23 @@ namespace xmedia {
      * _number_of_frames is zero, only duration used, for 1 and more frame-rate/audio data size used
      */
     std::optional<xbase::Time64> EndTime(const IMediaUnit* _unit_p, const size_t _number_of_frames = 1);
+    /**
+     * @brief Return frame or packet duration (by frame rate or audio data size)
+     */
+    std::optional<double> DurationMsec(const IMediaUnit* _unit_p, const IMediaUnit* _prev_unit_p = nullptr);
+
+    struct UnitDurations {
+        double estimated_msec = 0; ///< Use most often duration
+        double avg_msec       = 0; ///< Average
+        double min_msec       = 0; ///< Minimum
+        double max_msec       = 0; ///< Maximum
+        size_t valid_units    = 0; ///< Number of used units
+    };
+
+    /**
+     * @brief Calculate unit duration from bunch of frames ot packets (by frame rate or audio data size)
+     */
+    UnitDurations UnitDurationMsec(const MediaUnitsVec& _units);
 
     /**
      * @brief Start output from handler to callback

@@ -38,6 +38,7 @@ namespace xmedia::handlers {
     static const std::string kMediaPlayer    = "media_player";
     static const std::string kPlaylistPlayer = "playlist_player";
     static const std::string kMediaMixer     = "media_mixer";
+    static const std::string kMediaWriter    = "media_writer";
 } // namespace xmedia::handlers
 
 namespace xmedia::wrappers {
@@ -102,10 +103,11 @@ namespace xmedia::config {
     static const std::string kHandlerCategory          = "handler_category";
     static const std::string kHandlerType              = "handler_type";
 
-    static const std::string kName      = "name";
-    static const std::string kInitProps = "init_props";
-    static const std::string kOpenUrl   = "open_url";
-    static const std::string kAliases   = "aliases";
+    static const std::string kName           = "name";
+    static const std::string kInitProps      = "init_props";
+    static const std::string kOpenUrl        = "open_url";
+    static const std::string kAliases        = "aliases";
+    static const std::string kSchemeMetadata = "scheme_metadata";
 
     static const std::string kWrappers       = "wrappers";
     static const std::string kWrapperType    = "wrapper_type";
@@ -174,8 +176,21 @@ namespace xmedia::v_sdk_handlers {
 } // namespace xmedia::v_sdk_handlers
 
 namespace xmedia::handlers_options {
-    static const std::string kMaxBuffers    = "max_buffers";
-    static const size_t      kMaxBuffersDef = 3;
+    static const std::string kMaxBuffers        = "max_buffers";
+    static const size_t      kMaxBuffersDef     = 3;
+    static const std::string kFlushAtNewSegment = "flush_at_new_segment";
+
 } // namespace xmedia::handlers_options
+
+namespace xprogram {
+    // For XProgram store/load
+    static const std::string kProgramNum = "program_num";
+    static const std::string kProgramId  = "program_id";
+    static const std::string kFlags      = "flags";
+    static const std::string kPmtPid     = "pmt_pid";
+    static const std::string kPcrPid     = "pcr_pid";
+    static const std::string kPmtVersion = "pmt_version";
+    static const std::string kMetadata   = "metadata";
+} // namespace xprogram
 
 } // namespace xsdk

@@ -30,8 +30,9 @@ namespace xsdk {
 class ISchemeAliases {
 public:
     struct Alias {
-        XPath       path; // 2Think: allow multiple destination paths ?
-        std::string description;
+        XPath        path; // 2Think: allow multiple destination paths ?
+        std::string  description;
+        INode::SPtrC extra_props;
     };
 
     USING_PTRS(ISchemeAliases)
@@ -40,9 +41,10 @@ public:
     virtual ~ISchemeAliases() = default;
 
     virtual std::map<std::string, Alias> AliasesGet() const                              = 0;
-    virtual std::error_code              AliasAdd(const std::string& _public_name,
-                                                  const XPath&       _dest_path,
-                                                  const std::string& _description = {})  = 0;
+    virtual std::error_code              AliasAdd(const std::string&  _public_name,
+                                                  const XPath&        _dest_path,
+                                                  const std::string&  _description = {},
+                                                  const INode::SPtrC& _extra_props = {}) = 0;
     virtual xbase::XResult<Alias>        AliasRemove(const std::string& _public_name)    = 0;
     virtual xbase::XResult<Alias>        AliasGet(const std::string& _public_name) const = 0;
 };
@@ -90,11 +92,13 @@ class IContainerScheme: public ISchemeAliases {
 public:
     USING_PTRS(IContainerScheme)
 
+    using CategoryTypeOrScheme = std::variant<HandlerCategory, std::string, IContainerScheme::SPtrC>;
+
     // Structure used for describe handler or container
     struct ItemDesc {
-        std::variant<HandlerCategory, std::string, IContainerScheme::SPtrC> category_type_or_scheme;
-        IMediaHandler::InitParamsVariant                                    init_url_or_func;
-        INode::SPtrC                                                        init_props;
+        CategoryTypeOrScheme             category_type_or_scheme;
+        IMediaHandler::InitParamsVariant init_url_or_func;
+        INode::SPtrC                     init_props;
         // 2Think: use special class for wrapping props ?
         INode::SPtrC               wrapping_props;
         std::optional<std::string> instance_name;
@@ -150,6 +154,9 @@ public:
     // For sink links use kContainerSink
     virtual ILinksScheme::SPtrC ItemLinks(XPath&& _item_path) const = 0;
     virtual ILinksScheme::SPtr  ItemLinks(XPath&& _item_path)       = 0;
+
+    virtual INode::SPtrC SchemeMetadata() const = 0;
+    virtual INode::SPtr  SchemeMetadata()       = 0;
 };
 
 } // namespace xsdk

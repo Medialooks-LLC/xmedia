@@ -144,16 +144,20 @@ static constexpr std::string_view kAvMuxCloseOnEof       = "av_mux_close_on_eof"
 
 static constexpr std::string_view kAvCodec_UseStreamTimebase = "av_codec_use_stream_timebase";
 
-static constexpr std::string_view kAvInSec         = "in";
-static constexpr std::string_view kAvOutSec        = "out";
-static constexpr std::string_view kSegmentUid      = "segment_uid";
-static constexpr std::string_view kAvDurationSec   = "duration";
-static constexpr std::string_view kAvLoop          = "loop";
+static constexpr std::string_view kAvInSec       = "in";
+static constexpr std::string_view kAvOutSec      = "out";
+static constexpr std::string_view kSegmentUid    = "segment_uid";
+static constexpr std::string_view kAvDurationSec = "duration";
+// static constexpr std::string_view kAvLoop          = "loop"; // Not supported anymore
 static constexpr std::string_view kAvPosSec        = "pos";
+static constexpr std::string_view kAvPosPrecise    = "precise"; // Precise positioning
+static constexpr std::string_view kAvRewind        = "rewind";  // Rewind to in pos or start (no frame taken)
 static constexpr std::string_view kAvStreamForSeek = "stream_for_seek";
 static constexpr std::string_view kAvFlush         = "flush";
 static constexpr std::string_view kAvEOF           = "EOF";
 static constexpr std::string_view kAvEOS           = "EOS";
+// Do not mark packets as discarded (e.g. for media streams)
+static constexpr std::string_view kAvNoDiscard = "no_discard";
 
 // Format properties
 // TODO: move format_context namespace ?
@@ -168,10 +172,12 @@ static constexpr std::string_view kAvStreams_Array = "av_streams";
 
 static constexpr std::string_view kAvCodecParameters = "av_codec_parameters";
 static constexpr std::string_view kAvMuxrate         = "muxrate";
+static constexpr std::string_view kAvLowDelay        = "low_delay";
 
 // Common names
 
 static constexpr std::string_view kBitPerSample = "bits_per_sample";
+static constexpr std::string_view kGrowingFile  = "growing_file";
 
 static constexpr std::string_view kDevices        = "devices";
 static constexpr std::string_view kSelectedDevice = "selected_device";

@@ -98,10 +98,10 @@ XTime::Packet* PacketExtra(XTime& _time, bool _create_new);
 /**
  * @brief Helper function to check if XTime for key frame packet
  * @param _time_p Pointer to an XTime object.
- * @param _value_for_frame returned value for frames
+ * @param _value_for_frame returned value for frames, of not set as PictureType::TypeI flag as key (if has ones)
  * @return true for key-frame packet, _value_for_frame if it's frame and false for null
  */
-bool IsKeyPacket(const XTime* _time_p, const bool _value_for_frame);
+bool IsKeyPacket(const XTime* _time_p, const std::optional<bool> _value_for_frame);
 /**
  * @brief Helper function to extract Frame extra data from an XTime object.
  * @param _time_p Pointer to an XTime object.
@@ -175,9 +175,5 @@ INode::SPtr SegmentStore(const XSegment& _segment, const INode::SPtr& _dest_node
  * @return The loaded XSegment (from 'in', 'out' node attibutes)
  */
 XSegment SegmentLoad(const INode::SPtrC& _src_node, const bool _gen_segment_uid);
-/**
- * @brief Function for store XTime into INode
- */
-INode::SPtr ToNode(const xsdk::XTime* _time, const INode::SPtr& _dst_node = {});
 
 } // namespace xsdk::xtime

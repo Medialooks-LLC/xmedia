@@ -18,7 +18,9 @@ static constexpr std::string_view kResult        = "result";
 static constexpr std::string_view kErrorSource   = "error_source";
 static constexpr std::string_view kSuccess       = "success";
 static constexpr std::string_view kCode          = "code";
+static constexpr std::string_view kCategory      = "category";
 static constexpr std::string_view kStatus        = "status";
+static constexpr std::string_view kQuit          = "quit";
 static constexpr std::string_view kInProgress    = "in_progress";
 static constexpr std::string_view kStarted       = "started";
 static constexpr std::string_view kSucceeded     = "succeeded";
@@ -36,6 +38,7 @@ static constexpr std::string_view kParameters    = "parameterts";
 static constexpr std::string_view kMetadata      = "metadata";
 static constexpr std::string_view kPath          = "path";
 static constexpr std::string_view kTimestamp     = "timestamp";
+static constexpr std::string_view kClockTime     = "clock_time";
 static constexpr std::string_view kValues        = "values";
 static constexpr std::string_view kValue         = "value";
 static constexpr std::string_view kDepth         = "depth";
@@ -77,6 +80,7 @@ static constexpr std::string_view kLinkUid     = "link_uid";
 static constexpr std::string_view kMedia = "media";
 
 static constexpr std::string_view kIndex = "index";
+static constexpr std::string_view kOrder = "order";
 
 static constexpr std::string_view kReason   = "reason";
 static constexpr std::string_view kPrevious = "previous";

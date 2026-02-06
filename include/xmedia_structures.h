@@ -113,7 +113,7 @@ struct XTime {
     struct Packet {
         /// @brief Packet flags
         PacketFlags pkt_flags = PacketFlags::None; // AV_PKT_FLAG_xxx map
-        /// @brief Packet PTS offset
+        /// @brief Packet PTS offset (PTS = DTS + offset)
         int64_t pts_offset = 0;
     };
 
@@ -157,6 +157,7 @@ struct XStreamInfo {
     /// @brief Optional clock of the stream.
     xbase::IClock::SPtrC stream_clock;
 };
+
 /**
  * @brief Struct representation of side-data packet.
  * This struct is used to define a side-data packet which can contain different types of side-data.
@@ -347,12 +348,16 @@ public:
      * @brief Set audio format, use nullptr for reset type
      */
     void Set(const XFormatA* _format_p) { audio = (_format_p ? std::optional<XFormatA> {*_format_p} : std::nullopt); }
+
     void Set(const XFormatA& _format) { Set(&_format); }
+
     /**
      * @brief Set video format, use nullptr for reset type
      */
     void Set(const XFormatV* _format_p) { video = (_format_p ? std::optional<XFormatV> {*_format_p} : std::nullopt); }
+
     void Set(const XFormatV& _format) { Set(&_format); }
+
     /**
      * @brief Set subtitle format, use nullptr for reset type
      */
@@ -360,7 +365,9 @@ public:
     {
         subtitle = (_format_p ? std::optional<XFormatS> {*_format_p} : std::nullopt);
     }
+
     void Set(const XFormatS& _format) { Set(&_format); }
+
     /**
      * @brief Reset format type.
      */

@@ -131,10 +131,12 @@ XENUM_CLASS(HandlerCategory,
             kUnknown,
             kInputDevice,
             kDemultiplexer,
+            kMediaSource, // Input device or Demux, used for create source by protocol
             kDecoder,
             kEncoder,
             kMultiplexer,
             kOutputDevice,
+            kMediaDest, // Output device or Muxer, used for create source by protocol
             kProcessor,
             kContainer,
             kComplexSource,

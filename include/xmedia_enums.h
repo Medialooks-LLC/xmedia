@@ -30,24 +30,35 @@ XENUM_CLASS(XObjectType,
             PropsSubtitle = Props | Subtitle,
             PropsData     = Props | Data,
             PropsAV       = Props | AV,
+            PropsAVS      = Props | AVS,
 
             ChunkAudio    = Chunk | Audio,
             ChunkVideo    = Chunk | Video,
             ChunkSubtitle = Chunk | Subtitle,
             ChunkData     = Chunk | Data,
             ChunkAV       = Chunk | AV,
+            ChunkAVS      = Chunk | AVS,
 
             PacketAudio    = Packet | Audio,
             PacketVideo    = Packet | Video,
             PacketSubtitle = Packet | Subtitle,
             PacketData     = Packet | Data,
             PacketAV       = Packet | AV,
+            PacketAVS      = Packet | AVS,
 
             FrameAudio    = Frame | Audio,
             FrameVideo    = Frame | Video,
             FrameSubtitle = Frame | Subtitle,
             FrameData     = Frame | Data,
-            FrameAV       = Frame | AV)
+            FrameAV       = Frame | AV,
+            FrameAVS      = Frame | AVS,
+
+            FrameOrPacketAudio    = Frame | Packet | Audio,
+            FrameOrPacketVideo    = Frame | Packet | Video,
+            FrameOrPacketSubtitle = Frame | Packet | Subtitle,
+            FrameOrPacketData     = Frame | Packet | Data,
+            FrameOrPacketAV       = Frame | Packet | AV,
+            FrameOrPacketAVS      = Frame | Packet | AVS)
 
 /// @brief Enum class representing different flags of media packet or frame
 XENUM_CLASS(XMediaFlags,
@@ -57,7 +68,8 @@ XENUM_CLASS(XMediaFlags,
             kPaused      = 0x04,
             kStreamInfo  = 0x08,
             kKeyFrame    = 0x10,
-            kNonKeyFrame = 0x20)
+            kNonKeyFrame = 0x20,
+            kGrowingLast = 0x40)
 /**
  * @brief Enum class representing different rate control modes.
  * @details This enum class represents different rate control modes, namely:

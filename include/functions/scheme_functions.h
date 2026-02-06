@@ -26,8 +26,9 @@ using OnLinkChangedPF = std::function<std::error_code(const std::string&  dest_n
 
 // For create ActiveContainers for subconfig
 using OnCreateSubcontainerPF =
-    std::function<xbase::XResult<IContainerScheme::SPtr>(const xconfig::DataFlowMode data_flow_mode,
-                                                         const std::string_view      container_name)>;
+    std::function<xbase::XResult<IContainerScheme::SPtr>(const IContainerScheme::ItemDesc& container_desc,
+                                                         const xconfig::DataFlowMode       data_flow_mode,
+                                                         const std::string_view            container_name)>;
 
 // TODO: Think about factory for objects creation like below ?
 
@@ -48,6 +49,7 @@ ILinksScheme::SPtr CreateLinksScheme(const std::vector<INode::SPtrC>& _links_det
 
 std::optional<std::string>              ContainerTypeByFlow(const xconfig::DataFlowMode _flow_mode);
 std::optional<xconfig::DataFlowMode>    ContainerFlowByType(const std::string_view _container_type);
+std::optional<xconfig::DataFlowMode>    ContainerFlowByDesc(const IContainerScheme::ItemDesc& _item_desc);
 IContainerScheme::SPtrC                 ContainerScheme(const IContainerScheme::ItemDesc& _item_desc);
 std::pair<HandlerCategory, std::string> GetCategoryAndType(const IContainerScheme::ItemDesc& _item_desc);
 

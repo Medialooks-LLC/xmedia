@@ -20,6 +20,7 @@ option(WITH_CODE_COVERAGE "Set ON when do linux build on CI" OFF)
 option(DYNAMIC_RUNTIME "Set ON when want to use dynamic runtime" $ENV{DYNAMIC_RUNTIME})
 option(DYNAMIC_BUILD "Set ON when want to use dynamic build" $ENV{DYNAMIC_BUILD})
 option(WITH_TOOLS "Build tools projects" ON)
+option(WITH_CEF_LIBRARY "Build CEF library support" ON)
 
 if(WIN32 AND USE_PREBUILD)
     set(CMAKE_BUILD_TYPE "") # Fix for wrong usage prebuild libs with CMAKE_BUILD_TYPE flag on Windows
@@ -44,6 +45,12 @@ set(ENV{WITH_FFMPEG_GPL} ${WITH_FFMPEG_GPL})
 set(ENV{WITH_PYTHON_BINDINGS} ${WITH_PYTHON_BINDINGS})
 set(ENV{WITH_OPENCV_LIBRARY} ${WITH_OPENCV_LIBRARY})
 set(ENV{WITH_PATCHED_BAICALP7} ${WITH_PATCHED_BAICALP7})
+
+if(WITH_CEF_LIBRARY AND NOT APPLE AND NOT DYNAMIC_RUNTIME AND NOT DYNAMIC_BUILD)
+    set(ENV{WITH_CEF_LIBRARY} "ON")
+else()
+    set(ENV{WITH_CEF_LIBRARY} "OFF")
+endif()
 
 if(WIN32)
     set(MSVC_TOOLSET_VERSION "143" CACHE STRING MSVC_TOOLSET_VERSION)
@@ -112,6 +119,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(DEPS_FILE "$<IF:$<CONFIG:Debug>,${CMAKE_BINARY_DIR}/Debug.deps,${CMAKE_BINARY_DIR}/RelWithDebInfo.deps>")
+set(DEPS_DONE_FILE ".copy_deps_done")
 
 if(WIN32)
     set(DEPS_OUTPUT ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>)
@@ -121,7 +129,7 @@ endif()
 
 add_custom_command(
     OUTPUT ${DEPS_OUTPUT}/.copy_deps_done
-    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_LIST_DIR}/copy_deps.cmake ${DEPS_FILE} ${DEPS_OUTPUT}/
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_LIST_DIR}/copy_deps.cmake ${DEPS_FILE} ${DEPS_OUTPUT}/ ${DEPS_DONE_FILE}
     COMMENT "Copying libraries files from ${DEPS_FILE} to ${CMAKE_BINARY_DIR}"
 )
 
@@ -129,11 +137,37 @@ add_custom_target(copy_deps ALL
     DEPENDS ${DEPS_OUTPUT}/.copy_deps_done
 )
 
+if(WITH_CEF_LIBRARY AND NOT APPLE AND NOT DYNAMIC_RUNTIME AND NOT DYNAMIC_BUILD)
+set(DEPS_FILE "$<IF:$<CONFIG:Debug>,${CMAKE_BINARY_DIR}/Debug_locales.deps,${CMAKE_BINARY_DIR}/RelWithDebInfo_locales.deps>")
+set(DEPS_DONE_FILE ".copy_deps_done_locales")
+
+if(WIN32)
+    set(DEPS_OUTPUT ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<IF:$<CONFIG:Debug>,Debug,RelWithDebInfo>/locales)
+else()
+    set(DEPS_OUTPUT ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/locales)
+endif()
+
+add_custom_command(
+    OUTPUT ${DEPS_OUTPUT}/.copy_deps_done_locales
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_LIST_DIR}/copy_deps.cmake ${DEPS_FILE} ${DEPS_OUTPUT}/ ${DEPS_DONE_FILE}
+    COMMENT "Copying files from ${DEPS_FILE} to ${CMAKE_BINARY_DIR}"
+)
+
+add_custom_target(copy_deps_locales ALL
+    DEPENDS ${DEPS_OUTPUT}/.copy_deps_done_locales
+)
+endif()
+
+
 if(PREPARE_PREBUILD)
     set(ENV{XSDK_PREBUILD_FOLDER} ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 endif()
 
 project(xmedia)
+
+if(WITH_CEF_LIBRARY AND NOT APPLE AND NOT DYNAMIC_RUNTIME AND NOT DYNAMIC_BUILD)
+	add_compile_definitions("_WITH_CEF_LIBRARY_")
+endif()
 
 if(NOT USE_PREBUILD)
     add_custom_target(copy_libs)
@@ -161,6 +195,10 @@ if(NOT USE_PREBUILD)
     find_package(srt REQUIRED)
     find_package(ffmpeg REQUIRED)
     # find_package(google-webrtc REQUIRED)
+    find_package(Boost REQUIRED)
+    if(WIN32)
+    find_package(uwebsockets REQUIRED)
+    endif()
     find_package(ndi_newtek REQUIRED)
     find_package(RapidJSON REQUIRED)
     find_package(xlogger REQUIRED)
@@ -171,13 +209,21 @@ if(NOT USE_PREBUILD)
         find_package(OpenCV REQUIRED)
         add_compile_definitions("_WITH_OPENCV_LIBRARY_")
     endif()
+    if(WITH_CEF_LIBRARY AND NOT APPLE AND NOT DYNAMIC_RUNTIME AND NOT DYNAMIC_BUILD)
+        find_package(google-cef-prebuild REQUIRED)
+    endif()
 
     if(NOT ${MEDIALOOKS_BUILD_NUMBER} EQUAL "")
         add_compile_definitions("MEDIALOOKS_BUILD_NUMBER=\"${MEDIALOOKS_BUILD_NUMBER}\"")
+    else()
+        add_compile_definitions("MEDIALOOKS_BUILD_NUMBER=\"local build\"")
     endif()
 
     if(NOT ${MEDIALOOKS_BUILD_DATE} EQUAL "")
         add_compile_definitions("MEDIALOOKS_BUILD_DATE=\"${MEDIALOOKS_BUILD_DATE}\"")
+    else()
+        string(TIMESTAMP BUID_DATE "%Y-%m-%d %H:%M:%S")
+        add_compile_definitions("MEDIALOOKS_BUILD_DATE=\"${BUID_DATE}\"")
     endif()
 
     if(WITH_STATIC_ANALYSIS AND NOT WIN32)
@@ -253,9 +299,10 @@ else() # USE_PREBUILD
 
     if(CONAN_MINIMUM_VERSION)
         find_package(srt REQUIRED)
-
         find_package(ffmpeg REQUIRED)
         # find_package(google-webrtc REQUIRED)
+        find_package(Boost REQUIRED)
+        find_package(uwebsockets REQUIRED)
         find_package(ndi_newtek REQUIRED)
         find_package(RapidJSON REQUIRED)
         find_package(xlogger REQUIRED)

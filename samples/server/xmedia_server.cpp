@@ -6,6 +6,8 @@
 
 #include <algorithm>
 #include <atomic>
+#include <iomanip>
+#include <iostream>
 #include <string_view>
 #include <thread>
 
@@ -91,11 +93,13 @@ public:
         return {};
     }
 
-    ICommandsExecutor::CommandRes CommandExecute(const ICommandsExecutor::Command& _command)
-    {
-        assert(command_executor_);
-        return command_executor_->CommandExecute(_command);
-    }
+    ICommandsExecutor::SPtr CommandExecutor() const { return command_executor_; }
+
+    // ICommandsExecutor::CommandRes CommandExecute(const ICommandsExecutor::Command& _command)
+    //{
+    //     assert(command_executor_);
+    //     return command_executor_->CommandExecute(_command);
+    // }
 
     INode::SPtrC Stat(XPath&& _path = {})
     {
@@ -123,7 +127,7 @@ private:
     std::error_code Init_(xevents::OnEventPF&& _on_media_event)
     {
         assert(!command_executor_);
-        command_executor_ = xcommands::ExecutorCreate(true);
+        command_executor_ = xcommands::CreateExecutor(true);
         assert(command_executor_);
         AddSaveLoadCommands_(command_executor_.get());
 
@@ -207,6 +211,7 @@ void PrintHelp(std::string name)
     std::cout << "--factory_config Handler & Wrappers factory config." << std::endl;
     std::cout << "--load_scheme Path for load root contianer scheme." << std::endl;
     std::cout << "--save_scheme Path for store root contianer scheme (updated at commands receving)" << std::endl;
+    std::cout << "--control Colntrol interface (e.g. ws://:4567 for listen web-sockets on 4567 port)" << std::endl;
     std::cout << "--log_level logging level" << std::endl;
     std::cout << std::endl;
     std::cout
@@ -215,16 +220,6 @@ void PrintHelp(std::string name)
         << " --factory_config factory_config.json --load_scheme container_state.json --save_scheme container_state.json"
         << std::endl;
     std::cout << std::endl;
-}
-
-ICommandsExecutor::Command ParseCommand(const INode::SPtrC& _command)
-{
-    // Fill command
-    ICommandsExecutor::Command command = {xnode::At(_command, "command_name").String()};
-    command.body                       = xnode::NodeConstGet(_command, "command_body");
-    command.target_path                = XPath(xnode::At(_command, "target_path").String());
-
-    return command;
 }
 
 using CommandInputPF = std::function<std::string()>;
@@ -237,9 +232,9 @@ void PopulateCommandsList(ContainerServer* _server_p, std::ostream& _output_stre
     auto commands_list = _server_p->CommandsList();
     for (const auto& command_desc : commands_list) {
         _output_stream << "\n" << command_desc.name << ": " << command_desc.description << std::endl;
-        if (!command_desc.mendatory_params.empty()) {
-            _output_stream << "  - Mandatory params(" << command_desc.mendatory_params.size() << "):" << std::endl;
-            for (const auto& param : command_desc.mendatory_params) {
+        if (!command_desc.mandatory_params.empty()) {
+            _output_stream << "  - Mandatory params(" << command_desc.mandatory_params.size() << "):" << std::endl;
+            for (const auto& param : command_desc.mandatory_params) {
                 _output_stream << "\t" << param.option_name << ": " << param.option_description << std::endl;
             }
         }
@@ -271,7 +266,7 @@ void ControlMessagesLoop(ContainerServer*      _server_p,
 
     _output_stream << std::endl << "Command format (json):" << std::endl;
     _output_stream << R"({
-        "command_name" : <name of command - see below>, 
+        "command_name" : <name of command - see below>,
         "command_body" : { commands parameters json },  // optional
         "target_path" : <target container item path>,  // optional
 } <enter>)" << std::endl
@@ -357,10 +352,14 @@ void ControlMessagesLoop(ContainerServer*      _server_p,
         auto [captured_node, error_pos] = xnode::FromJson(composed_json);
         if (!error_pos && !captured_node->Empty()) {
             // Parsed ok
-            if (command_p)
+            if (command_p) {
                 command_p->body = captured_node;
-            else
-                command_p.reset(new ICommandsExecutor::Command(ParseCommand(captured_node)));
+            }
+            else {
+                auto command_xr = xcommands::ParseCommand(captured_node);
+                if (command_xr.HasResult())
+                    command_p.reset(new ICommandsExecutor::Command(command_xr->command));
+            }
 
             composed_json.clear();
             lines_count = 0;
@@ -380,22 +379,292 @@ void ControlMessagesLoop(ContainerServer*      _server_p,
             _output_stream << "EXECUTE Command:" << command_p->name << " Body:" << xnode::ToJson(command_p->body)
                            << " Path:" << command_p->target_path.ToString() << std::endl;
 
-            auto command_res = _server_p->CommandExecute(*command_p);
+            auto execute_res = _server_p->CommandExecutor()->CommandExecute(*command_p);
             if (_on_command_executed_pf)
-                _on_command_executed_pf(*command_p, command_res);
+                _on_command_executed_pf(*command_p, execute_res);
 
-            if (command_res.error) {
-                _output_stream << "FAILED(" << ErrorDump(command_res.error) << "):" << std::endl
-                               << xnode::ToJson(command_res.result) << std::endl;
+            if (execute_res.error) {
+                _output_stream << "FAILED(" << ErrorDump(execute_res.error) << "):" << std::endl
+                               << xnode::ToJson(execute_res.result) << std::endl;
             }
             else {
-                _output_stream << "SUCCCEDED:" << std::endl << xnode::ToJson(command_res.result) << std::endl;
+                _output_stream << "SUCCCEDED:" << std::endl << xnode::ToJson(execute_res.result) << std::endl;
             }
 
             prev_command_p = std::move(command_p);
             command_p.reset();
         }
     }
+}
+
+// std::error_code SocketControlLoop(const std::shared_ptr<ContainerServer>& _server_p,
+//                                   const std::string                       _control_url,
+//                                   OnCommandExecutedPF&&                   _on_command_executed_pf = {},
+//                                   std::ostream&                           _output_stream          = std::cout)
+//{
+//     xbase::IWorker::SPtr worker_sp {xworker::CreateWorker()};
+//
+//     std::condition_variable cv_done;
+//     std::atomic<bool>       is_done;
+//     std::mutex              mtx_done;
+//
+//     ICommandsDispatcher::SPtr dispatcher_p;
+//
+//     _output_stream << std::fixed << std::setprecision(3);
+//
+//     std::atomic<xbase::Time64> recent_cmd_time = {xclock::UtcTime()};
+//     ISocketRpc::SPtr           control_server_rtc;
+//     auto                       control_servre_rtc_xr = xsockets::CreateWebSocketServerRpc(
+//         4,
+//         _control_url,
+//         [&](const std::optional<xbase::Uid> _from, const XValue& _message) {
+//             if (_message.IsEmpty()) {
+//                 _output_stream << "From:" << _from.value_or(0) << "data_buffer.IsEmpty() " << std::endl;
+//                 return true;
+//             }
+//
+//             auto command_xr = xcommands::ParseCommand(_message.QueryPtrC<INode>());
+//             if (!command_xr.HasResult()) {
+//                 _output_stream << "From:" << _from.value_or(0)
+//                                << "xcommands::ParseCommand() failed:" << ErrorDump(command_xr.Error()) << std::endl;
+//                 _output_stream << "Msg:" << xnode::ToJson(_message) << std::endl;
+//                 // todo: error
+//                 return true;
+//             }
+//
+//             assert(command_xr->from_uid == _from);
+//
+//             recent_cmd_time.store(xclock::UtcTime());
+//
+//             _output_stream << "Command:" << command_xr->command.name << " From:" << _from.value_or(0) << " Recevied"
+//                            << std::endl;
+//
+//             if (command_xr->command.name == kQuit) {
+//                 std::unique_lock lck(mtx_done);
+//                 is_done.store(true);
+//                 cv_done.notify_all();
+//                 return false;
+//             }
+//
+//             if (command_xr->request_id.has_value()) {
+//                 assert(control_server_rtc);
+//                 worker_sp->TaskPut(
+//                     [command_xr, srv_p = _server_p, control_server_rtc, &_output_stream, _on_command_executed_pf]() {
+//                         _output_stream << "EXECUTE Command:" << command_xr->command.name
+//                                        << " Body:" << xnode::ToJson(command_xr->command.body)
+//                                        << " UID:" << command_xr->request_id.value_or("")
+//                                        << " Path:" << command_xr->command.target_path.ToString() << std::endl;
+//
+//                         auto execute_res = srv_p->CommandExecutor()->CommandExecute(command_xr->command);
+//
+//                         if (execute_res.error) {
+//                             _output_stream << "FAILED(" << ErrorDump(execute_res.error) << "):" << std::endl
+//                                            << xnode::ToJson(execute_res.result) << std::endl;
+//                         }
+//                         else {
+//                             _output_stream << "SUCCCEDED:" << std::endl
+//                                            << xnode::ToJson(execute_res.result) << std::endl;
+//                         }
+//
+//                         if (_on_command_executed_pf)
+//                             _on_command_executed_pf(command_xr->command, execute_res);
+//
+//                         auto msg_node = xcommands::CommandResToNode(execute_res, &command_xr.Result(), {});
+//                         control_server_rtc->SocketMessage(command_xr->from_uid, msg_node);
+//
+//                         return xbase::IWorker::RepeatType::kDoNotRepeat;
+//                     });
+//             }
+//             else {
+//                 auto execute_res = _server_p->CommandExecutor()->CommandExecute(command_xr->command);
+//                 auto msg_node = xcommands::CommandResToNode(execute_res, &command_xr.Result(), {});
+//                 control_server_rtc->SocketMessage(command_xr->from_uid, msg_node);
+//             }
+//             return true;
+//         },
+//         [&](const xbase::Uid      _socket_uid,
+//             const std::error_code _err,
+//             const ISocket::State  _new_state,
+//             const ISocket::State  _from_state,
+//             const INode::SPtrC&   _details) {
+//             _output_stream << "Socket UID:" << _socket_uid;
+//             if (_err)
+//                 _output_stream << " ERROR:" << ErrorDump(_err);
+//             _output_stream << " State:" << (int)_from_state << "->" << (int)_new_state << std::endl;
+//             return true;
+//         });
+//
+//     if (!control_servre_rtc_xr.Result()) {
+//         _output_stream << "web-socket server at:" << _control_url
+//                        << " ERROR:" << ErrorDump(control_servre_rtc_xr.Error()) << std::endl
+//                        << std::endl;
+//         return control_servre_rtc_xr.Error();
+//     }
+//
+//     control_server_rtc = control_servre_rtc_xr.Result();
+//
+//     _output_stream << "web-socket server at:" << _control_url << " STARTED" << std::endl << std::endl;
+//
+//     std::unique_lock lck(mtx_done);
+//     while (!is_done.load()) {
+//         auto done = cv_done.wait_for(lck, std::chrono::seconds(5));
+//
+//         _output_stream << "wait_for() res:" << (int32_t)done
+//                        << " From recent command:" << time64::ToSec(xclock::UtcTime() - recent_cmd_time.load())
+//                        << " sec." << std::endl;
+//     }
+//     lck.unlock();
+//
+//     _output_stream << "web-socket server stopped:" << _control_url << " STOPPED" << std::endl << std::endl;
+//
+//     control_server_rtc->SocketClose("complete", XError::Closed);
+//     worker_sp->TaskCancelAll();
+//     return {};
+// }
+
+std::error_code SocketControlLoopEx(const std::shared_ptr<ContainerServer>& _server_p,
+                                    const std::string                       _control_url,
+                                    OnCommandExecutedPF&&                   _on_command_executed_pf = {},
+                                    std::ostream&                           _output_stream          = std::cout)
+{
+    xbase::IWorker::SPtr worker_sp {xworker::CreateWorker()};
+
+    std::condition_variable cv_done;
+    std::atomic<bool>       is_done;
+    std::mutex              mtx_done;
+
+    ICommandsDispatcher::SPtr dispatcher_p = xcommands::CreateDispatcher();
+
+    _output_stream << std::fixed << std::setprecision(3);
+
+    std::atomic<xbase::Time64> recent_cmd_time = {xclock::UtcTime()};
+    ISocketRpc::SPtr           control_server_rtc;
+    auto                       control_servre_rtc_xr = xsockets::CreateWebSocketServerRpc(
+        4,
+        _control_url,
+        [&](const std::optional<xbase::Uid>   _from,
+            const XValue&                     _message,
+            const std::optional<std::string>& _request_id) -> std::optional<XValue> {
+            if (_message.IsEmpty()) {
+                _output_stream << "From:" << _from.value_or(0) << "data_buffer.IsEmpty() " << std::endl;
+                return XValue {};
+            }
+
+            auto msg_json = xnode::ToJson(_message);
+
+            auto command_xr = xcommands::ParseCommand(_message.QueryPtrC<INode>());
+            if (!command_xr.HasResult()) {
+                // todo: error
+                return XValue {};
+            }
+
+            recent_cmd_time.store(xclock::UtcTime());
+
+            _output_stream << "Command:" << command_xr->command.name << " From:" << _from.value_or(0) << " Recevied"
+                           << std::endl;
+
+            if (command_xr->command.name == kQuit) {
+                std::unique_lock lck(mtx_done);
+                is_done.store(true);
+                cv_done.notify_all();
+                return std::nullopt;
+            }
+
+            if (command_xr->command.name == xcommands::dispatcher::kDispatchCancel) {
+                auto disp_task_uid = xnode::At(command_xr->command.body, xcommands::kDispatcherTaskUid)
+                                         .Uint64(xbase::kInvalidUid);
+                assert(disp_task_uid != xbase::kInvalidUid);
+
+                auto removed_xr = dispatcher_p->DispatchCancel(disp_task_uid);
+                if (!_request_id.has_value())
+                    return XValue {};
+
+                ICommandsExecutor::CommandRes command_res = {removed_xr.Error()};
+                if (removed_xr.Result())
+                    command_res.result = xcommands::CommandToNode(*removed_xr.Result(), false);
+
+                return xcommands::CommandResToNode(command_res, &command_xr.Result(), nullptr);
+            }
+
+            auto scheduled_xr = dispatcher_p->DispatchCommand(
+                _server_p->CommandExecutor(),
+                ICommandsDispatcher::Command(command_xr.Result()),
+                [&, from = _from, req_id = _request_id](const ICommandsDispatcher::DispatchRes& _dispatch_res,
+                                                        const ICommandsDispatcher::Command*     _command_p,
+                                                        const xbase::IScheduler::TaskInfo*      _task_info_p) {
+                    assert(_command_p);
+
+                    if (_dispatch_res.command_res.error) {
+                        std::cerr << "Error:" << ErrorDump(_dispatch_res.command_res.error)
+                                  << " for command:" << _command_p->command.name << std::endl;
+                    }
+
+                    if (!req_id.has_value())
+                        return true;
+
+                    auto node_res = xcommands::DispatchResToNode(_dispatch_res, _command_p, _task_info_p);
+                    auto err = control_server_rtc->SocketResponce(req_id.value(), from, node_res);
+                    if (err) {
+                        std::cerr << "FAILED" << std::endl
+                                  << "control_server_rtc->SocketMessage(" << from.value_or(0)
+                                  << ") err:" << ErrorDump(err) << " Res:" << xnode::ToJson(node_res) << std::endl;
+
+                        return false;
+                    }
+
+                    //     _output_stream << "Send Result:" << std::endl << xnode::ToJson(json_res) << std::endl;
+
+                    return true;
+                });
+            if (scheduled_xr.Error()) {
+                _output_stream << "Dispatch Failed:" << xerror::ToString(scheduled_xr.Error()) << std::endl;
+
+                if (!_request_id.has_value())
+                    return XValue {};
+
+                return xcommands::CommandResToNode({scheduled_xr.Error(), "dispatch_failed"}, &command_xr.Result());
+            }
+
+            return XValue {};
+        },
+        [&](const xbase::Uid      _socket_uid,
+            const std::error_code _err,
+            const ISocket::State  _new_state,
+            const ISocket::State  _from_state,
+            const XValue&         _details) -> bool {
+            _output_stream << "Socket UID:" << _socket_uid;
+            if (_err)
+                _output_stream << " ERROR:" << ErrorDump(_err);
+            _output_stream << " State:" << (int)_from_state << "->" << (int)_new_state << std::endl;
+            return true;
+        });
+
+    if (!control_servre_rtc_xr.Result()) {
+        _output_stream << "web-socket server at:" << _control_url
+                       << " ERROR:" << ErrorDump(control_servre_rtc_xr.Error()) << std::endl
+                       << std::endl;
+        return control_servre_rtc_xr.Error();
+    }
+
+    control_server_rtc = control_servre_rtc_xr.Result();
+
+    _output_stream << "web-socket server at:" << _control_url << " STARTED" << std::endl << std::endl;
+
+    std::unique_lock lck(mtx_done);
+    while (!is_done.load()) {
+        auto done = cv_done.wait_for(lck, std::chrono::seconds(5));
+
+        _output_stream << "wait_for() res:" << (int32_t)done
+                       << " From recent command:" << time64::ToSec(xclock::UtcTime() - recent_cmd_time.load())
+                       << " sec." << std::endl;
+    }
+    lck.unlock();
+
+    _output_stream << "web-socket server stopped:" << _control_url << " STOPPED" << std::endl << std::endl;
+
+    control_server_rtc->SocketClose("complete", XError::Closed);
+    worker_sp->TaskCancelAll();
+    return {};
 }
 
 int main(int argc, char** argv)
@@ -406,9 +675,12 @@ int main(int argc, char** argv)
     if (need_help) {
         PrintHelp(argv[0]);
     }
-    auto factory_config_path = cmd_line->At("factory_config").String();
-    auto load_scheme_path    = cmd_line->At("load_scheme").String("xm_server.scheme.json");
-    auto save_scheme_path    = cmd_line->At("save_scheme").String("xm_server.scheme.json");
+    ISocketServer::SPtr control_server;
+    auto                factory_config_path = cmd_line->At("factory_config").String();
+    auto                load_scheme_path    = cmd_line->At("load_scheme").String("xm_server.scheme.json");
+    auto                save_scheme_path    = cmd_line->At("save_scheme").String("xm_server.scheme.json");
+    auto                control_url         = cmd_line->At("control").String();
+
     xmedia::LogLevelSet(xmedia::LogLevel(cmd_line->At("log_level").Int32()));
 
     auto container_server_xr = ContainerServer::Create(
@@ -430,7 +702,7 @@ int main(int argc, char** argv)
         auto copied = xnode::CopyTo(factory_config, xmedia::FactoryConfig(), true, true);
         std::cout << "Applied factory config (props:" << copied << ") from:" << factory_config_path << std::endl;
     }
-    else if (!error.empty()) {
+    else if (!factory_config_path.empty() && !error.empty()) {
         std::cout << "Error load factory config from:" << factory_config_path << " Error:" << error << std::endl;
     }
 
@@ -446,28 +718,42 @@ int main(int argc, char** argv)
         }
     }
 
-    ControlMessagesLoop(
-        container_server_xr.GetPtr(),
-        []() {
-            // Capture command from std::cin example
-            std::string captured_line;
-            std::getline(std::cin, captured_line);
-            return captured_line;
-        },
-        [&](const ICommandsExecutor::Command& _command, const ICommandsExecutor::CommandRes& _command_res) {
-            // Command result handling example - save container scheme for succeeded command
-            if (!_command_res.error && !save_scheme_path.empty()) {
-                auto err = container_server_xr->StoreScheme(save_scheme_path);
-                if (err) {
-                    std::cout << "(scheme) Failed update:" << save_scheme_path << " Error:" << ErrorDump(err)
-                              << std::endl;
-                }
-                else {
-                    std::cout << "(scheme) Updated:" << save_scheme_path << std::endl;
-                }
+    auto on_command_executed_pf = [&](const ICommandsExecutor::Command&    _command,
+                                      const ICommandsExecutor::CommandRes& _command_res) {
+        // Command result handling example - save container scheme for succeeded command
+        if (!_command_res.error && !save_scheme_path.empty()) {
+            auto err = container_server_xr->StoreScheme(save_scheme_path);
+            if (err) {
+                std::cout << "(scheme) Failed update:" << save_scheme_path << " Error:" << ErrorDump(err) << std::endl;
             }
-        },
-        std::cout);
+            else {
+                std::cout << "(scheme) Updated:" << save_scheme_path << std::endl;
+            }
+        }
+    };
+
+    if (!control_url.empty()) {
+        std::cout << "External control via:" << control_url << " STARTED" << std::endl;
+        auto err = SocketControlLoopEx(container_server_xr.Result(),
+                                       control_url,
+                                       std::move(on_command_executed_pf),
+                                       std::cout);
+        std::cout << "External control via:" << control_url << " STARTED:" << ErrorDump(err) << std::endl;
+    }
+    else {
+        std::cout << "Console control via:" << control_url << " FINISHED" << std::endl;
+        ControlMessagesLoop(
+            container_server_xr.GetPtr(),
+            []() {
+                // Capture command from std::cin example
+                std::string captured_line;
+                std::getline(std::cin, captured_line);
+                return captured_line;
+            },
+            std::move(on_command_executed_pf),
+            std::cout);
+        std::cout << "Console control via:" << control_url << " FINISHED" << std::endl;
+    }
 
     container_server_xr->Close();
 

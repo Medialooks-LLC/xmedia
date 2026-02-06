@@ -15,8 +15,6 @@
 
 namespace xsdk::xcommands {
 
-ICommandsExecutor::SPtr ExecutorCreate(bool _fill_commands);
-
 xbase::XResult<ICommandsExecutor::GetTargetPF> ContainerSchemeTargetAdd(ICommandsExecutor*            _executor_p,
                                                                         const IContainerScheme::SPtr& _container_scheme,
                                                                         XPath&& _target_path = {});
@@ -40,5 +38,9 @@ xbase::XResult<size_t> ActiveContainerTargetsAdd(ICommandsExecutor*            _
 xbase::XResult<ICommandsExecutor::GetTargetPF> PlaylistTargetAdd(ICommandsExecutor*         _executor_p,
                                                                  const IMediaHandler::SPtr& _playlist_sp,
                                                                  XPath&&                    _target_path = {});
+
+xbase::XResult<ICommandsExecutor::GetTargetPF> MediaMixerTargetAdd(ICommandsExecutor*         _executor_p,
+                                                                   const IMediaHandler::SPtr& _mixer_handler_sp,
+                                                                   XPath&&                    _target_path = {});
 
 } // namespace xsdk::xcommands

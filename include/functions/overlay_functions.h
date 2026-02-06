@@ -88,7 +88,6 @@ xbase::XResult<size_t> OverlayPut(IOverlayRenderer* const _overlay_renderer_p,
                                   const IOverlayBlock*    _block_or_group_p,
                                   const XRect&            _dest_region = {});
 
-// TODO:
 /**
  * @brief - Convert overlay props to node structure (inverse of LoadOverlayProps)
  */
@@ -117,12 +116,72 @@ INode::SPtr StoreOverlayProps(const IOverlayBlock::OverlayProps& _overlay_props,
  */
 xbase::XResult<IOverlayBlock::OverlayProps> LoadOverlayProps(const INode::SPtrC& _from);
 
+IOverlayBlock::State StateFromString(const std::string& _str);
+
+std::string ToString(IOverlayBlock::State _state);
+
+/**
+ * @brief - Convert audio level to node structure (inverse of LoadAudioLevel)
+ */
+INode::SPtr StoreAudioLevel(IOverlayBlock::AudioLevel _audio_level, INode::SPtr&& _dest = {});
+
+/**
+ * @brief - Load audio level from specific node structure
+ * Node structure:
+ * {
+ *     "base_level": 1.0,
+ *     "gain_mode": "auto"
+ * }
+ */
+xbase::XResult<xsdk::IOverlayBlock::AudioLevel> LoadAudioLevel(const INode::SPtrC& _from);
+
 /**
  * @brief - Store overlay block configuration to node
  */
 INode::SPtr StoreOverlayBlock(const IOverlayBlock* _block_p, INode::SPtr&& _dest = {});
 /**
  * @brief - Load overlay block configuration from node
+ *
+ * Loads an overlay block configuration from a node structure and creates a new IOverlayBlock instance.
+ * This function is the inverse of StoreOverlayBlock and provides a convenient way to deserialize
+ * overlay block configurations from JSON or node representations.
+ *
+ * Node structure:
+ * {
+ *     "overlay_props": {
+ *         "src_rect": {
+ *             "x": 0.0, "y": 0.0,
+ *             "width": 0.5, "height": 0.5,
+ *             "anchor": "TopLeft",
+ *             "units": "ratio"
+ *         },
+ *         "dst_rect": {
+ *             "x": 0.0, "y": 0.0,
+ *             "width": 100.0, "height": 100.0,
+ *             "anchor": "TopLeft",
+ *             "units": "pixels"
+ *         },
+ *         "blending": {
+ *             "alpha_value": 1.0,
+ *             "flags": "default"
+ *         }
+ *     },
+ *     "audio_level": {
+ *         "base_level": 1.0,
+ *         "gain_mode": "auto"
+ *     },
+ *     "block_name": "optional_block_name",
+ *     "state": "enabled",
+ *     "media_source_uid": 12345,
+ *     "display_frame": <IMediaFrame pointer or null>,
+ *     "props": {
+ *         "custom_property": "value"
+ *     }
+ * }
+ *
+ * @param _from Source node containing the overlay block configuration
+ * @return XResult containing the created IOverlayBlock instance or an error code
+ * @see StoreOverlayBlock, LoadOverlayProps, LoadAudioLevel
  */
 xbase::XResult<IOverlayBlock::SPtr> LoadOverlayBlock(const INode::SPtrC& _from);
 

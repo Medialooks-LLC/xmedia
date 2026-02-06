@@ -7,13 +7,13 @@ cd xmedia
 ```
 ###### Checkout sources:
 ```shell
-git clone https://github.com/Medialooks-LLC/xmedia.git . --branch=v1.0.1.17-beta
+git clone https://github.com/Medialooks-LLC/xmedia.git . --branch=v1.0.1.19-beta
 git submodule update --init
 ```
-###### Extract binaries from [here](https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.17-beta/xmedia-1.0.1.17-beta-windows.zip) to `lib` folder.
+###### Extract binaries from [here](https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.19-beta/xmedia-1.0.1.19-beta-windows.zip) to `lib` folder.
 ###### Build project:
 ```shell
-cmake -DDYNAMIC_RUNTIME=ON -DDYNAMIC_BUILD=ON -DUSE_PREBUILD=ON -DWITH_TESTS=OFF -DWITH_TOOLS=OFF -S . -B build
+cmake -DDYNAMIC_RUNTIME=ON -DDYNAMIC_BUILD=ON -DUSE_PREBUILD=ON -DWITH_TESTS=OFF -DWITH_TOOLS=OFF -DWITH_CEF_LIBRARY=OFF -S . -B build
 cmake --build build
 ```
 
@@ -35,7 +35,8 @@ apt-get install -y \
         libxcb1 \
         libxcb-shape0 \
         libxcb-shm0 \
-        libxcb-xfixes0
+        libxcb-xfixes0 \
+        libboost-all-dev
 ```
 ###### Setup build environment:
 ```shell script
@@ -51,17 +52,17 @@ mkdir -p xmedia && cd xmedia
 ```
 ###### Checkout sources:
 ```shell
-git clone https://github.com/Medialooks-LLC/xmedia.git . --branch=v1.0.1.17-beta
+git clone https://github.com/Medialooks-LLC/xmedia.git . --branch=v1.0.1.19-beta
 git submodule update --init
 ```
-###### Download and extract binaries from [here](https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.17-beta/xmedia-1.0.1.17-beta-linux.tar.gz) to `lib` folder.
+###### Download and extract binaries from [here](https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.19-beta/xmedia-1.0.1.19-beta-linux.tar.gz) to `lib` folder.
 ```shell script
-wget https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.17-beta/xmedia-1.0.1.17-beta-linux.tar.gz
-tar xvfz xmedia-1.0.1.17-beta-linux.tar.gz -C lib/
+wget https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.19-beta/xmedia-1.0.1.19-beta-linux.tar.gz
+tar xvfz xmedia-1.0.1.19-beta-linux.tar.gz -C lib/
 ```
 ###### Build project:
 ```shell
-cmake -DDYNAMIC_RUNTIME=ON -DDYNAMIC_BUILD=ON -DUSE_PREBUILD=ON -DWITH_TESTS=OFF -DWITH_TOOLS=OFF -DCMAKE_BUILD_TYPE=Debug -S . -B build
+cmake -DDYNAMIC_RUNTIME=ON -DDYNAMIC_BUILD=ON -DUSE_PREBUILD=ON -DWITH_TESTS=OFF -DWITH_TOOLS=OFF -DWITH_CEF_LIBRARY=OFF -DCMAKE_BUILD_TYPE=Debug -S . -B build
 cmake --build build
 ```
 
@@ -72,17 +73,17 @@ mkdir -p xmedia && cd xmedia
 ```
 ###### Checkout sources:
 ```shell
-git clone https://github.com/Medialooks-LLC/xmedia.git . --branch=v1.0.1.17-beta
+git clone https://github.com/Medialooks-LLC/xmedia.git . --branch=v1.0.1.19-beta
 git submodule update --init
 ```
-###### Download and extract binaries from [here](https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.17-beta/xmedia-1.0.1.17-beta-macos.tar.gz) to `lib` folder.
+###### Download and extract binaries from [here](https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.19-beta/xmedia-1.0.1.19-beta-macos.tar.gz) to `lib` folder.
 ```shell script
-wget https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.17-beta/xmedia-1.0.1.17-beta-macos.tar.gz
-tar xvfz xmedia-1.0.1.17-beta-macos.tar.gz -C lib/
+wget https://github.com/Medialooks-LLC/xmedia/releases/download/v1.0.1.19-beta/xmedia-1.0.1.19-beta-macos.tar.gz
+tar xvfz xmedia-1.0.1.19-beta-macos.tar.gz -C lib/
 ```
 ###### Build project:
 ```shell
-cmake -DDYNAMIC_RUNTIME=ON -DDYNAMIC_BUILD=ON -DUSE_PREBUILD=ON -DWITH_TESTS=OFF -DWITH_TOOLS=OFF -DCMAKE_BUILD_TYPE=Debug -S . -B build
+cmake -DDYNAMIC_RUNTIME=ON -DDYNAMIC_BUILD=ON -DUSE_PREBUILD=ON -DWITH_TESTS=OFF -DWITH_TOOLS=OFF -DWITH_CEF_LIBRARY=OFF -DCMAKE_BUILD_TYPE=Debug -S . -B build
 cmake --build build
 ```
 
@@ -123,4 +124,3 @@ Next, you can run:
 ```
 
 This will extract a sequence of images (`captured_xxxx.png`) from the previously generated `xmedia_gen_sample.mp4` file.
-

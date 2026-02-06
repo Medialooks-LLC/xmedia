@@ -69,7 +69,7 @@ and extract them into the `lib` folder.
 #### Build the project:
 
 ```shell
-cmake -DDYNAMIC_RUNTIME=ON -DDYNAMIC_BUILD=ON -DUSE_PREBUILD=ON -DWITH_TESTS=OFF -S . -B build
+cmake -DDYNAMIC_RUNTIME=ON -DDYNAMIC_BUILD=ON -DUSE_PREBUILD=ON -DWITH_TESTS=OFF -DWITH_TOOLS=OFF -DWITH_CEF_LIBRARY=OFF -S . -B build
 cmake --build build
 ```
 
@@ -99,7 +99,8 @@ apt-get install -y \
         libxcb1 \
         libxcb-shape0 \
         libxcb-shm0 \
-        libxcb-xfixes0
+        libxcb-xfixes0 \
+        libboost-all-dev
 ```
 
 ##### Set up the build environment:
@@ -141,7 +142,7 @@ tar xvfz xmedia-<version>-linux.tar.gz -C lib/
 #### Build the project:
 
 ```shell
-cmake -DDYNAMIC_RUNTIME=ON -DDYNAMIC_BUILD=ON -DUSE_PREBUILD=ON -DWITH_TESTS=OFF -DCMAKE_BUILD_TYPE=Debug -S . -B build
+cmake -DDYNAMIC_RUNTIME=ON -DDYNAMIC_BUILD=ON -DUSE_PREBUILD=ON -DWITH_TESTS=OFF -DWITH_TOOLS=OFF -DWITH_CEF_LIBRARY=OFF -DCMAKE_BUILD_TYPE=Debug -S . -B build
 cmake --build build
 ```
 
@@ -177,7 +178,7 @@ tar xvfz xmedia-<version>-macos.tar.gz -C lib/
 #### Build the project:
 
 ```shell
-cmake -DDYNAMIC_RUNTIME=ON -DDYNAMIC_BUILD=ON -DUSE_PREBUILD=ON -DWITH_TESTS=OFF -DCMAKE_BUILD_TYPE=Debug -S . -B build
+cmake -DDYNAMIC_RUNTIME=ON -DDYNAMIC_BUILD=ON -DUSE_PREBUILD=ON -DWITH_TESTS=OFF -DWITH_TOOLS=OFF -DWITH_CEF_LIBRARY=OFF -DCMAKE_BUILD_TYPE=Debug -S . -B build
 cmake --build build
 ```
 

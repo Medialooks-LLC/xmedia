@@ -15,11 +15,12 @@ class IMediaStreamEncoders {
 public:
     struct EncoderSpecs {
         std::string                encoder_name;
-        INode::SPtrC               encoder_props;
+        INode::SPtrC               encoder_props; // e.g.
         XFormat                    conversion_format;
         INode::SPtrC               conversion_props;
-        std::optional<std::string> handler_subtype;
+        std::optional<std::string> handler_subtype; // TODO: handler_type
 
+        XValueRT public_label; // User-only data
         // By default the program & metadata copied from original stream
         // Specify next props for update it's
         std::vector<XProgram> stream_programs_update;
@@ -29,6 +30,7 @@ public:
     };
 
     struct EncodedStream {
+
         xbase::Uid           source_stream_uid;
         xbase::Uid           encoded_stream_uid;
         EncoderSpecs::SPtrC  encoder_specs;
@@ -57,7 +59,9 @@ public:
         EncoderSpecs&&                  _encoder_specs,
         const std::optional<xbase::Uid> _encoded_stream_uid = {}) = 0;
 
-    virtual EncodedStream::SPtrC EncodedStreamGet(const xbase::Uid _encoded_stream_uid) const              = 0;
+    virtual EncodedStream::SPtrC EncodedStreamGet(const xbase::Uid _encoded_stream_uid) const = 0;
+    // TODO: Get with filter (e.g. EncodedStreamsGet(const XValue label_filter = {}, std::vector<XObjectType>&&
+    // _obj_types_exact);
     virtual std::multimap<xbase::Uid, EncodedStream::SPtrC> EncodedStreamsGet() const                      = 0;
     virtual xbase::XResult<EncodedStream::SPtrC> EncodedStreamRemove(const xbase::Uid _encoded_stream_uid) = 0;
     virtual const IMediaStreamsBunch*            EncodedStreamsBunch() const                               = 0;
@@ -66,32 +70,30 @@ public:
 
     // Return media unit & size for each encoded stream
     // 2Think: Drop size_t - for simplify return type ?
+
     virtual xbase::XResult<std::vector<std::pair<IMediaStream::Item::SPtrC, size_t>>> PutStreamUnit(
         const IMediaUnit::SPtrC&           _media_unit_p,
-        const bool                         _add_new_input,
-        const IMediaStreamWrite::PutMode   _put_mode    = IMediaStreamWrite::PutMode::kRejectIfFull,
+        const bool                         _create_new_stream,
+        const IMediaStreamWrite::PutFlags  _put_flags   = IMediaStreamWrite::PutFlags::kRejectIfFull,
         const std::optional<uint32_t>      _wait_msec   = {},
         const std::optional<xbase::Time64> _stream_time = {}) = 0;
+};
+
+class IMediaStreamsProcessors {
+public:
+    virtual ~IMediaStreamsProcessors() = default;
+
+    // TODO:
 };
 
 class IWriterSink {
 
 public:
-    enum class CloseReason { kNone, kError, kMaxDuration, kEndOfSegment, kEndOfStream, kSinkClosed };
+    enum class CloseReason { kNone, kError, kCreateNextError, kMaxDuration, kEndOfSegment, kEndOfStream, kSinkClosed };
 
     enum class Flags { kNone = 0, kUseUtcTime = 1, kPeekMode = 2 /*, kInstantSwitch = 4*/ };
 
-    enum class State {
-        kClosed,
-        kStarting,
-        kCapture,
-        kPausing,
-        kPaused,
-        kClosing,
-        kSwitchingByTime,
-        kSwitchingByUser,
-        kError
-    };
+    enum class State { kClosed, kStarting, kCapture, kPausing, kPaused, kClosing, kError };
 
     struct DestSpecs {
         std::string                dest_url;
@@ -150,6 +152,7 @@ public:
     using OnSinkClosePf =
         std::function<std::optional<IWriterSink::DestSpecs>(const IWriterSink*             _sink_p,
                                                             const IWriterSink::CloseReason _close_reason,
+                                                            const std::error_code          _error,
                                                             IWriterSink::DestSpecs&&       _next_dest_specs)>;
 
     virtual xbase::XResult<IWriterSink::SPtr> SinkAdd(const std::set<xbase::Uid>&   _streams_uids,

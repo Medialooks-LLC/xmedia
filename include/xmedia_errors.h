@@ -14,6 +14,9 @@ XENUM_CLASS(XError,
             Ok,
             Repeat,
             Pending,
+            AlreadyStarted,
+            AlreadyInit,
+            AlreadyStopped,
             GeneralFailure  = -1,
             InvalidArgument = -1000,
             WrongFormat,
@@ -42,7 +45,6 @@ XENUM_CLASS(XError,
             NotSuitableData,
             StartError,
             Disabled,
-            AlreadyStarted,
             Expired,
             DuplicatedName,
             DuplicatedUid,
@@ -53,7 +55,6 @@ XENUM_CLASS(XError,
             MissedStreamUid,
             InvalidFlowMode,
             LinksUsed,
-            AlreadyInit,
             InvalidMode,
             LinkSourceAfterDest,
             LinkSourceNotFound,
@@ -66,7 +67,7 @@ XENUM_CLASS(XError,
             MissedFormat,
             ArrayNodeRequired,
             MapNodeRequired,
-            TypeOrSubtypeMissed,
+            CategoryOrTypeMissed,
             CommandNotFound,
             CommandNoExecutors,
             CommandTargetNotFound,
@@ -144,12 +145,34 @@ XENUM_CLASS(XError,
             StreamEncoderNotSpecified,
             StreamIgnored,
             EndOfSegment,
-            TimeBeforePreviousOne,
+            TimeNotIncreasing,
             SegmentStartAfterBack,
             SegmentEndBeforeStart,
             SegmentEndBeforeFront,
             UncompatibleFlags,
-            PathIsEmpty)
+            PathIsEmpty,
+            StreamNotFound,
+            UnitDurationFailed,
+            StreamIndexesWrong,
+            StreamTimesWrong,
+            Exception,
+            NoCallback,
+            InvalidUrl,
+            IsExternal,
+            NotComplete,
+            BinaryNotExpected,
+            Flushed,
+            DifferentMessageType,
+            CommandStatusMissed,
+            Replaced,
+            ContextClosed,
+            RequestIdMissed,
+            DifferentCommandName,
+            DuplicatedRequestId,
+            PathNotExist,
+            NotConnected,
+            ReconnectingNow,
+            UnitDurationUnknown)
 
 /**
  * @brief Creates an std::error_code object from an XError
@@ -170,6 +193,11 @@ namespace xerror {
      * @brief Check is error_code from XError
      */
     bool IsXError(const std::error_code err);
+
+    /**
+     * @brief Return XError error category
+     */
+    const std::error_category& XErrorCategory();
 } // namespace xerror
 
 // Test class

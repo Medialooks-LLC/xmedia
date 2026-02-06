@@ -23,19 +23,18 @@ static const std::string kTranscodeSrc = "src";
 static const std::string kTranscodeDst = "dst";
 
 // Temp, used for tests, have to be removed
-xbase::XResult<IContainerScheme::SPtr> CreateTranscodeScheme(
-    const std::string&            _scheme_name,
-    const std::string&            _source_url,
-    const std::string&            _dest_url,
-    const INode::SPtrC&           _src_props               = {},
-    const INode::SPtrC&           _dst_props               = {},
-    const std::string&            _source_handler          = xmedia::handlers::kAvDemultiplexer,
-    const std::string&            _dest_handler            = xmedia::handlers::kAvMultiplexer,
-    const std::optional<bool>&    _rate_control            = {},
-    const std::optional<bool>&    _reconnect_src           = {},
-    const std::optional<bool>&    _reconnect_dst           = {},
-    const std::optional<bool>&    _stream_buffer_for_input = {},
-    const std::optional<XFormat>& _conversion_format       = {});
+xbase::XResult<IContainerScheme::SPtr> CreateTranscodeScheme(const std::string&                _scheme_name,
+                                                             const std::string&                _source_url,
+                                                             const std::string&                _dest_url,
+                                                             const INode::SPtrC&               _src_props        = {},
+                                                             const INode::SPtrC&               _dst_props        = {},
+                                                             const std::optional<std::string>& _source_handler   = {},
+                                                             const std::optional<std::string>& _dest_handler     = {},
+                                                             const std::optional<bool>&        _rate_control     = {},
+                                                             const std::optional<bool>&        _reconnect_src    = {},
+                                                             const std::optional<bool>&        _reconnect_dst    = {},
+                                                             const std::optional<bool>& _stream_buffer_for_input = {},
+                                                             const std::optional<XFormat>& _conversion_format    = {});
 
 XENUM_CLASS(SchemeFlags,
             kBasic                = 0x00,

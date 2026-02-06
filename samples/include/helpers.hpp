@@ -12,6 +12,59 @@ namespace helpers {
 
 using namespace xsdk;
 
+// std::optional<ICommandsExecutor::Command> ParseCommand(const INode::SPtrC& _command_p)
+//{
+//     if (!_command_p)
+//         return {};
+//
+//     // Fill command
+//     ICommandsExecutor::Command command = {_command_p->At("command_name").String()};
+//     if (command.name.empty())
+//         return {};
+//
+//     command.body        = xnode::NodeConstGet(_command_p, "command_body");
+//     command.target_path = XPath(_command_p->At("target_path").String());
+//     command.request_id = _command_p->At("request_id").OptionalGet<std::string>();
+//
+//     return command;
+// }
+//
+// INode::SPtr CommandToNode(const ICommandsExecutor::Command& _command)
+//{
+//     if (_command.name.empty())
+//         return {};
+//
+//     auto cmd_node = xnode::CreateMap({}, _command.name);
+//     cmd_node->Set("command_name", _command.name);
+//     if (_command.body)
+//         cmd_node->Set("command_body", _command.body);
+//     if (!_command.target_path.Empty())
+//         cmd_node->Set("target_path", _command.target_path.ToString());
+//     if (_command.request_id.has_value())
+//         cmd_node->Set("request_id", _command.request_id.value());
+//
+//     return cmd_node;
+// }
+//
+// INode::SPtr CommandResToNode(const ICommandsExecutor::CommandRes& _res,
+//                              const ICommandsExecutor::Command     _finished_command,
+//                              const INode::SPtr&&                  _dest)
+//{
+//     auto dest_node = xnode::CreateOrUse(_dest, INode::NodeType::Map);
+//     dest_node->Set("succeeded", !_res.error);
+//     if (_finished_command.request_id.has_value())
+//         dest_node->Set("request_id", _finished_command.request_id.value());
+//     dest_node->Set("command_name", _finished_command.name);
+//     if (_res.error) {
+//         dest_node->Set("error_code", _res.error.value());
+//         dest_node->Set("error_desc", xerror::ToString(_res.error));
+//     }
+//     if (!_res.result.IsEmpty())
+//         dest_node->Set("command_result", XValue(_res.result));
+//
+//     return dest_node;
+// }
+
 static constexpr std::string_view kWhiteSpace = " \t\n\r\f\v";
 
 // trim from end of string (right)
@@ -314,6 +367,7 @@ inline IMediaFrame::SPtrC GenerateBGRAVideoFrame(size_t  _frame_num,
 }
 
 #define XM_PI 3.14159265358979323846 /* pi */
+
 inline IMediaFrame::SPtrC GenerateAudioFrame(size_t  _audio_pos_in_samples,
                                              bool    _eos         = false,
                                              int32_t _num_samples = 1764)

@@ -37,4 +37,7 @@ namespace state {
     static const std::string kRunning = "running";
 } // namespace state
 
+// Enable buffering of video frames for smoother playback (boolean)
+static const std::string kBufferVideoFrames = "buffer_video_frames";
+
 } // namespace xsdk::xmixer
